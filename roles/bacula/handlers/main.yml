@@ -1,0 +1,19 @@
+- name: remount all
+  command: mount -a
+  args:
+    warn: no
+
+- name: restart bareos-dir
+  service:
+    name: bareos-dir
+    state: restarted
+
+- name: restart bareos-sd
+  service:
+    name: bareos-sd
+    state: restarted
+
+- name: restart bareos-fd
+  service:
+    name: bareos-fd
+    state: restarted

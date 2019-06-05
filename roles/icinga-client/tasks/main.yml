@@ -1,0 +1,26 @@
+- name: Install list of packages
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - icinga2
+
+- name: Copy icinga client config
+  template:
+    src: templates/{{ item }}
+    dest: "/{{ item }}"
+  with_items:
+    - etc/icinga2/features-enabled/api.conf
+    - etc/icinga2/zones.conf
+    - etc/icinga2/constants.conf
+    - etc/icinga2/pki/ca.crt
+    - etc/icinga2/pki/client.crt
+    - etc/icinga2/pki/client.key
+  notify: restart icinga2
+
+- name: Allow http and https through firewall
+  ufw:
+    rule: allow
+    port: 5665
+    from_ip: "{{ icinga_master_ip_address }}"

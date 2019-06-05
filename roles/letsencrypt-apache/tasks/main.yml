@@ -1,0 +1,7 @@
+- name: Add certbot renew certificates job
+  cron:
+    name: "renew SSL certificates"
+    minute: "0"
+    hour: "10"
+    weekday: "sun"
+    job: certbot renew --pre-hook "systemctl stop apache2" --post-hook "systemctl start apache2" --preferred-challenges http-01

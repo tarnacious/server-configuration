@@ -1,0 +1,1 @@
+AuthInfo:{{ smtp_relay }} "U:{{ email_user }}" "P:{{ email_password }}" "M:PLAIN"

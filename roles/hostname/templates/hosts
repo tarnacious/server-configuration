@@ -1,0 +1,25 @@
+127.0.0.1       localhost
+127.0.1.1       {{ hostname }} {{ fqdn }}
+
+{{ hypervisor_ipv6_address }} hypervisor
+
+::1     ip6-localhost ip6-loopback {{ hostname }}
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
+
+{{ hypervisor_ipv6_address }} hypervisor
+{{ bacula_ipv6_address }} bacula bacula.tarnbarford.net
+{{ monitoring_ipv6_address }} monitoring monitoring.tarnbarford.net
+{{ load_balancer_ipv6_address }} load-balancer load-balancer.tarnbarford.net
+{{ tarnbarford_ipv6_address }} tarnbarford tarnbarford.net
+{{ bab_website_ipv6_address }} bab-website
+{{ owncloud_ipv6_address }} owncloud owncloud.tarnbarford.net
+{{ mail_server_ipv6_address }} mail-server mail.tarnbarford.net
+{{ debugproxy_ipv6_address }} debugproxy debugproxy.com
+{{ icinga_ipv6_address }} icinga icinga.tarnbarford.net
+{{ vpn_ipv6_address }} vpn vpn.tarnbarford.net
+{{ ns1_ipv6_address }} ns1 ns1.tarnbarford.net
+{{ ns2_ipv6_address }} ns2 ns2.tarnbarford.net

@@ -1,0 +1,236 @@
+- name: Install list of packages
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - dnsutils
+    - certbot
+    - mariadb-server
+    - dovecot-core
+    - dovecot-imapd
+    - dovecot-lmtpd
+    - dovecot-mysql
+    - dovecot-sieve
+    - dovecot-managesieved
+    - postfix
+    - postfix-mysql
+    - nginx
+    - python-certbot-nginx
+    - spamassassin
+    - spamc
+    - opendkim
+    - opendkim-tools
+    - opendmarc
+
+- name: sets /etc/mailname
+  copy:
+    src: templates/mailname
+    dest: /etc/mailname
+
+- name: certbot mail.tarnbarford.net
+  shell: "certbot certonly --noninteractive --text --agree-tos --nginx --email tarn@tarnbarford.net --domains mail.tarnbarford.net"
+  args:
+    creates: "/etc/letsencrypt/live/mail.tarnbarford.net/cert.pem"
+
+- name: add vmail group
+  group:
+    name: vmail
+
+- name: add vmail user
+  user:
+    name: vmail
+    group: vmail
+    home: /var/vmail
+
+- name: create /var/vmail
+  file:
+    path: /var/vmail
+    owner: vmail
+    group: vmail
+    state: directory
+    mode: 0755
+
+- name: create /var/vmail/mailboxes
+  file:
+    path: /var/vmail/mailboxes
+    owner: vmail
+    group: vmail
+    state: directory
+    mode: 0755
+
+- name: create /var/vmail/sieve-scripts
+  file:
+    path: /var/vmail/sieve-scripts
+    owner: vmail
+    group: vmail
+    state: directory
+    mode: 0755
+
+- name: create /var/vmail/sieve/global
+  file:
+    path: /var/vmail/sieve/global
+    owner: vmail
+    group: vmail
+    state: directory
+    mode: 0755
+
+- name: copies mail sql script
+  copy:
+    src: templates/create_database.sql
+    dest: /etc/postfix/create_database.sql
+
+- name: sets /etc/dovecot/dovecot.conf
+  copy:
+    src: templates/dovecot.conf
+    dest: /etc/dovecot/dovecot.conf
+
+- name: sets /etc/dovecot/dovecot-sql.conf
+  template:
+    src: templates/dovecot-sql.conf
+    dest: /etc/dovecot/dovecot-sql.conf
+    mode: 0440
+
+- name: sets spam sieves
+  copy:
+    src: "templates/{{ item }}"
+    dest: /var/vmail/sieve/global/{{ item }}
+  with_items:
+    - spam-global.sieve
+    - learn-spam.sieve
+    - learn-ham.sieve
+  notify:
+    - restart dovecot
+
+- name: sets user sieves
+  copy:
+    src: "templates/sieve-scripts/{{ item }}.sieve"
+    dest: "/var/vmail/sieve-scripts/{{ item }}.sieve"
+  with_items:
+    - "tarn@tarnbarford.net"
+  notify:
+    - restart dovecot
+
+- name: create /etc/postfix/sql
+  file:
+    path: /etc/postfix/sql
+    state: directory
+
+- name: sets postfix sql configuration
+  template:
+    src: "templates/sql/{{ item }}"
+    dest: "/etc/postfix/sql/{{ item }}"
+  with_items:
+    - accounts.cf
+    - aliases.cf
+    - domains.cf
+    - recipient-access.cf
+    - sender-login-maps.cf
+    - tls-policy.cf
+
+- name: touch postfix config
+  copy:
+    content: ""
+    dest: "/etc/postfix/{{ item }}"
+    force: no
+    mode: 0755
+  with_items:
+   - without_ptr
+   - postscreen_access
+
+# Technically this should be re-run if the /etc/postfix/without_ptr file above
+# is changed. Practically it's currently empty so running once is enough.
+- name: create postmap db
+  command: postmap /etc/postfix/without_ptr
+  args:
+    creates: "/etc/postfix/without_ptr.db"
+
+- name: set postfix configuration
+  template:
+    src: "templates/postfix/{{ item }}"
+    dest: "/etc/postfix/{{ item }}"
+    mode: 0755
+  with_items:
+   - main.cf
+   - master.cf
+   - submission_header_cleanup
+  notify:
+    - restart postfix
+    - restart spamassassin
+
+- name: set spamassassin configuration
+  template:
+    src: "templates/spamassassin/{{ item }}"
+    dest: "/etc/spamassassin/{{ item }}"
+  with_items:
+   - local.cf
+  notify:
+    - restart postfix
+    - restart spamassassin
+
+- name: opendmarc.conf
+  copy:
+    src: templates/opendmarc.conf
+    dest: /etc/opendmarc.conf
+  notify:
+    - restart opendmarc
+
+- name: create /etc/postfix/dkim/
+  file:
+    path: /etc/postfix/dkim/
+    group: opendkim
+    mode: "g+r"
+    state: directory
+
+- name: create /etc/postfix/dkim/tarnbarford.net
+  file:
+    path: /etc/postfix/dkim/tarnbarford.net
+    group: opendkim
+    mode: "g+r"
+    state: directory
+
+- name: set dkim keys
+  template:
+    src: "templates/dkim/tarnbarford.net/{{ item }}"
+    dest: "/etc/postfix/dkim/tarnbarford.net/{{ item }}"
+    group: opendkim
+    mode: 0640
+  with_items:
+   - dkim.private
+   - dkim.txt
+
+- name: opendkim.conf
+  copy:
+    src: templates/opendkim.conf
+    dest: /etc/opendkim.conf
+  notify:
+    - restart opendkim
+
+- name: dkim settings
+  copy:
+    src: "templates/dkim/{{ item }}"
+    dest: /etc/postfix/dkim/{{ item }}
+  with_items:
+    - keytable
+    - signingtable
+    - trustedhosts
+  notify:
+    - restart opendkim
+
+- name: configure nginx
+  template:
+    src: "templates/nginx/default"
+    dest: "/etc/nginx/sites-enabled/default"
+  notify: restart nginx
+
+- name: Allow mail ports through firewall
+  ufw:
+    rule: allow
+    port: '{{ item }}'
+    proto: tcp
+  with_items:
+    - 80
+    - 443
+    - 587
+    - 25
+    - 993

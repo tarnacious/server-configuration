@@ -1,0 +1,12 @@
+- hosts: load-balancer
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - sshd
+    - hostname
+    - firewall
+    - haproxy
+    - certificates
+    - munin-node
+    - icinga-client

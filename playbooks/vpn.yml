@@ -1,0 +1,12 @@
+- hosts: vpn
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
+    - sshd
+    - backup-client
+    - monitoring
+    - firewall
+    - openvpn
+    - icinga-client

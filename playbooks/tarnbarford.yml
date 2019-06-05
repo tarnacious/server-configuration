@@ -1,0 +1,13 @@
+- hosts: tarnbarford
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
+    - sshd
+    - certificates
+    - backup-client
+    - letsencrypt-nginx
+    - munin-node
+    - tarnbarford-website
+    - icinga-client

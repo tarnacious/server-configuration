@@ -1,0 +1,10 @@
+- name: 'Check mandatory variables are defined'
+  assert:
+    that:
+      - ipv4_address is defined
+      - ipv6_address is defined
+
+- name: set /etc/network/interfaces
+  template:
+    src: templates/interfaces
+    dest: /etc/network/interfaces

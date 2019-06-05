@@ -1,0 +1,5 @@
+proc            /proc           proc    defaults          0       0
+PARTUUID=7f05e3fe-01  /boot           vfat    defaults          0       2
+PARTUUID=7f05e3fe-02  /               ext4    defaults,noatime  0       1
+//u198293.your-storagebox.de/backup /mnt/remote  cifs    iocharset=utf8,rw,credentials=/etc/backup-credentials,uid=107,gid=111,file_mode=0660,dir_mode=0770 0 0
+/dev/sda4  /mnt/local               ext4    defaults  0       1

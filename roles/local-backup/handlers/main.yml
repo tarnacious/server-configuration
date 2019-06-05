@@ -1,0 +1,4 @@
+- name: remount all
+  command: mount -a
+  args:
+    warn: no

@@ -1,0 +1,15 @@
+- name: ensure certificates directory
+  file:
+    path: "/etc/ssl/certs/"
+    state: directory
+
+- name: copy certificates
+  template:
+    src: "templates/{{ item }}"
+    dest: "/etc/ssl/certs/{{ item }}"
+  with_items:
+    - ca.crt
+    - client.crt
+    - client.key
+    - combined_client.crt
+  register: certificates

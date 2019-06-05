@@ -1,0 +1,8 @@
+- name: set hostname
+  hostname:
+    name: "{{ hostname }}"
+
+- name: set /etc/hosts
+  template:
+    src: templates/hosts
+    dest: /etc/hosts

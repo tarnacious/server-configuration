@@ -1,0 +1,182 @@
+- name: 'Check mandatory variables are defined'
+  assert:
+    that:
+      - icinga_mysql_password is defined
+      - icinga_domain is defined
+
+- name: Install list of packages
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - php7.0-mysql
+    - php7.0-curl
+    - mariadb-server
+    - mariadb-client
+    - icinga2
+    - icinga2-ido-mysql
+    - icingaweb2
+    - icingacli
+    - python-mysqldb
+    - certbot
+    - monitoring-plugins
+    - sendmail-bin
+    - sendmail
+
+- name: Create a new database with name 'icinga'
+  mysql_db:
+    name: icinga
+    state: present
+
+- name: Create a new database with name 'icinga_web'
+  mysql_db:
+    name: icinga_web
+    state: present
+
+- name: Create 'icinga' mysql user and grant ALL to 'icinga' and 'icinga_web'
+  mysql_user:
+    name: icinga
+    password: "{{ icinga_mysql_password }}"
+    priv: '*.*:ALL'
+    state: present
+
+- name: Create schema
+  shell: mysql -u root icinga < /usr/share/icinga2-ido-mysql/schema/mysql.sql && touch /var/schema-created
+  args:
+    creates: /var/schema-created
+
+- name: Create web schema
+  shell: mysql icinga_web < /usr/share/icingaweb2/etc/schema/mysql.schema.sql && touch /var/icinga-web-schema-created
+  args:
+    creates: /var/icinga-web-schema-created
+
+- name: Copy create admin sql script
+  copy:
+    src: templates/create_admin.sql
+    dest: /tmp/create_admin.sql
+  register: create_admin_script
+
+- name: create admin user
+  shell: mysql icinga_web < /tmp/create_admin.sql
+  when: create_admin_script.changed
+
+- name: Create icingaweb2 logging directory
+  file:
+    path: /var/log/icingaweb2
+    state: directory
+    group: icingaweb2
+    mode: 0775
+
+- name: Copy icingaweb2 config
+  template:
+    src: templates/icingaweb2/{{ item }}
+    dest: /etc/icingaweb2/{{ item }}
+  with_items:
+    - config.ini
+    - resources.ini
+    - authentication.ini
+    - groups.ini
+    - roles.ini
+  notify: restart apache2
+
+- name: ensure icinga zone exists
+  file:
+    path: /etc/icinga2/zones.d/icinga.tarnbarford.net
+    state: directory
+
+- name: Remove default configuration
+  file:
+    path: "/{{ item }}"
+    state: absent
+  with_items:
+    - etc/icinga2/conf.d/hosts.conf
+    - etc/icinga2/conf.d/services.conf
+
+- name: Copy icinga config
+  template:
+    src: templates/{{ item }}
+    dest: "/{{ item }}"
+  with_items:
+    - etc/icinga2/features-enabled/ido-mysql.conf
+    - etc/icinga2/features-enabled/api.conf
+    - etc/icinga2/constants.conf
+    - etc/icinga2/zones.conf
+    - etc/icinga2/conf.d/hosts.conf
+    - etc/icinga2/conf.d/api-users.conf
+    - etc/icinga2/conf.d/services.conf
+    - etc/icinga2/conf.d/users.conf
+    - etc/icinga2/pki/ca.crt
+    - etc/icinga2/pki/client.crt
+    - etc/icinga2/pki/client.key
+    - etc/icinga2/zones.d/icinga.tarnbarford.net/services.conf
+    - etc/icinga2/scripts/mail-service-notification.sh
+    - etc/icinga2/scripts/mail-host-notification.sh
+  notify: restart icinga2
+
+- name: clients configuration
+  template:
+    src: templates/etc/icinga2/zones.d/icinga.tarnbarford.net/template.conf
+    dest: "/etc/icinga2/zones.d/icinga.tarnbarford.net/{{ item.name }}.conf"
+  with_items:
+    - { name: "hypervisor.tarnbarford.net", address6: "{{ hypervisor_ipv6_address }}" }
+    - { name: "bacula.tarnbarford.net", address6: "{{ bacula_ipv6_address }}" }
+    - { name: "monitoring.tarnbarford.net", address6: "{{ monitoring_ipv6_address }}" }
+    - { name: "load-balancer.tarnbarford.net", address6: "{{ load_balancer_ipv6_address }}" }
+    - { name: "tarnbarford.net", address6: "{{ tarnbarford_ipv6_address }}" }
+    - { name: "bridgesacrossborders.net", address6: "{{ bab_website_ipv6_address }}" }
+    - { name: "owncloud.tarnbarford.net", address6: "{{ owncloud_ipv6_address }}" }
+    - { name: "mail.tarnbarford.net", address6: "{{ mail_server_ipv6_address }}" }
+    - { name: "debugproxy.com", address6: "{{ debugproxy_ipv6_address }}" }
+    - { name: "vpn.tarnbarford.net", address6: "{{ vpn_ipv6_address }}" }
+    - { name: "ns1.tarnbarford.net", address6: "{{ ns1_ipv6_address }}" }
+    - { name: "ns2.tarnbarford.net", address6: "{{ ns2_ipv6_address }}" }
+  notify: restart icinga2
+
+- name: Allow http and https through firewall
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+  with_items:
+    - 80
+    - 443
+    - 5665
+
+- name: Get initial letsencypt SSL certificat
+  shell: "systemctl stop apache2 && certbot certonly --non-interactive --standalone -d {{ icinga_domain }} --email hello@debugproxy.com --agree-tos && systemctl start apache2"
+  args:
+    creates: "/etc/letsencrypt/live/{{ icinga_domain }}/cert.pem"
+
+- name: enable apache2 ssl module
+  apache2_module:
+    state: present
+    name: ssl
+
+- name: enable apache2 rewrite module
+  apache2_module:
+    state: present
+    name: rewrite
+
+- name: Copy apache2 config
+  template:
+    src: "templates/{{ item }}"
+    dest: "/etc/{{ item }}"
+  with_items:
+    - apache2/sites-available/000-default.conf
+    - apache2/conf-available/icingaweb2.conf
+  notify: restart apache2
+
+- name: Create icingaweb monitory modules config directory
+  file:
+    path: /etc/icingaweb2/modules/monitoring
+    state: directory
+    mode: 0775
+
+- name: Create icingaweb monitory modules config directory
+  template:
+    src: "templates/icingaweb2/modules/{{ item }}"
+    dest: "/etc/icingaweb2/modules/{{ item }}"
+  with_items:
+    - monitoring/backends.ini
+    - monitoring/commandtransports.ini
+  notify: restart apache2

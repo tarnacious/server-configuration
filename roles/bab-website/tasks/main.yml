@@ -1,0 +1,30 @@
+- name: Install packages
+  apt:
+    name: "{{item}}"
+    state: latest
+    update_cache: yes
+  with_items:
+    - certbot
+    - python-certbot-nginx
+    - mariadb-server
+    - git
+    - nginx
+    - php-fpm
+    - php-mysql
+    - nginx-extras
+
+- name: Add the user 'bab'
+  user:
+    name: bab
+
+- name: Start PHP-FPM
+  service:
+    name: php7.0-fpm
+    state: started
+    enabled: True
+
+- name: Configure nginx
+  copy:
+    src: templates/nginx.conf
+    dest: /etc/nginx/sites-enabled/default
+  notify: restart nginx

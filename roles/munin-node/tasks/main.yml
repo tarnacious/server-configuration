@@ -1,0 +1,29 @@
+- name: Install apt packages
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - munin-node
+    - libnet-cidr-perl
+    - libdbd-pg-perl
+    - libwww-perl
+    - ufw
+
+- name: Copy munin config
+  template:
+    src: templates/munin-node.conf.j2
+    dest: /etc/munin/munin-node.conf
+  notify: reload munin-node
+
+- name: Remove acpi plugin
+  file:
+    path: /etc/munin/plugins/acpi
+    state: absent
+  notify: reload munin-node
+
+- name: Allow Munin Node
+  ufw:
+    rule: allow
+    port: 4949
+    proto: tcp
+  notify: reload ufw

@@ -1,0 +1,2 @@
+{{ client_crt }}
+{{ client_key }}

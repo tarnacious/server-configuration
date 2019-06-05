@@ -1,0 +1,39 @@
+- name: install packages
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - openvpn
+
+- name: ufw before.rule
+	template:
+		src: templates/before.rules
+		dest: /etc/ufw/before.rules
+
+- name: openvpn server.conf
+	template:
+		src: templates/server.conf
+		dest: /etc/openvpn/server.conf
+
+#- name: download and extract easy-rsa
+#  unarchive:
+#    src: https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.4/EasyRSA-3.0.4.tgz
+#    dest: /root/
+#    remote_src: yes
+#  args:
+#    creates: /root/EasyRSA-3.0.4
+#
+#- name: run init-pki
+#  command: ./easyrsa init-pki
+#  args:
+#    chdir: /root/EasyRSA-3.0.4/
+#    creates: /root/EasyRSA-3.0.4/pki
+#
+#- name: run gen-req
+#  command: ./easyrsa gen-req server nopass
+#  args:
+#    chdir: /root/EasyRSA-3.0.4/
+#    creates: /root/EasyRSA-3.0.4/pki/private/server.key
+
+

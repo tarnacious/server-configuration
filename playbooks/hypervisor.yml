@@ -1,0 +1,11 @@
+- hosts: hypervisor
+  user: root
+  become: yes
+  roles:
+    - hostname
+    - sshd
+    - certificates
+    - munin-node
+    - icinga-client
+    - icinga-plugins
+    - hypervisor

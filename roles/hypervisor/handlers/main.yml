@@ -1,0 +1,5 @@
+- name: restart networking
+  action: service name=networking state=restarted
+
+- name: reload ufw
+  action: service name=ufw state=restarted

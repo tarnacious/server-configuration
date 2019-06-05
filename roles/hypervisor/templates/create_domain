@@ -1,0 +1,19 @@
+vm_name=$1
+
+cp /root/base_vm /var/kvm/images/$vm_name.qcow2
+
+chown libvirt-qemu:libvirt-qemu /var/kvm/images/$vm_name.qcow2
+
+virt-install \
+  --name $vm_name \
+  --ram 4096 \
+  --disk path=/var/kvm/images/$vm_name.qcow2 \
+  --vcpus 2 \
+  --os-type linux \
+  --os-variant debian9 \
+  --graphics none \
+  --console pty,target_type=serial \
+  --noautoconsole \
+  --network bridge=virbr0 \
+  --network bridge=br0 \
+  --import

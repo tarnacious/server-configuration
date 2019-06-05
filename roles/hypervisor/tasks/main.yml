@@ -1,0 +1,88 @@
+- name: Install list of packages
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - python
+    - python-lxml
+    - qemu-kvm
+    - libvirt-clients
+    - libvirt-daemon-system
+    - bridge-utils
+    - debootstrap
+    - virtinst
+    - ufw
+    - htop
+
+- name: Allow SSH access
+  ufw:
+    rule: allow
+    port: 22
+
+# acidentally deleted my local, default should be ok for now
+#- name: set /etc/resolv.conf
+#  copy:
+#    src: templates/resolv.conf
+#    dest: /etc/resolv.conf
+
+- name: set default routed policy to accept
+  ufw:
+    policy: allow
+    direction: routed
+
+- name: add before.rules
+  copy:
+    src: templates/ufw/before.rules
+    dest: /etc/ufw/before.rules
+  notify: reload ufw
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+    policy: reject
+
+- name: add /etc/network/interfaces
+  copy:
+    src: templates/interfaces
+    dest: /etc/network/interfaces
+  notify: restart networking
+
+- name: add /var/kvm/images directory
+  file:
+    path: /var/kvm/images
+    state: directory
+    mode: 0755
+
+- name: add create vm script
+  copy:
+    src: templates/build_vm
+    dest: /usr/bin/build_vm
+    mode: 0744
+
+- name: add create domain script
+  copy:
+    src: templates/create_domain
+    dest: /usr/bin/create_domain
+    mode: 0744
+
+- sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- sysctl:
+    name: net.ipv4.conf.enp2s0.send_redirects
+    value: 0
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes

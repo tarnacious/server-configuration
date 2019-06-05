@@ -1,0 +1,16 @@
+source /etc/network/interfaces.d/*
+
+auto lo
+iface lo inet loopback
+
+allow-hotplug ens2
+iface ens2 inet static
+gateway {{ bridge_ipv4_gateway }}
+address {{ ipv4_address }}
+netmask 255.255.255.0
+
+allow-hotplug ens3
+iface ens3 inet6 static
+gateway {{ bridge_ipv6_gateway }}
+address {{ ipv6_address }}
+netmask 64

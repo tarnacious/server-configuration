@@ -1,0 +1,104 @@
+- name: Install apt packages
+  apt:
+    name: "{{item}}"
+    state: present
+    force: yes
+    update_cache: yes
+  with_items:
+    - certbot
+    - munin
+    - munin-node
+    - apache2
+    - libcgi-fast-perl
+    - libapache2-mod-fcgid
+    - libio-socket-inet6-perl
+
+- name: get inital letsencrypt certificates
+  shell: certbot certonly --standalone -d monitoring.tarnbarford.net --email tarn@tarnbarford.net --agree-tos
+  args:
+    creates: "/etc/letsencrypt/live/monitoring.tarnbarford.net/cert.pem"
+
+- name: Ensures munin has /var/www/munin
+  file:
+    path: /var/www/munin
+    state: directory
+    owner: munin
+    group: munin
+
+- name: Ensures www-data has /var/lib/munin/cgi-tmp/munin-cgi-graph
+  file:
+    path: /var/lib/munin/cgi-tmp/munin-cgi-graph
+    state: directory
+    owner: munin
+    group: munin
+
+- name: Ensure log permission
+  copy:
+    dest: /var/log/munin/munin-cgi-graph.log
+    content: ""
+    force: no
+    owner: www-data
+    group: munin
+
+- name: Copy cron config
+  copy:
+    src: cron
+    dest: /etc/cron.d/munin
+
+- name: Copy munin config
+  template:
+    src: templates/munin.conf
+    dest: /etc/munin/munin.conf
+  notify: restart munin
+
+- name: Copy munin node config
+  copy:
+    src: munin-node.conf
+    dest: /etc/munin/munin-node.conf
+  notify: restart munin-node
+
+# The debian munin package is a bit broken :(
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=837788
+#
+# Work around is to remove the unit file and reenable it
+- name: remove munin unit
+  file:
+    state: absent
+    path: /lib/systemd/system/munin.service
+  notify: enable munin unit
+
+- name: Copy sites appach config
+  copy:
+    src: templates/000-default.conf
+    dest: /etc/apache2/sites-enabled/000-default.conf
+  notify: restart apache2
+
+- name: Copy appach config
+  copy:
+    src: apache24.conf
+    dest: /etc/apache2/conf-enabled/apache24.conf
+  notify: restart apache2
+
+- name: Copy htpassword
+  template:
+    src: htpasswd
+    dest: /etc/apache2/htpasswd
+  notify: restart apache2
+
+- name: enable ssl
+  apache2_module:
+    state: present
+    name: ssl
+  notify: restart apache2
+
+- name: Allow HTTP in UFW
+  ufw:
+    rule: allow
+    port: 80
+    proto: tcp
+
+- name: Allow HTTPS in UFW
+  ufw:
+    rule: allow
+    port: 443
+    proto: tcp

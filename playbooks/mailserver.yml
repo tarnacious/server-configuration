@@ -1,0 +1,14 @@
+- hosts: mail-server
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
+    - sshd
+    - firewall
+    - certificates
+    - backup-client
+    - icinga-client
+    - letsencrypt-nginx
+    - munin-node
+    - mail-server

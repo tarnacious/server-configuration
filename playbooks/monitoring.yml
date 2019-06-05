@@ -1,0 +1,13 @@
+- hosts: monitoring
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - sshd
+    - hostname
+    - firewall
+    - certificates
+    - backup-client
+    - letsencrypt-apache
+    - munin-master
+    - icinga-client

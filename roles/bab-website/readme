@@ -1,0 +1,6 @@
+# Bridges Across Borders Website
+
+This role configures a basic nginx PHP evirnonment. The actual wordpress
+sources, database scripts and SSL certificates are managed via the backup
+system.
+

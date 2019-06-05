@@ -1,0 +1,13 @@
+- hosts: icinga
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
+    - sshd
+    - firewall
+    - sendmail
+    - icinga
+    - certificates
+    - munin-node
+    - icinga-plugins

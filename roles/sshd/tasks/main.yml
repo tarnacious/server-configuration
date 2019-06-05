@@ -1,0 +1,13 @@
+- name: add sshd_config
+  copy:
+    src: templates/sshd_config
+    dest: /etc/ssh/sshd_config
+  notify: reload sshd
+
+- name: ensure authorized_key
+  template:
+    src: "templates/authorized_keys"
+    dest: "/home/tarn/.ssh/authorized_keys"
+    owner: tarn
+    group: tarn
+    mode: 0644

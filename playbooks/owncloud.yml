@@ -1,0 +1,13 @@
+- hosts: owncloud
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
+    - sshd
+    - certificates
+    - backup-client
+    - icinga-client
+    - owncloud
+    - letsencrypt-apache
+    - munin-node

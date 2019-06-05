@@ -1,0 +1,17 @@
+- name: Install list of packages
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - perl-modules
+
+- name: Copy icinga client plugins
+  copy:
+    src: templates/{{ item }}
+    dest: "/{{ item }}"
+    mode: "a+x"
+  with_items:
+    - usr/lib/nagios/plugins/check_mem.pl
+    - usr/lib/nagios/plugins/check_raid.pl
+

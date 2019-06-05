@@ -1,0 +1,13 @@
+- hosts: bacula
+  user: root
+  become: yes
+  roles:
+     - vm-networking
+     - hostname
+     - sshd
+     - firewall
+     - certificates
+     - munin-node
+     - icinga-client
+     - sendmail
+     - bacula

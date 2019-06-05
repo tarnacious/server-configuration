@@ -1,0 +1,13 @@
+- hosts: bab-website
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
+    - sshd
+    - certificates
+    - backup-client
+    - bab-website
+    - letsencrypt-nginx
+    - munin-node
+    - icinga-client

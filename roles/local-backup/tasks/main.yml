@@ -1,0 +1,22 @@
+- name: copy backup credentials
+  template:
+    src: templates/backup-credentials
+    dest: /etc/backup-credentials
+    mode: 0600
+  notify: remount all
+
+- name: create mount dir /mnt/local
+  file:
+    dest: /mnt/local
+    state: directory
+
+- name: create mount dir /mnt/remote
+  file:
+    dest: /mnt/remote
+    state: directory
+
+- name: fstab with network drive
+  template:
+    src: templates/fstab
+    dest: /etc/fstab
+  notify: remount all

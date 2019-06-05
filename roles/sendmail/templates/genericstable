@@ -1,0 +1,4 @@
+root {{ email_user }}
+nagios {{ email_user }}
+bareos {{ email_user }}
+tarn {{ email_user }}

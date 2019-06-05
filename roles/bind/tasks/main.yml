@@ -1,0 +1,48 @@
+- name: ensure packages
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - bind9
+    - bind9utils
+    - bind9-doc
+
+- name: ensure zones directory
+  file:
+    path: /etc/bind/zones
+    state: directory
+
+- name: ensure configuration
+  template:
+    src: "templates{{ item }}"
+    dest: "{{ item }}"
+  with_items:
+    - '/etc/bind/named.conf.options'
+    - '/etc/bind/named.conf.local'
+    - '/etc/bind/zones/db.dodgyaf.xyz'
+    - '/etc/bind/zones/db.tarnbarford.net'
+    - '/etc/bind/zones/db.debugproxy.com'
+  notify: restart bind
+
+- name: check config
+  command: 'named-checkzone tarnbarford.net /etc/bind/zones/db.tarnbarford.net'
+  register: out
+
+- debug: msg="{{ out.stdout_lines }}"
+
+- name: check config
+  command: 'named-checkzone debugproxy.com /etc/bind/zones/db.debugproxy.com'
+  register: out
+
+- debug: msg="{{ out.stdout_lines }}"
+
+- name: Allow bind dns port in UFW
+  ufw:
+    rule: allow
+    port: 53
+
+- name: Allow bind remote name daemon control port in UFW
+  ufw:
+    rule: allow
+    port: 953

@@ -1,0 +1,5 @@
+- name: restart apache2
+  action: service name=apache2 state=restarted
+
+- name: restart icinga2
+  action: service name=icinga2 state=restarted

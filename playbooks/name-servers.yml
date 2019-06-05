@@ -1,0 +1,26 @@
+- hosts: ns1
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
+    - sshd
+    - firewall
+    - certificates
+    - icinga-client
+    - icinga-plugins
+    - munin-node
+    - bind
+
+- hosts: ns2
+  user: root
+  become: yes
+  roles:
+    - hostname
+    - sshd
+    - firewall
+    - certificates
+    - icinga-client
+    - icinga-plugins
+    - munin-node
+    - bind

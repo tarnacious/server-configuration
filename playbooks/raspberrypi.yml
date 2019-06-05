@@ -1,0 +1,6 @@
+- hosts: raspberrypi
+  user: root
+  become: yes
+  roles:
+    - hostname
+    - local-backup

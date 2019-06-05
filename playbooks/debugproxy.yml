@@ -1,0 +1,11 @@
+- hosts: debugproxy
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
+    - letsencrypt-nginx
+    - certificates
+    - backup-client
+    - munin-node
+    - icinga-client

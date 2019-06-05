@@ -1,0 +1,26 @@
+- name: Install packages
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - bareos-filedaemon
+
+- name: copy director configuration
+  template:
+    src: templates/bareos-dir.conf
+    dest: /etc/bareos/bareos-fd.d/director/bareos-dir.conf
+  notify: restart bacula-fd
+
+- name: copy client configuration
+  template:
+    src: templates/myself.conf
+    dest: /etc/bareos/bareos-fd.d/client/myself.conf
+  notify: restart bacula-fd
+
+- name: Allow backup in UFW
+  ufw:
+    rule: allow
+    port: 9102
+    from_ip: "{{ bacula_ipv6_address }}"
+    proto: tcp
