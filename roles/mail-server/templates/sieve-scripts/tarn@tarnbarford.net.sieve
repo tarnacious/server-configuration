@@ -1,5 +1,10 @@
 require ["fileinto", "reject"];
 
+if address :is "from" "appstore@piqd.de"
+{
+    fileinto "brainsome";
+}
+
 if address :is "from" "panic@taktsoft.com"
 {
     fileinto "brainsome";
