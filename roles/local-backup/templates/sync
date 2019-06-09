@@ -1,0 +1,91 @@
+#!/bin/bash
+set -e
+
+scriptname=$(basename $0)
+pidfile="/tmp/${scriptname}"
+local_mountpoint=/mnt/local
+remote_mountpoint=/mnt/remote
+log_path=/var/log/local-backup/`date +"%Y%m%d_%H%M%S"`
+email=tarn@tarnbarford.net
+
+function log {
+    echo "[$(date)]: $*"
+}
+
+get_lock() {
+    log "Attempting to aquire lock"
+    exec 200>$pidfile
+    if flock -n 200; then
+        pid=$$
+        log "Lock aquired for process $pid"
+        echo $pid 1>&200
+        return 0;
+    else
+        log "Failed to aquire lock"
+        return 1;
+    fi
+}
+
+mount_filesystems() {
+  log "Attempting to mount $local_mountpoint"
+  if mountpoint -q "$local_mountpoint"; then
+    log "$local_mountpoint is already mounted"
+  else
+    mount $local_mountpoint || (log "Error mounting $local_mountpoint"; return 1)
+    log "$local_mountpoint mounted"
+  fi
+
+  log "Attempting to mount $remote_mountpoint"
+  if mountpoint -q "$remote_mountpoint"; then
+    log "$remote_mountpoint is already mounted"
+  else
+    mount $remote_mountpoint || (log "Error mounting $remote_mountpoint"; return 1)
+    log "$remote_mountpoint mounted"
+  fi
+}
+
+umount_filesystems() {
+  log "Attempting to umount $local_mountpoint"
+  if mountpoint -q "$local_mountpoint"; then
+    umount $local_mountpoint || (log "Error umounting $local_mountpoint"; return 1)
+    log "$local_mountpoint umounted"
+  else
+    log "$local_mountpoint is not mounted"
+  fi
+
+  log "Attempting to umount $remote_mountpoint"
+  if mountpoint -q "$remote_mountpoint"; then
+    umount $remote_mountpoint || (log "Error umounting $remote_mountpoint"; return 1)
+    log "$remote_mountpoint umounted"
+  else
+    log "$remote_mountpoint is not mounted"
+  fi
+}
+
+run_rsync() {
+  log "Start rsync"
+  rsync -avzh /mnt/remote /mnt/local || (log "Error syncing"; return 1)
+  log "Finished rsync"
+}
+
+run() {
+    get_lock
+    mount_filesystems
+    run_rsync
+    umount_filesystems
+    log "Completed backup."
+}
+
+main() {
+  run | tee $log_path
+  if [ ${PIPESTATUS[0]} -eq 0 ]; then
+      log "Sending report to $email."
+      cat $log_path | mail -s "Buckup Succeeded" -aFrom:raspberry@tarnbarford.net $email
+  else
+      log "Backup failed, sending report to $email."
+      cat $log_path | mail -s "Buckup Failed" -aFrom:raspberry@tarnbarford.net $email
+  fi
+  log "Bye."
+}
+
+main

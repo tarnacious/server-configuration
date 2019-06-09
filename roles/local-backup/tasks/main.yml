@@ -15,8 +15,36 @@
     dest: /mnt/remote
     state: directory
 
+- name: create /var/log/local-backup
+  file:
+    dest: /var/log/local-backup
+    state: directory
+
 - name: fstab with network drive
   template:
     src: templates/fstab
     dest: /etc/fstab
   notify: remount all
+
+- name: setup wpa-supplicant
+  template:
+    src: templates/wpa-supplicant.conf
+    dest: /etc/wpa_supplicant/wpa_supplicant.conf
+
+- name: setup interfaces
+  template:
+    src: templates/interfaces
+    dest: /etc/network/interfaces
+
+- name: copy sync script
+  template:
+    src: templates/sync
+    dest: /srv/sync
+    mode: u+x
+
+- name: setup cron job
+  cron:
+    name: "run sync script"
+    minute: "0"
+    hour: "2"
+    job: "/srv/sync"
