@@ -4,7 +4,7 @@
     state: present
 
 - name: add haproxy.cfg
-  copy:
+  template:
     src: templates/haproxy.cfg
     dest: /etc/haproxy/haproxy.cfg
   notify: restart haproxy
