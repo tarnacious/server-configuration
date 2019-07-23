@@ -10,6 +10,16 @@ if address :is "from" "panic@taktsoft.com"
     fileinto "brainsome";
 }
 
+if address :is "from" "hosting@brainsome.de"
+{
+    fileinto "brainsome";
+}
+
+if address :is "from" "developers@toria.com"
+{
+    fileinto "brainsome";
+}
+
 if address :is "to" "external-services@torial.com"
 {
     fileinto "brainsome";
