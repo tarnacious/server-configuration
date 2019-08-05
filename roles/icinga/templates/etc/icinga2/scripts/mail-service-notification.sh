@@ -16,4 +16,4 @@ Comment: [$NOTIFICATIONAUTHORNAME] $NOTIFICATIONCOMMENT
 TEMPLATE
 `
 
-(echo "Subject: $NOTIFICATIONTYPE - $HOSTDISPLAYNAME - $SERVICEDISPLAYNAME IS $SERVICESTATE"; /usr/bin/printf "%b" "$template") | sendmail $USEREMAIL
+(echo "Subject: $NOTIFICATIONTYPE - $HOSTDISPLAYNAME - $SERVICEDISPLAYNAME IS $SERVICESTATE"; /usr/bin/printf "%b" "$template") | sendmail -f icinga@tarnbarford.net $USEREMAIL
