@@ -11,3 +11,4 @@
     - certificates
     - munin-node
     - icinga-plugins
+    - letsencrypt-apache
