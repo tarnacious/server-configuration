@@ -32,7 +32,7 @@
     direction: routed
 
 - name: add before.rules
-  copy:
+  template:
     src: templates/ufw/before.rules
     dest: /etc/ufw/before.rules
   notify: reload ufw
