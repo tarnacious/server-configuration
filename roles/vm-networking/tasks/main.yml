@@ -8,3 +8,8 @@
   template:
     src: templates/interfaces
     dest: /etc/network/interfaces
+
+- name: set /etc/resolv.conf
+  template:
+    src: templates/resolv.conf
+    dest: /etc/resolv.conf
