@@ -1,0 +1,26 @@
+if [ $# -lt 2 ]
+then
+        echo "author: Tarn Barford (http://tarnbarford.net)"
+        echo "usage: $0 domain_name disk_path" 1>&2
+        exit 1
+fi
+
+domain_name=$1
+disk_path=$2
+
+#chown libvirt-qemu:libvirt-qemu $disk_path
+
+virt-install \
+  --name $domain_name \
+  --ram 4096 \
+  --disk path=$disk_path \
+  --vcpus 2 \
+  --os-type linux \
+  --os-variant debian9 \
+  --graphics none \
+  --console pty,target_type=serial \
+  --noautoconsole \
+  --network bridge=virbr0 \
+  --import
+
+#  --network bridge=br0 \
