@@ -8,7 +8,7 @@
 
 - name: Copy icinga client plugins
   copy:
-    src: templates/{{ item }}
+    src: "{{ item }}"
     dest: "/{{ item }}"
     mode: "a+x"
   with_items:
