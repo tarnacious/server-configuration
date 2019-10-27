@@ -28,3 +28,14 @@
     src: templates/nginx.conf
     dest: /etc/nginx/sites-enabled/default
   notify: restart nginx
+
+- name: Check if wp-cli exists
+  stat: path="/usr/bin/wp"
+  register: wpcli_exist
+
+- name: Download wp-cli
+  get_url:
+    url: 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar'
+    dest: "/usr/bin/wp"
+    mode: '0755'
+  when: not wpcli_exist.stat.exists

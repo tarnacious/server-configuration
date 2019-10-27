@@ -4,3 +4,10 @@ This role configures a basic nginx PHP evirnonment. The actual wordpress
 sources, database scripts and SSL certificates are managed via the backup
 system.
 
+## wp-cli
+
+The tool https://wp-cli.org/ is installed to manage the wordpress instance.
+
+  su bab -c 'wp plugin --path=/var/www/bab/wordpress update --all'
+  su bab -c 'wp core --path=/var/www/bab/wordpress update'
+
