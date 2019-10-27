@@ -1,0 +1,5 @@
+- name: Copy default buster sources
+  copy:
+    src: templates/sources.list
+    dest: /etc/apt/sources.list
+  notify: restart nginx
