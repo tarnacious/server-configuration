@@ -153,6 +153,7 @@ chroot $MNT_DIR apt-get clean || fail "unable to clean apt cache"
 
 sed -i "s|${DISK}p1|/dev/vda1|g" $MNT_DIR/boot/grub/grub.cfg
 sed -i "s|${DISK}p2|/dev/vda2|g" $MNT_DIR/boot/grub/grub.cfg
+sed -i "s|${DISK}p2|/dev/vda3|g" $MNT_DIR/boot/grub/grub.cfg
 
 echo "Enter root password:"
 while ! chroot $MNT_DIR passwd root
