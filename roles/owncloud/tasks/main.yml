@@ -8,11 +8,11 @@
     - apt-transport-https
 
 - apt_key:
-    url: https://download.owncloud.org/download/repositories/stable/Debian_9.0/Release.key
+    url: https://download.owncloud.org/download/repositories/stable/Debian_10/Release.key
     state: present
 
 - apt_repository:
-    repo: deb https://download.owncloud.org/download/repositories/stable/Debian_9.0/ /
+    repo: deb https://download.owncloud.org/download/repositories/stable/Debian_10/ /
     state: present
 
 - name: Install list of packages
@@ -28,25 +28,25 @@
     - libapache2-mod-php7.0
     - openssl
     - php-imagick
-    - php7.0-common
-    - php7.0-curl
-    - php7.0-gd
-    - php7.0-mbstring
-    - php7.0-imap
-    - php7.0-intl
-    - php7.0-json
+    - php7.3-common
+    - php7.3-curl
+    - php7.3-gd
+    - php7.3-mbstring
+    - php7.3-imap
+    - php7.3-intl
+    - php7.3-json
       #- php7.0-ldap
-    - php7.0-mbstring
-    - php7.0-mcrypt
-    - php7.0-mysql
+    - php7.3-mbstring
+      #- php7.3-mcrypt
+    - php7.3-mysql
       #- php7.0-pgsql
       #- php-smbclient
       #- php-ssh2
       #- php7.0-sqlite3
-    - php7.0-xml
-    - php7.0-zip
-    - php7.0-apcu
-    - php7.0-redis
+    - php7.3-xml
+    - php7.3-zip
+    - php7.3-apcu
+    - php7.3-redis
     - redis-server
     # ansible
     - python-mysqldb
