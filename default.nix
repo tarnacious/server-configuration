@@ -16,6 +16,7 @@ in
     ];
     shellHook = ''
       export PIP_PREFIX="$(pwd)/_build/pip_packages"
+      export PATH=$PATH:$PIP_PREFIX/bin
       export PYTHONPATH="$(pwd)/_build/pip_packages/lib/python3.6/site-packages:$PYTHONPATH" 
       unset SOURCE_DATE_EPOCH
     '';
