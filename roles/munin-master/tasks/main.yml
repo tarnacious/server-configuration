@@ -79,12 +79,6 @@
     dest: /etc/apache2/conf-enabled/apache24.conf
   notify: restart apache2
 
-- name: Copy htpassword
-  template:
-    src: htpasswd
-    dest: /etc/apache2/htpasswd
-  notify: restart apache2
-
 - name: enable ssl
   apache2_module:
     state: present
