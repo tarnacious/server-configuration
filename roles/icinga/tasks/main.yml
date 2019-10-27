@@ -106,6 +106,7 @@
     - etc/icinga2/conf.d/api-users.conf
     - etc/icinga2/conf.d/services.conf
     - etc/icinga2/conf.d/users.conf
+    - etc/icinga2/conf.d/notifications.conf
     - etc/icinga2/pki/ca.crt
     - etc/icinga2/pki/client.crt
     - etc/icinga2/pki/client.key
