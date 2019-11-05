@@ -75,6 +75,11 @@
     state: directory
     mode: 0755
 
+- name: copy dh params
+  template:
+    src: templates/dh.pem
+    dest: /etc/dovecot/dh.pem
+
 - name: copies mail sql script
   copy:
     src: templates/create_database.sql
