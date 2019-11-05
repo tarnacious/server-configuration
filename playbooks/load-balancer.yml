@@ -5,6 +5,7 @@
     - vm-networking
     - sshd
     - hostname
+    - apt
     - firewall
     - haproxy
     - certificates
