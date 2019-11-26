@@ -3,6 +3,7 @@
   become: yes
   roles:
     - vm-networking
+    - apt
     - hostname
     - sshd
     - certificates
