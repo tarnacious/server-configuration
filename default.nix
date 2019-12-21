@@ -15,9 +15,10 @@ in
       libxslt
     ];
     shellHook = ''
-      export PIP_PREFIX="$(pwd)/_build/pip_packages"
+      export PIP_PREFIX="$(pwd)/.build/pip_packages"
       export PATH=$PATH:$PIP_PREFIX/bin
-      export PYTHONPATH="$(pwd)/_build/pip_packages/lib/python3.6/site-packages:$PYTHONPATH" 
+      export PATH=$PATH:$(pwd)/scripts
+      export PYTHONPATH="$(pwd)/.build/pip_packages/lib/python3.6/site-packages:$PYTHONPATH"
       unset SOURCE_DATE_EPOCH
     '';
   }
