@@ -10,8 +10,8 @@
     state: present
     update_cache: yes
   with_items:
-    - php7.0-mysql
-    - php7.0-curl
+    - php7.3-mysql
+    - php7.3-curl
     - mariadb-server
     - mariadb-client
     - icinga2
@@ -120,17 +120,28 @@
     src: templates/etc/icinga2/zones.d/icinga.tarnbarford.net/template.conf
     dest: "/etc/icinga2/zones.d/icinga.tarnbarford.net/{{ item.name }}.conf"
   with_items:
-    - { name: "hypervisor.tarnbarford.net", address6: "{{ hypervisor_ipv6_address }}" }
-    - { name: "bacula.tarnbarford.net", address6: "{{ bacula_ipv6_address }}" }
-    - { name: "monitoring.tarnbarford.net", address6: "{{ monitoring_ipv6_address }}" }
-    - { name: "load-balancer.tarnbarford.net", address6: "{{ load_balancer_ipv6_address }}" }
-    - { name: "tarnbarford.net", address6: "{{ tarnbarford_ipv6_address }}" }
-    - { name: "bridgesacrossborders.net", address6: "{{ bab_website_ipv6_address }}" }
-    - { name: "owncloud.tarnbarford.net", address6: "{{ owncloud_ipv6_address }}" }
-    - { name: "mail.tarnbarford.net", address6: "{{ mail_server_ipv6_address }}" }
-    - { name: "debugproxy.com", address6: "{{ debugproxy_ipv6_address }}" }
-    - { name: "ns1.tarnbarford.net", address6: "{{ ns1_ipv6_address }}" }
-    - { name: "ns2.tarnbarford.net", address6: "{{ ns2_ipv6_address }}" }
+    - name: "hypervisor.tarnbarford.net"
+      address6: "{{ hosts.hypervisor.ipv6 }}"
+    - name: "bacula.tarnbarford.net"
+      address6: "{{ hosts.bacula.ipv6 }}"
+    - name: "monitoring.tarnbarford.net", 
+      address6: "{{ hosts.monitoring.ipv6 }}" }
+    - name: "load-balancer.tarnbarford.net"
+      address6: "{{ hosts.load_balancer.ipv6 }}" 
+    - name: "tarnbarford.net"
+      address6: "{{ hosts.tarnbarford.ipv6 }}" 
+    - name: "bridgesacrossborders.net"
+      address6: "{{ hosts.bab_website.ipv6 }}" 
+    - name: "owncloud.tarnbarford.net"
+      address6: "{{ hosts.owncloud.ipv6 }}" 
+    - name: "mail.tarnbarford.net"
+      address6: "{{ hosts.mail_server.ipv6 }}" 
+    - name: "debugproxy.com" 
+      address6: "{{ hosts.debugproxy.ipv6 }}" 
+    - name: "ns1.tarnbarford.net"
+      address6: "{{ hosts.ns1.ipv6 }}" 
+    - name: "ns2.tarnbarford.net"
+      address6: "{{ hosts.ns2.ipv6 }}" 
   notify: restart icinga2
 
 - name: Allow http and https through firewall

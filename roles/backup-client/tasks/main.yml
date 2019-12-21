@@ -22,5 +22,5 @@
   ufw:
     rule: allow
     port: 9102
-    from_ip: "{{ bacula_ipv6_address }}"
+    from_ip: "{{ hosts.bacula.ipv6 }}"
     proto: tcp

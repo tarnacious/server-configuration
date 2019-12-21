@@ -9,17 +9,17 @@ $TTL    604800
 @               IN      NS      ns1.tarnbarford.net.
 @               IN      NS      ns2.tarnbarford.net.
 ; a records
-ns1             IN      A       136.243.14.198
-ns2             IN      A       134.209.255.175
-@               IN      A       136.243.14.198
-www             IN      A       136.243.14.198
-icinga          IN      A       136.243.14.198
-mail            IN      A       136.243.14.198
-monitoring      IN      A       136.243.14.198
-owncloud        IN      A       136.243.14.198
-@               IN      AAAA    2a01:4f8:211:2845::9
-owncloud        IN      AAAA    2a01:4f8:211:2845::11
-mail            IN      AAAA    2a01:4f8:211:2845::12
+ns1             IN      A       {{ hosts.hypervisor.ipv4 }}
+ns2             IN      A       {{ hosts.ns2.ipv4 }}
+@               IN      A       {{ hosts.hypervisor.ipv4 }}
+www             IN      A       {{ hosts.hypervisor.ipv4 }}
+icinga          IN      A       {{ hosts.hypervisor.ipv4 }}
+mail            IN      A       {{ hosts.hypervisor.ipv4 }}
+monitoring      IN      A       {{ hosts.hypervisor.ipv4 }}
+owncloud        IN      A       {{ hosts.hypervisor.ipv4 }}
+@               IN      AAAA    {{ hosts.tarnbarford.ipv6 }}
+owncloud        IN      AAAA    {{ hosts.owncloud.ipv6 }}
+mail            IN      AAAA    {{ hosts.mail_server.ipv6 }}
 @               IN      MX      1  mail.tarnbarford.net.
 _dmarc          IN      TXT     "v=DMARC1;p=reject;pct=100;rua=mailto:postmaster@tarnbarford.net"
 @               IN      TXT     "v=spf1 mx a -all"

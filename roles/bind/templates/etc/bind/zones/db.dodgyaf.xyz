@@ -9,5 +9,5 @@ $TTL    604800
 @               IN      NS      ns1.tarnbarford.net.
 @               IN      NS      ns2.tarnbarford.net.
 ; a records
-@               IN      A       136.243.14.198
-www             IN      A       136.243.14.198
+@               IN      A       {{ hosts.hypervisor.ipv4 }}
+www             IN      A       {{ hosts.hypervisor.ipv4 }}

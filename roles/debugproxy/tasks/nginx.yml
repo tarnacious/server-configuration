@@ -1,0 +1,11 @@
+- name: Remove default config 
+  file:
+    path: /etc/nginx/sites-enabled/default 
+    state: absent
+  notify: restart nginx 
+
+- name: Copy config 
+  template:
+    src: templates/nginx/debugproxy
+    dest: /etc/nginx/sites-enabled/debugproxy 
+  notify: restart nginx 

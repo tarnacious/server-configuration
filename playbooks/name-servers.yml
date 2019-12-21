@@ -17,7 +17,6 @@
   user: root
   become: yes
   roles:
-    - apt
     - hostname
     - sshd
     - firewall

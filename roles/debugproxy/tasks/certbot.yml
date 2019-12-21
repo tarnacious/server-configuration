@@ -1,0 +1,14 @@
+- name: stop nginx
+  service: 
+    name: nginx
+    state: stopped
+
+- name: run cert bot server
+  shell: "certbot certonly --standalone -d {{ debugproxy_domain }} --email {{ debugproxy_email }} --agree-tos"
+  args: 
+    creates: "/etc/letsencrypt/live/{{ debugproxy_domain }}"
+
+- name: restart nginx
+  service: 
+    name: nginx
+    state: started

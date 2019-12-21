@@ -4,7 +4,7 @@
     state: present
     update_cache: yes
   with_items:
-    - perl-modules-5.24
+    - perl-modules-5.28
 
 - name: Copy icinga client plugins
   copy:

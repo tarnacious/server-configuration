@@ -1,0 +1,20 @@
+# this is quite old
+#- name: postgres config
+#  template:
+#    src: templates/postgresql.conf
+#    dest: /etc/postgresql/9.6/main/postgresql.conf
+#  notify: restart postgres 
+
+- name: createdb  
+  postgresql_db:
+    name: debugproxy
+  become: yes
+  become_user: postgres
+
+- postgresql_user:
+    db: debugproxy
+    user: debugproxy
+    password: "{{ debugproxy_postgres_password }}"
+    encrypted: yes
+  become: yes
+  become_user: postgres

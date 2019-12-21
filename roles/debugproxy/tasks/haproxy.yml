@@ -1,0 +1,9 @@
+- name: Copy haproxy config 
+  template:
+    src: templates/haproxy/haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+
+- name: Copy haproxy proxy auth error page 
+  template:
+    src: templates/haproxy/407.html
+    dest: /etc/haproxy/errors/407.html

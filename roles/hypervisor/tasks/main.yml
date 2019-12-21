@@ -43,7 +43,7 @@
     policy: reject
 
 - name: add /etc/network/interfaces
-  copy:
+  template:
     src: templates/interfaces
     dest: /etc/network/interfaces
   notify: restart networking

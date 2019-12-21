@@ -1,0 +1,38 @@
+- name: install packages
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - git
+    - python3
+    - fail2ban
+    - nodejs
+    - python-psycopg2 
+    - postgresql 
+    - libpq-dev
+    - redis-server
+    - python3-dev
+    - build-essential
+    - libffi-dev
+    - libssl-dev
+    - python3-venv
+    - supervisor
+    - certbot 
+    - haproxy
+    - ufw
+    - nginx
+    - ruby-sass
+    - npm
+
+
+- include: timezone.yml
+- include: user.yml
+- include: firewall.yml
+- include: postgres.yml
+- include: debugproxy.yml
+#  not handling re-running 
+#- include: certbot.yml
+- include: haproxy.yml
+- include: supervisor.yml
+- include: nginx.yml

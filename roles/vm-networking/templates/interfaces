@@ -3,14 +3,14 @@ source /etc/network/interfaces.d/*
 auto lo
 iface lo inet loopback
 
-allow-hotplug ens2
-iface ens2 inet static
+allow-hotplug {{ ipv4_device }}
+iface {{ ipv4_device }} inet static
 gateway {{ bridge_ipv4_gateway }}
-address {{ ipv4_address }}
+address {{ hosts[hostname | replace('-', '_')].ipv4 }}
 netmask 255.255.255.0
 
-allow-hotplug ens3
-iface ens3 inet6 static
-gateway {{ bridge_ipv6_gateway }}
-address {{ ipv6_address }}
+allow-hotplug {{ ipv6_device }}
+iface {{ ipv6_device }} inet6 static
+gateway {{ hosts.hypervisor.ipv6 }}
+address {{ hosts[hostname | replace('-', '_')].ipv6 }}
 netmask 64

@@ -1,0 +1,35 @@
+- name: Add debugproxy user group
+  group:
+    name: debugproxy
+    state: present
+
+- name: Add debugproxy user
+  user:
+    name: debugproxy
+    shell: /bin/bash
+    group: debugproxy
+
+- name: Ensures debugproxy SSH dir exists
+  file: 
+    path: /home/debugproxy/.ssh 
+    state: directory
+    owner: debugproxy
+    group: debugproxy
+
+- name: Copy SSH public key 
+  copy:
+    src: templates/ssh_keys/id_rsa.pub
+    dest: /home/debugproxy/.ssh/id_rsa.pub
+    owner: debugproxy
+    group: debugproxy
+    mode: 0600
+  become: yes
+
+- name: Copy SSH private key 
+  copy:
+    src: templates/ssh_keys/id_rsa
+    dest: /home/debugproxy/.ssh/id_rsa
+    owner: debugproxy
+    group: debugproxy
+    mode: 0600
+  become: yes

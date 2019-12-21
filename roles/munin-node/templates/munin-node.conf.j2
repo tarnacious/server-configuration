@@ -57,10 +57,10 @@ host_name {{ hostname }}
 # cidr_deny  192.0.2.42/32
 #
 #
-#cidr_allow ::ffff:136.243.14.198/128
-cidr_allow {{ hypervisor_ipv4_address }}/32
-cidr_allow {{ monitoring_ipv4_address }}/32
-allow ^{{ monitoring_ipv6_address }}$
+#cidr_allow ::ffff:{{ hosts.hypervisor.ipv4 }}/128
+cidr_allow {{ hosts.hypervisor.ipv4 }}/32
+cidr_allow {{ hosts.monitoring.ipv4 }}/32
+allow ^{{ hosts.monitoring.ipv6 }}$
 
 # Which address to bind to;
 host *

@@ -1,0 +1,12 @@
+- name: Install Supervisor
+  apt:
+    name: supervisor
+    state: present
+    force: yes
+    update_cache: yes
+
+- name: Copy config 
+  copy:
+    src: templates/supervisor/debugproxy.conf
+    dest: /etc/supervisor/conf.d/debugproxy.conf
+  notify: restart supervisor 

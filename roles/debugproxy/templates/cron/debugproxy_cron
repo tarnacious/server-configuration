@@ -1,0 +1,3 @@
+*/2 * * * * postgres psql debugproxy -c "delete from request where created_at < now() - interval '20 minutes';"
+1-59/2 * * * * postgres psql debugproxy -c "update proxy_session set is_active=false where updated_at < now() - interval '20 minutes' and is_active=true;"
+*/5 * * * * root find /home/debugproxy/debugproxy/data -type f -mmin +20 -delete

@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -e
+
+if [[ $# -eq 0 ]] ; then
+    echo "usage: ${0##*/} fqdn"
+    exit 0
+fi
+
+ANSIBLE_VAULT=$(find . -name 'ansible-vault' | head -n 1)
+DECRYPT="$ANSIBLE_VAULT decrypt"
+ENCRYPT="$ANSIBLE_VAULT encrypt"
+CA_DIR=./inventory/ca
+CERTS_DIR=./inventory/ca/certs
+COMMON_NAME=$1
+SUBJECT="/C=DE/ST=Berlin/L=Berlin/O=tarnbarford.net/OU=tarnbarford.net/CN=$COMMON_NAME"
+
+clean() {
+  echo "Cleaning up"
+
+  [ -e "ca.crt" ] && rm "ca.crt"
+  [ -e "$COMMON_NAME.csr" ] && rm "$COMMON_NAME.csr"
+  [ -e "$CERTS_DIR/$COMMON_NAME.csr" ] && rm "$CERTS_DIR/$COMMON_NAME.csr"
+}
+
+trap clean EXIT
+
+mkdir -p $CERTS_DIR
+
+echo "Creating $COMMON_NAME.key"
+
+openssl genrsa 4096 | $ENCRYPT > $CERTS_DIR/$COMMON_NAME.key
+
+echo "Creating $COMMON_NAME.csr"
+
+cat $CERTS_DIR/$COMMON_NAME.key | $DECRYPT | openssl req -new -key /dev/stdin -subj $SUBJECT | $ENCRYPT > $CERTS_DIR/$COMMON_NAME.csr
+
+echo "Decrypting CA certificate to sign cert"
+cat $CA_DIR/ca.crt | $DECRYPT > ca.crt
+
+echo "Decrypting CSR to sign"
+cat $CERTS_DIR/$COMMON_NAME.csr | $DECRYPT > $COMMON_NAME.csr
+
+echo "Signing $COMMON_NAME.crt"
+cat $CA_DIR/ca.key | $DECRYPT | openssl x509 -req -days 365 -sha256 -in $COMMON_NAME.csr -CA ca.crt -CAkey /dev/stdin -set_serial 3 | $ENCRYPT > $CERTS_DIR/$COMMON_NAME.crt
+
+echo "Done"
