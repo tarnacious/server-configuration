@@ -2,6 +2,7 @@
   user: root
   become: yes
   roles:
+    - apt
     - vm-networking
     - hostname
     - sshd
@@ -16,6 +17,7 @@
   user: root
   become: yes
   roles:
+    - apt
     - hostname
     - sshd
     - firewall
