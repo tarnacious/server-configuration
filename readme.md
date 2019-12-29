@@ -1,7 +1,7 @@
 ## Server Configuration
 
-This is the ansible configuration for my personal servers. The inventory and
-secrets are not included in this repository.
+This is the ansible configuration for my personal servers. Sensitive data is
+encrypted with ansible-vault.
 
 ## Servers
 
