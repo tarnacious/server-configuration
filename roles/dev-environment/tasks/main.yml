@@ -30,10 +30,20 @@
     - offlineimaprc
     - muttrc
 
-- name: Creates directory
+- name: Create ~/.vim directory
+  file:
+    path: /home/tarn/.vim
+    state: directory
+    group: tarn
+    owner: tarn
+    recurse: yes
+
+- name: Create ~/.vim/autoload directory
   file:
     path: /home/tarn/.vim/autoload
     state: directory
+    group: tarn
+    owner: tarn
     recurse: yes
 
 - name: Download vim plugin manager
