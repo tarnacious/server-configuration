@@ -1,7 +1,5 @@
 #!/bin/bash
 # Configs overwritable via environment variables
-VSYSTEM=${VSYSTEM:=qemu}         # Either 'qemu' or 'kvm'
-FLAVOUR=${FLAVOUR:=debian}       # Either 'debian' or 'ubuntu'
 INCLUDES=${INCLUDES:="less,vim,sudo,openssh-server,acpid,dbus"}
 ARCH=${ARCH:=amd64}
 IMGSIZE=${IMGSIZE:=80G}
@@ -14,7 +12,7 @@ clean_debian() {
         sleep 1s
         [ "$MNT_DIR" != "" ] && umount $MNT_DIR
         sleep 1s
-        [ "$DISK" != "" ] && $VSYSTEM-nbd -d $DISK
+        [ "$DISK" != "" ] && qemu-nbd -d $DISK
         sleep 1s
         [ "$MNT_DIR" != "" ] && rm -r $MNT_DIR
 }
@@ -51,14 +49,10 @@ DISK=
 
 if [ ! -f $FILE ]; then
     echo "Creating $FILE"
-    $VSYSTEM-img create -f qcow2 $FILE $IMGSIZE
+    qemu-img create -f qcow2 $FILE $IMGSIZE
 fi
 
-if [ $FLAVOUR == "debian" ]; then
-    BOOT_PKG="linux-image-$ARCH grub2"
-elif [ $FLAVOUR == "ubuntu" ]; then
-    BOOT_PKG="linux-image-generic grub-pc"
-fi
+BOOT_PKG="linux-image-$ARCH grub2"
 
 echo "Looking for nbd device..."
 
@@ -66,7 +60,7 @@ modprobe nbd max_part=16 || fail "failed to load nbd module into kernel"
 
 for i in /dev/nbd*
 do
-        if $VSYSTEM-nbd -c $i $FILE
+        if qemu-nbd -c $i $FILE
         then
                 DISK=$i
                 break
