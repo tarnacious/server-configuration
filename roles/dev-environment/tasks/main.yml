@@ -1,0 +1,48 @@
+- name: Install packages
+  apt:
+    name: ['vim', 'git', 'curl', 'wget', 'tmux', 'net-tools']
+    state: present
+    update_cache: yes
+
+- name: Clone dotfiles repository
+  git:
+    repo: git@github.com:tarnacious/dotfiles.git
+    dest: /home/tarn/.dotfiles
+    version: master
+    accept_hostkey: True
+    force: yes
+  become: yes
+  become_user: tarn
+
+- name: Create symbolic links to dotfiles
+  file:
+    src: "/home/tarn/.dotfiles/.{{ item }}"
+    dest: "/home/tarn/.{{ item }}"
+    state: link
+  with_items:
+    - vimrc
+    - gitconfig
+    - gitignore.global
+    - bash_profile
+#    - bashrc
+    - tmux.conf
+    - msmtprc
+    - offlineimaprc
+    - muttrc
+
+- name: Creates directory
+  file:
+    path: /home/tarn/.vim/autoload
+    state: directory
+    recurse: yes
+
+- name: Download vim plugin manager
+  get_url:
+    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    dest: /home/tarn/.vim/autoload/plug.vim
+    checksum: sha256:f4292e1894699436441ffaebef240f439da8db1d2fcba227d21bebdafaaee7d6
+
+- name: Ensure a locale exists
+  locale_gen:
+    name: en_US.UTF-8
+    state: present

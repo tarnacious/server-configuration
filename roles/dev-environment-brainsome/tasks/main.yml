@@ -1,0 +1,64 @@
+- apt_key:
+    url: https://dl.yarnpkg.com/debian/pubkey.gpg
+    state: present
+
+- apt_repository:
+    repo: deb https://dl.yarnpkg.com/debian/ stable main
+    state: present
+
+- name: Install packages
+  apt:
+    name: [
+      'nodejs',
+      'npm',
+      'yarn',
+      'build-essential',
+      'libssl-dev',
+      'libreadline-dev',
+      'libpq-dev',
+      'tzdata',
+      'imagemagick',
+      'libfontconfig1',
+      'libfreetype6',
+      'netcat',
+      'ssh',
+      'curl',
+      'redis-server',
+      'memcached',
+      'libjpeg-turbo-progs',
+      'pngcrush',
+      'libicu-dev',
+      'pandoc',
+      'git',
+      'libicu-dev',
+      'chromium',
+      #'chromedriver',
+      ]
+    state: present
+    update_cache: yes
+
+- name: Clone piqd repository
+  git:
+    repo: git@github.com:brainsome-de/piqd.git
+    dest: /home/tarn/piqd
+    version: master
+    accept_hostkey: True
+    force: yes
+  become: yes
+  become_user: tarn
+
+- name: Clone torial repository
+  git:
+    repo: git@github.com:brainsome-de/torial.git
+    dest: /home/tarn/torial
+    version: master
+    accept_hostkey: True
+    force: yes
+  become: yes
+  become_user: tarn
+
+- name: Download chromedriver
+  unarchive:
+    src: https://chromedriver.storage.googleapis.com/78.0.3904.105/chromedriver_linux64.zip
+    dest: /usr/local/bin
+    remote_src: yes

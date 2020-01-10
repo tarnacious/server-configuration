@@ -1,0 +1,8 @@
+- hosts: brainsome-dev
+  user: root
+  become: yes
+  roles:
+    - dev-environment
+    - rbenv
+    - dev-environment-docker
+    - dev-environment-brainsome

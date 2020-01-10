@@ -1,0 +1,38 @@
+- name: Install packages
+  apt:
+    name: [
+      'git',
+      'libreadline-dev',
+      'zlib1g-dev',
+      'libreadline-dev',
+      'libncurses5-dev',
+      'autoconf',
+      'bison',
+      'libssl-dev',
+      'build-essential',
+      'libyaml-dev',
+      'libffi-dev',
+      'libssl-dev',
+      'libreadline-dev',
+      'zlib1g-dev',
+      'libgdbm-dev']
+    state: present
+    update_cache: yes
+
+
+- name: Clone rbenv repository
+  git:
+    repo: https://github.com/rbenv/rbenv.git
+    dest: /home/tarn/.rbevn
+    version: master
+    accept_hostkey: True
+  become: yes
+  become_user: tarn
+
+- name: Clone rbbuild repository
+  git:
+    repo: https://github.com/rbenv/ruby-build.git
+    dest: /home/tarn/.rbevn/plugins/ruby-build
+    accept_hostkey: True
+  become: yes
+  become_user: tarn
