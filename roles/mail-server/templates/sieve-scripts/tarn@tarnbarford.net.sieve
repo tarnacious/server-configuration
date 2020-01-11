@@ -1,5 +1,26 @@
 require ["fileinto", "reject"];
 
+
+if address :is "from" "piqd-testing@brainsome.de"
+{
+    fileinto "piqd-testing";
+}
+
+if address :is "from" "piqd-staging@brainsome.de"
+{
+    fileinto "piqd-staging";
+}
+
+if address :is "from" "nagios@monitoring.brainsome.de"
+{
+    fileinto "monitoring";
+}
+
+if address :is "from" "notifications@github.com"
+{
+    fileinto "github";
+}
+
 if address :is "from" "appstore@piqd.de"
 {
     fileinto "brainsome";
