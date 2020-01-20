@@ -1,6 +1,6 @@
 - name: Install packages
   apt:
-    name: ['vim', 'git', 'curl', 'wget', 'tmux', 'net-tools']
+    name: ['vim', 'git', 'curl', 'wget', 'tmux', 'net-tools', 'silversearcher-ag']
     state: present
     update_cache: yes
 
