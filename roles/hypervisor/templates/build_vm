@@ -74,21 +74,22 @@ echo "Connected $FILE to $DISK"
 echo "Partitioning $DISK..."
 sfdisk $DISK << EOF || fail "cannot partition $FILE"
 ,200MiB,83,*
-,4GiB,S
 ;
 EOF
 
 echo "Creating boot partition..."
 mkfs.ext4 -q ${DISK}p1 || fail "cannot create /boot ext4"
 
-echo "Creating boot partition..."
-mkswap ${DISK}p2 || fail "cannot create swap"
+#echo "Creating boot partition..."
+#mkswap ${DISK}p2 || fail "cannot create swap"
 
 echo "Creating root partition..."
-mkfs.ext4 -q ${DISK}p3 || fail "cannot create / ext4"
+mkfs.ext4 -q ${DISK}p2 || fail "cannot create / ext4"
 
 echo "Mounting root partition..."
-mount ${DISK}p3 $MNT_DIR || fail "cannot mount /"
+mount ${DISK}p2 $MNT_DIR || fail "cannot mount /"
+
+mkdir /tmp/aptcache 
 
 echo "Installing Debian..."
 debootstrap --cache-dir /tmp/aptcache --include=$INCLUDES $RELEASE $MNT_DIR || fail "cannot install onto $DISK"
@@ -147,7 +148,6 @@ chroot $MNT_DIR apt-get clean || fail "unable to clean apt cache"
 
 sed -i "s|${DISK}p1|/dev/vda1|g" $MNT_DIR/boot/grub/grub.cfg
 sed -i "s|${DISK}p2|/dev/vda2|g" $MNT_DIR/boot/grub/grub.cfg
-sed -i "s|${DISK}p2|/dev/vda3|g" $MNT_DIR/boot/grub/grub.cfg
 
 echo "Enter root password:"
 while ! chroot $MNT_DIR passwd root
