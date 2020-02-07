@@ -1,13 +1,13 @@
 - name: Install apt packages
   apt:
-    name: "{{item}}"
+    name: [
+      'munin-node',
+      'libnet-cidr-perl',
+      'libdbd-pg-perl',
+      'libwww-perl',
+      'ufw'
+    ]
     state: present
-  with_items:
-    - munin-node
-    - libnet-cidr-perl
-    - libdbd-pg-perl
-    - libwww-perl
-    - ufw
 
 - name: Copy munin config
   template:
@@ -24,6 +24,6 @@
 - name: Allow Munin Node
   ufw:
     rule: allow
-    port: 4949
+    port: '4949'
     proto: tcp
   notify: reload ufw

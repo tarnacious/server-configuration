@@ -1,10 +1,8 @@
 - name: Install packages
   apt:
-    name: "{{item}}"
+    name: "bareos-filedaemon"
     state: present
     update_cache: yes
-  with_items:
-    - bareos-filedaemon
 
 - name: copy director configuration
   template:
@@ -21,6 +19,6 @@
 - name: Allow backup in UFW
   ufw:
     rule: allow
-    port: 9102
+    port: '9102'
     from_ip: "{{ hosts.bacula.ipv6 }}"
     proto: tcp

@@ -1,12 +1,12 @@
 - name: ensure packages
   apt:
-    name: "{{item}}"
+    name: [
+      'bind9',
+      'bind9utils',
+      'bind9-doc'
+    ]
     state: present
     update_cache: yes
-  with_items:
-    - bind9
-    - bind9utils
-    - bind9-doc
 
 - name: ensure zones directory
   file:
@@ -40,9 +40,9 @@
 - name: Allow bind dns port in UFW
   ufw:
     rule: allow
-    port: 53
+    port: '53'
 
 - name: Allow bind remote name daemon control port in UFW
   ufw:
     rule: allow
-    port: 953
+    port: '953'

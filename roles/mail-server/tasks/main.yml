@@ -1,27 +1,27 @@
 - name: Install list of packages
   apt:
-    name: "{{item}}"
+    name: [
+      'dnsutils',
+      'certbot',
+      'mariadb-server',
+      'dovecot-core',
+      'dovecot-imapd',
+      'dovecot-lmtpd',
+      'dovecot-mysql',
+      'dovecot-sieve',
+      'dovecot-managesieved',
+      'postfix',
+      'postfix-mysql',
+      'nginx',
+      'python-certbot-nginx',
+      'spamassassin',
+      'spamc',
+      'opendkim',
+      'opendkim-tools',
+      'opendmarc'
+    ]
     state: present
     update_cache: yes
-  with_items:
-    - dnsutils
-    - certbot
-    - mariadb-server
-    - dovecot-core
-    - dovecot-imapd
-    - dovecot-lmtpd
-    - dovecot-mysql
-    - dovecot-sieve
-    - dovecot-managesieved
-    - postfix
-    - postfix-mysql
-    - nginx
-    - python-certbot-nginx
-    - spamassassin
-    - spamc
-    - opendkim
-    - opendkim-tools
-    - opendmarc
 
 - name: sets /etc/mailname
   copy:
@@ -234,8 +234,8 @@
     port: '{{ item }}'
     proto: tcp
   with_items:
-    - 80
-    - 443
-    - 587
-    - 25
-    - 993
+    - '80'
+    - '443'
+    - '587'
+    - '25'
+    - '993'

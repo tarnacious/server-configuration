@@ -1,10 +1,8 @@
 - name: Install list of packages
   apt:
-    name: "{{item}}"
+    name: "icinga2"
     state: present
     update_cache: yes
-  with_items:
-    - icinga2
 
 - name: Copy icinga client config
   template:
@@ -22,5 +20,5 @@
 - name: Allow http and https through firewall
   ufw:
     rule: allow
-    port: 5665
+    port: '5665'
     from_ip: "{{ hosts.icinga.ipv6 }}"
