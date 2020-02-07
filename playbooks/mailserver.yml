@@ -4,6 +4,7 @@
   roles:
     - vm-networking
     - hostname
+    - apt
     - sshd
     - firewall
     - certificates
