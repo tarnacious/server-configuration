@@ -1,0 +1,102 @@
+- name: Create /etc/cron.d/stats_cron
+  template:
+    src: templates/munin/stats_cron
+    dest: /etc/cron.d/stats_cron
+  become: true
+
+- name: Install apt packages
+  apt:
+    name: [
+      'python-pip',
+      'munin-node',
+      'libnet-cidr-perl',
+      'libdbd-pg-perl',
+      'libwww-perl'
+    ]
+    state: present
+
+- name: install pip packages
+  pip:
+    name: [
+      'pymunin',
+      'psutil'
+    ]
+
+- name: Munin Plugin Configuration
+  template:
+    src: templates/munin/munin_node
+    dest: /etc/munin/plugin-conf.d/munin-node
+  become: true
+
+- name: Remove unwanted config
+  file:
+    path: /etc/munin/plugin-conf.d/munin_node
+    state: absent
+  become: true
+
+- name: Link munin modules
+  file:
+    src: '/usr/share/munin/plugins/{{ item.src }}'
+    dest: '/etc/munin/plugins/{{ item.dest }}'
+    state: link
+  with_items:
+    - { src: 'postgres_autovacuum', dest: 'postgres_autovacuum' }
+    - { src: 'postgres_bgwriter', dest: 'postgres_bgwriter' }
+    - { src: 'postgres_cache_', dest: 'postgres_cache_debugproxy' }
+    - { src: 'postgres_checkpoints', dest: 'postgres_checkpoints' } 
+    - { src: 'postgres_connections_', dest: 'postgres_connections_debugproxy' } 
+    - { src: 'postgres_connections_db', dest: 'postgres_connections_db' } 
+    - { src: 'postgres_locks_', dest: 'postgres_locks_debugproxy' } 
+    - { src: 'postgres_oldest_prepared_xact_', dest: 'postgres_oldest_prepared_xact_debugproxy' } 
+    - { src: 'postgres_prepared_xacts_', dest: 'postgres_prepared_xacts_debugproxy' } 
+    - { src: 'postgres_querylength_', dest: 'postgres_querylength_debugproxy' } 
+    - { src: 'postgres_scans_', dest: 'postgres_scans_debugproxy' } 
+    - { src: 'postgres_size_', dest: 'postgres_size_debugproxy' } 
+    - { src: 'postgres_transactions_', dest: 'postgres_transactions_debugproxy' } 
+    - { src: 'postgres_tuples_', dest: 'postgres_tuples_debugproxy' } 
+    - { src: 'postgres_users', dest: 'postgres_users' } 
+    - { src: 'postgres_xlog', dest: 'postgres_xlog' } 
+    - { src: 'uptime', dest: 'uptime' } 
+    - { src: 'users', dest: 'users' } 
+    - { src: 'apt', dest: 'apt' } 
+    - { src: 'df_abs', dest: 'df_abs' } 
+    - { src: 'fw_conntrack', dest: 'fw_conntrack' } 
+    - { src: 'fw_forwarded_local', dest: 'fw_forwarded_local' } 
+    - { src: 'fw_packets', dest: 'fw_packets' } 
+    - { src: 'if_', dest: 'if_eno1' } 
+    - { src: 'if_err_', dest: 'if_err_eno1' } 
+    - { src: 'munin_stats', dest: 'munin_stats' } 
+    - { src: 'entropy', dest: 'entropy' } 
+    - { src: 'cpu', dest: 'cpu' } 
+    - { src: 'interrupts', dest: 'interrupts' } 
+    - { src: 'memory', dest: 'memory' } 
+    - { src: 'load', dest: 'load' } 
+    - { src: 'processes', dest: 'processes' } 
+    - { src: 'open_files', dest: 'open_files' } 
+    - { src: 'open_inodes', dest: 'open_inodes' } 
+    - { src: 'nginx_request', dest: 'nginx_request' } 
+    - { src: 'nginx_status', dest: 'nginx_status' } 
+    - { src: 'haproxy_', dest: 'haproxy_frontend' } 
+    - { src: 'haproxy_', dest: 'haproxy_backend' } 
+    - { src: 'haproxy_ng', dest: 'haproxy_ng' } 
+
+- file:
+    path: '/etc/munin/plugins/{{ item.dest }}'
+    state: absent
+  with_items:
+  - { src: 'acpi', dest: 'acpi' }
+
+- template:
+    src: 'templates/munin/supervisor.py'
+    dest: '/etc/munin/plugins/supervisor_{{ item.name }}'
+    mode: 0550
+  with_items:
+    - { name: 'proxyworker' }
+    - { name: 'proxyserver' }
+    - { name: 'proxyweb' }
+
+- template:
+    src: 'templates/munin/stats.py'
+    dest: '/etc/munin/plugins/debugproxy_stats'
+    owner: 'debugproxy'
+    mode: 0550

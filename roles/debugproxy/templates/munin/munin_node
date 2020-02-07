@@ -1,0 +1,60 @@
+# This file is used to configure how the plugins are invoked.
+# Place in /etc/munin/plugin-conf.d/ or corresponding directory.
+#
+# PLEASE NOTE: Changes in the plugin-conf.d directory are only
+# read at munin-node startup, so restart at any changes.
+#
+# user <user>         # Set the user to run the plugin as.
+# group <group>       # Set the group to run the plugin as.
+# command <command>   # Run <command> instead of the plugin. %c expands to
+#                       what would normally be run.
+# env.<variable> <value> # Sets <variable> in the plugin's environment, see the
+#                       individual plugins to find out which variables they
+#                       care about.
+#
+#
+
+[nginx*]
+env.url http://localhost:8555/
+
+[debugproxy_stats]
+user debugproxy
+group adm
+
+[haproxy_*]
+env.url http://localhost:8556/;csv;norefresh  
+
+[supervisor*]
+user root
+env.url unix:///var/run/supervisor.sock
+
+[df*]
+env.warning 92
+env.critical 98
+env.exclude_re ^/run/user
+
+[fw_conntrack]
+user root
+
+[fw_forwarded_local]
+user root
+
+[if_*]
+user root
+
+[if_err_*]
+user nobody
+
+[ip_*]
+user root
+
+[ipmi_*]
+user root
+
+[postgres_*]
+user postgres
+env.PGUSER postgres
+env.PGPORT 5432
+
+[fail2ban]
+user root

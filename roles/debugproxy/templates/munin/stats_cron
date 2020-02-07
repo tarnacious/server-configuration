@@ -1,0 +1,1 @@
+* * * * * debugproxy cd /home/debugproxy/debugproxy && ./bin/munin > /var/log/debugproxy/stats
