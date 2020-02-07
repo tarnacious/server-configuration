@@ -1,0 +1,12 @@
+- hosts: ns2
+  user: root
+  become: yes
+  roles:
+    - hostname
+    - sshd
+    - firewall
+    - certificates
+    - icinga-client
+    - icinga-plugins
+    - munin-node
+    - bind
