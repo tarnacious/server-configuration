@@ -1,0 +1,20 @@
+- hosts: debugproxy
+  user: root
+  become: yes
+  tasks:
+    - name: copy database.sql to /tmp
+      become_user: root
+      become: true
+      command:
+        cmd: cp -f /tmp/bareos-restores/var/lib/bareos/backup.sql /tmp/backup.sql
+    - name: change owner of /tmp/database.sql to postgres
+      become_user: root
+      become: true
+      file:
+        path: /tmp/backup.sql
+        owner: postgres
+    - name: restore /tmo/backup.sql database
+      become_user: postgres
+      become: true
+      command:
+        cmd: psql -f /tmp/backup.sql postgres
