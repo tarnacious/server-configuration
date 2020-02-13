@@ -62,3 +62,9 @@
     src: https://chromedriver.storage.googleapis.com/78.0.3904.105/chromedriver_linux64.zip
     dest: /usr/local/bin
     remote_src: yes
+
+- name: Download phrase app binary
+  get_url:
+    url: https://github.com/phrase/phraseapp-client/releases/download/1.16.1/phraseapp_linux_amd64
+    dest: /usr/local/bin/phrase-app
+    mode: '0755'
