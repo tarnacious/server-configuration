@@ -2,11 +2,10 @@
   user: root
   become: yes
   roles:
-    - vm-networking
     - hostname
     - sshd
     - backup-client
     - monitoring
     - firewall
-    - openvpn
+    - vpn
     - icinga-client

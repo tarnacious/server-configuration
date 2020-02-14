@@ -1,0 +1,17 @@
+source /etc/network/interfaces.d/*
+
+auto lo
+iface lo inet loopback
+
+allow-hotplug {{ ipv4_interface }}
+iface {{ ipv4_interface }} inet static
+gateway {{ ipv4_gateway }}
+address {{ ipv4_address }}
+netmask {{ ipv4_netmask }}
+dns-nameserver {{ ipv4_nameserver }}
+
+allow-hotplug {{ ipv6_interface }}
+iface {{ ipv6_interface }} inet6 static
+gateway {{ ipv6_gateway }}
+address {{ ipv6_address }}
+netmask 64
