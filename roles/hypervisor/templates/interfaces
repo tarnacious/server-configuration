@@ -21,3 +21,13 @@ iface br0 inet6 static
   bridge_fd 0
   bridge_maxwait 0
 up ip addr add fe80::1/64 dev br0 scope link
+
+auto br1
+iface br1 inet static
+  address {{ hosts.hypervisor.ipv4 }}
+  netmask 255.255.255.255
+  bridge_stp off
+  bridge_ports none
+  bridge_fd 0
+  bridge_maxwait 0
+  up route add -host {{ hosts.vpn.ipv4 }} dev br1
