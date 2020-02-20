@@ -18,6 +18,7 @@
     src: "templates{{ item }}"
     dest: "{{ item }}"
   with_items:
+    - '/etc/bind/named.conf'
     - '/etc/bind/named.conf.options'
     - '/etc/bind/named.conf.local'
     - '/etc/bind/zones/db.dodgyaf.xyz'
