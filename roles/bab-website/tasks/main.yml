@@ -1,17 +1,17 @@
 - name: Install packages
   apt:
-    name: "{{item}}"
+    name: [
+      'certbot',
+      'python-certbot-nginx',
+      'mariadb-server',
+      'git',
+      'nginx',
+      'php-fpm',
+      'php-mysql',
+      'nginx-extras'
+    ]
     state: latest
     update_cache: yes
-  with_items:
-    - certbot
-    - python-certbot-nginx
-    - mariadb-server
-    - git
-    - nginx
-    - php-fpm
-    - php-mysql
-    - nginx-extras
 
 - name: Add the user 'bab'
   user:
