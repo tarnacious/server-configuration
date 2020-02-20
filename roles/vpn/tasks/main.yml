@@ -28,6 +28,7 @@
   service:
     name: wg-quick@wg0
     state: started
+    enabled: true
 
 - name: allow wireguard udp port
   ufw:
