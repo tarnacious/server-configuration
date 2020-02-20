@@ -32,6 +32,9 @@
       'git',
       'libicu-dev',
       'chromium',
+      'postgresql-client-11',
+      'rsync',
+      'python3-venv',
       #'chromedriver',
       ]
     state: present
