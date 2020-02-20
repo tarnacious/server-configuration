@@ -4,6 +4,8 @@
   roles:
     - vm-networking
     - hostname
+    - apt
+    - unattended-upgrades
     - sshd
     - firewall
     - sendmail

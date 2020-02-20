@@ -5,6 +5,7 @@
     - vm-networking
     - hostname
     - apt
+    - unattended-upgrades
     - sshd
     - firewall
     - certificates

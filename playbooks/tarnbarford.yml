@@ -3,8 +3,9 @@
   become: yes
   roles:
     - vm-networking
-    - apt
     - hostname
+    - apt
+    - unattended-upgrades
     - sshd
     - certificates
     - backup-client

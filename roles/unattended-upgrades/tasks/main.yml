@@ -1,0 +1,8 @@
+- name: Install packages for unattended upgrades
+  apt:
+    name: [
+     'unattended-upgrades',
+     'apt-listchanges'
+    ]
+    state: present
+    update_cache: yes

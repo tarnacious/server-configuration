@@ -3,6 +3,8 @@
   become: yes
   roles:
     - hostname
+    - apt
+    - unattended-upgrades
     - sshd
     - firewall
     - certificates

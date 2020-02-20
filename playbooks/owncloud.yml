@@ -4,6 +4,8 @@
   roles:
     - vm-networking
     - hostname
+    - apt
+    - unattended-upgrades
     - sshd
     - certificates
     - backup-client

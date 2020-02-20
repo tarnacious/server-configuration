@@ -1,6 +1,8 @@
 hostname: vpn
 client_name: vpn-fd
 fqdn: vpn.tarnbarford.net
+ipv4_device: enp1s0
+ipv6_device: enp2s0
 
 ipv4_gateway: !vault |
   $ANSIBLE_VAULT;1.1;AES256

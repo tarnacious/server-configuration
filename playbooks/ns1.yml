@@ -2,8 +2,9 @@
   user: root
   become: yes
   roles:
-    - apt
     - vm-networking
+    - unattended-upgrades
+    - apt
     - hostname
     - sshd
     - firewall
