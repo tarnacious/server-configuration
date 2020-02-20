@@ -21,6 +21,21 @@ if address :is "from" "notifications@github.com"
     fileinto "github";
 }
 
+if address :is "to" "hosting@brainsome.de"
+{
+    fileinto "monitoring";
+}
+
+if address :is "to" "torial-staging@brainsome.de"
+{
+    fileinto "brainsome";
+}
+
+if address :is "to" "developers@torial.com"
+{
+    fileinto "brainsome";
+}
+
 if address :is "from" "appstore@piqd.de"
 {
     fileinto "brainsome";
