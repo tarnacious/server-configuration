@@ -124,7 +124,7 @@
       address6: "{{ hosts.hypervisor.ipv6 }}"
     - name: "bacula.tarnbarford.net"
       address6: "{{ hosts.bacula.ipv6 }}"
-    - name: "monitoring.tarnbarford.net", 
+    - name: "monitoring.tarnbarford.net"
       address6: "{{ hosts.monitoring.ipv6 }}"
     - name: "load-balancer.tarnbarford.net"
       address6: "{{ hosts.load_balancer.ipv6 }}" 
