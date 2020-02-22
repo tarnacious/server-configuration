@@ -1,0 +1,15 @@
+- hosts: dns
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
+    - apt
+    - unattended-upgrades
+    - sshd
+    - firewall
+    - bind-recursive
+    - certificates
+    - icinga-client
+    - icinga-plugins
+    - munin-node

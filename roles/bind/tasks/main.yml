@@ -23,11 +23,18 @@
     - '/etc/bind/named.conf.local'
     - '/etc/bind/zones/db.dodgyaf.xyz'
     - '/etc/bind/zones/db.tarnbarford.net'
+    - '/etc/bind/zones/db.internal.tarnbarford.net'
     - '/etc/bind/zones/db.debugproxy.com'
   notify: restart bind
 
 - name: check config
   command: 'named-checkzone tarnbarford.net /etc/bind/zones/db.tarnbarford.net'
+  register: out
+
+- debug: msg="{{ out.stdout_lines }}"
+
+- name: check config
+  command: 'named-checkzone internal.tarnbarford.net /etc/bind/zones/db.internal.tarnbarford.net'
   register: out
 
 - debug: msg="{{ out.stdout_lines }}"

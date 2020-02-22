@@ -1,0 +1,29 @@
+- name: ensure packages
+  apt:
+    name: [
+      'bind9',
+      'bind9utils',
+      'bind9-doc'
+    ]
+    state: present
+    update_cache: yes
+
+- name: ensure configuration
+  template:
+    src: "templates{{ item }}"
+    dest: "{{ item }}"
+  with_items:
+    - '/etc/bind/named.conf'
+    - '/etc/bind/named.conf.options'
+    - '/etc/bind/rpz.db'
+  notify: restart bind
+
+- name: Allow bind dns port in UFW
+  ufw:
+    rule: allow
+    port: '53'
+
+- name: Allow bind remote name daemon control port in UFW
+  ufw:
+    rule: allow
+    port: '953'

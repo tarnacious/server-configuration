@@ -1,0 +1,13 @@
+$TTL 60
+@            IN    SOA  localhost. tarn.tarnbarford.net.  (
+                      2   ; serial 
+                      3H  ; refresh 
+                      1H  ; retry 
+                      1W  ; expiry 
+                      1H) ; minimum 
+              IN    NS    localhost.
+
+www.yahoo.com       CNAME    .
+weather.yahoo.com   CNAME    *.
+stocks.yahoo.com    CNAME    www.google.com.
+ad.yahoo.com        A    127.0.0.1
