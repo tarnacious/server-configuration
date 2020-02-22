@@ -60,7 +60,7 @@
   get_url:
     url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     dest: /home/tarn/.vim/autoload/plug.vim
-    checksum: sha256:f4292e1894699436441ffaebef240f439da8db1d2fcba227d21bebdafaaee7d6
+    checksum: sha256:49e4b25f789f10639155863b17dabdccb9d59b0d12ced0299c40a81533660bf3
 
 - name: Ensure a locale exists
   locale_gen:
