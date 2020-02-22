@@ -1,6 +1,16 @@
 - name: Install packages
   apt:
-    name: ['vim', 'git', 'curl', 'wget', 'tmux', 'net-tools', 'silversearcher-ag']
+    name: [
+      'vim',
+      'git',
+      'curl',
+      'wget',
+      'tmux',
+      'net-tools',
+      'silversearcher-ag',
+      'locales',
+      'python3-venv'
+    ]
     state: present
     update_cache: yes
 
