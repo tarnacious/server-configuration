@@ -1,0 +1,17 @@
+$TTL    604800
+@       IN      SOA     internal.tarnbarford.net. tarn.tarnbarford.net. (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+; name servers
+@               IN      NS      ns1.tarnbarford.net.
+@               IN      NS      ns2.tarnbarford.net.
+; a records
+{% for key, value in hosts.items() %}
+{{ key | replace("_", "-") }}             IN      A       {{ value.ipv4 }}
+{% endfor %}
+{% for key, value in hosts.items() %}
+{{ key | replace("_", "-") }}             IN      AAAA    {{ value.ipv6 }}
+{% endfor %}
