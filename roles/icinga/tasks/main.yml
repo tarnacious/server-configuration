@@ -85,14 +85,6 @@
     path: /etc/icinga2/zones.d/icinga.tarnbarford.net
     state: directory
 
-- name: Remove default configuration
-  file:
-    path: "/{{ item }}"
-    state: absent
-  with_items:
-    - etc/icinga2/conf.d/hosts.conf
-    - etc/icinga2/conf.d/services.conf
-
 - name: Copy icinga config
   template:
     src: templates/{{ item }}
