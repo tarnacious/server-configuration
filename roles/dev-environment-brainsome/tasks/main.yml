@@ -35,6 +35,7 @@
       'postgresql-client-11',
       'rsync',
       'python3-venv',
+      'libtag1-dev',
       #'chromedriver',
       ]
     state: present
