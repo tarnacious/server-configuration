@@ -6,6 +6,7 @@ iface enp2s0 inet static
   address {{ hosts.hypervisor.ipv4 }}
   netmask 255.255.255.192
   gateway 136.243.14.193
+  pointopoint 136.243.14.193
 
 iface enp2s0 inet6 static
   address {{ hosts.hypervisor.ipv6 }}
@@ -22,12 +23,11 @@ iface br0 inet6 static
   bridge_maxwait 0
 up ip addr add fe80::1/64 dev br0 scope link
 
-auto br1
-iface br1 inet static
+iface br0 inet static
   address {{ hosts.hypervisor.ipv4 }}
   netmask 255.255.255.255
   bridge_stp off
   bridge_ports none
   bridge_fd 0
   bridge_maxwait 0
-  up route add -host {{ hosts.vpn.ipv4 }} dev br1
+  up ip route add {{ hosts.vpn.ipv4 }}/32 dev br0 scope link

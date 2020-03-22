@@ -4,6 +4,9 @@ fqdn: vpn.tarnbarford.net
 ipv4_device: enp1s0
 ipv6_device: enp2s0
 
+internal_interface_device: 'enp1s0'
+external_interface_device: 'enp2s0'
+
 ipv4_gateway: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   37653233663261323865313835346433636332383836353930306164343862653833633033663637
@@ -60,8 +63,6 @@ ipv6_address: !vault |
   3836666265393166620a326632633630633364326332323335303762386333373462653566316364
   36376363636265346561393434666432356632636136383037623562666634386130
 
-ipv4_interface: 'enp1s0'
-ipv6_interface: 'enp2s0'
 
 wg0_private_key: !vault |
   $ANSIBLE_VAULT;1.1;AES256
