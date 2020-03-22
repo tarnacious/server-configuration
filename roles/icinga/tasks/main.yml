@@ -107,12 +107,27 @@
     - etc/icinga2/conf.d/services.conf
     - etc/icinga2/conf.d/users.conf
     - etc/icinga2/conf.d/notifications.conf
-    - etc/icinga2/pki/ca.crt
-    - etc/icinga2/pki/client.crt
-    - etc/icinga2/pki/client.key
     - etc/icinga2/zones.d/icinga.tarnbarford.net/services.conf
     - etc/icinga2/scripts/mail-service-notification.sh
     - etc/icinga2/scripts/mail-host-notification.sh
+  notify: restart icinga2
+
+- name: "copy {{ fqdn }} certificate"
+  copy:
+    src: "ca/client_keys/{{ fqdn }}.crt"
+    dest: "/etc/icinga2/pki/client.crt"
+  notify: restart icinga2
+
+- name: "copy {{ fqdn }} private key"
+  copy:
+    src: "ca/client_keys/{{ fqdn }}.key"
+    dest: "/etc/icinga2/pki/client.key"
+  notify: restart icinga2
+
+- name: copy ca certificate
+  copy:
+    src: "ca/ca.crt"
+    dest: "/etc/icinga2/pki/ca.crt"
   notify: restart icinga2
 
 - name: clients configuration

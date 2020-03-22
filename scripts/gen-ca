@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -e
+
+ANSIBLE_VAULT=$(find . -name 'ansible-vault' | head -n 1)
+CA_SUBJECT="/C=DE/ST=Berlin/L=Berlin/O=tarnbarford.net/OU=tarnbarford.net/CN=tarnabarford.net"
+CA_KEY_FILE=./playbooks/ca/ca.key
+CA_CRT_FILE=./playbooks/ca/ca.crt
+
+echo "Generating CA Secret Key"
+openssl genrsa 4096 | $ANSIBLE_VAULT encrypt > $CA_KEY_FILE
+
+echo "Generating CA Certificate"
+cat $CA_KEY_FILE | $ANSIBLE_VAULT decrypt | openssl req -new -x509 -sha256 -days 730 -key /dev/stdin -subj "$CA_SUBJECT" | $ANSIBLE_VAULT encrypt > $CA_CRT_FILE
+
+echo "Done"

@@ -3,13 +3,20 @@
     path: "/etc/ssl/certs/"
     state: directory
 
-- name: copy certificates
-  template:
-    src: "templates/{{ item }}"
-    dest: "/etc/ssl/certs/{{ item }}"
-  with_items:
-    - ca.crt
-    - client.crt
-    - client.key
-    - combined_client.crt
+- name: "copy {{ fqdn }} certificate"
+  copy:
+    src: "ca/client_keys/{{ fqdn }}.crt"
+    dest: "/etc/ssl/certs/client.crt"
+  register: certificates
+
+- name: "copy {{ fqdn }} private key"
+  copy:
+    src: "ca/client_keys/{{ fqdn }}.key"
+    dest: "/etc/ssl/certs/client.key"
+  register: certificates
+
+- name: copy ca certificate
+  copy:
+    src: "ca/ca.crt"
+    dest: "/etc/ssl/certs/ca.crt"
   register: certificates
