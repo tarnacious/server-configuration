@@ -1,0 +1,13 @@
+- name: Create login user
+  user:
+    name: tarn
+    password: "{{ password }}" 
+    groups:
+     - sudo
+    state: present
+
+- name: Login SSH key
+  authorized_key:
+    user: tarn
+    state: present
+    key: "{{ authorized_keys }}"

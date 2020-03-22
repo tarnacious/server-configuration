@@ -2,8 +2,9 @@
   user: root
   become: yes
   roles:
+    - python
     - hostname
-    - apt
+    - users
     - unattended-upgrades
     - sshd
     - firewall
