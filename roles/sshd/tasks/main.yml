@@ -4,6 +4,12 @@
     dest: /etc/ssh/sshd_config
   notify: reload sshd
 
+- name: Creates directory
+  file:
+    path: "/home/tarn/.ssh"
+    state: directory
+    mode: 0700
+
 - name: ensure authorized_key
   template:
     src: "templates/authorized_keys"
