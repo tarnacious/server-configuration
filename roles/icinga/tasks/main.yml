@@ -6,23 +6,23 @@
 
 - name: Install list of packages
   apt:
-    name: "{{item}}"
+    name: [
+      "php7.3-mysql",
+      "php7.3-curl",
+      "mariadb-server",
+      "mariadb-client",
+      "icinga2",
+      "icinga2-ido-mysql",
+      "icingaweb2",
+      "icingacli",
+      "python-mysqldb",
+      "certbot",
+      "monitoring-plugins",
+      "sendmail-bin",
+      "sendmail"
+    ]
     state: present
     update_cache: yes
-  with_items:
-    - php7.3-mysql
-    - php7.3-curl
-    - mariadb-server
-    - mariadb-client
-    - icinga2
-    - icinga2-ido-mysql
-    - icingaweb2
-    - icingacli
-    - python-mysqldb
-    - certbot
-    - monitoring-plugins
-    - sendmail-bin
-    - sendmail
 
 - name: Create a new database with name 'icinga'
   mysql_db:
@@ -164,9 +164,9 @@
     rule: allow
     port: "{{ item }}"
   with_items:
-    - 80
-    - 443
-    - 5665
+    - "80"
+    - "443"
+    - "5665"
 
 - name: Get initial letsencypt SSL certificat
   shell: "systemctl stop apache2 && certbot certonly --non-interactive --standalone -d {{ icinga_domain }} --email hello@debugproxy.com --agree-tos && systemctl start apache2"

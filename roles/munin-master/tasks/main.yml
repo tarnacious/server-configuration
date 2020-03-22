@@ -1,17 +1,17 @@
 - name: Install apt packages
   apt:
-    name: "{{item}}"
+    name: [
+      "certbot",
+      "munin",
+      "munin-node",
+      "apache2",
+      "libcgi-fast-perl",
+      "libapache2-mod-fcgid",
+      "libio-socket-inet6-perl"
+    ]
     state: present
     force: yes
     update_cache: yes
-  with_items:
-    - certbot
-    - munin
-    - munin-node
-    - apache2
-    - libcgi-fast-perl
-    - libapache2-mod-fcgid
-    - libio-socket-inet6-perl
 
 - name: get inital letsencrypt certificates
   shell: certbot certonly --standalone -d monitoring.tarnbarford.net --email tarn@tarnbarford.net --agree-tos
@@ -88,11 +88,11 @@
 - name: Allow HTTP in UFW
   ufw:
     rule: allow
-    port: 80
+    port: "80"
     proto: tcp
 
 - name: Allow HTTPS in UFW
   ufw:
     rule: allow
-    port: 443
+    port: "443"
     proto: tcp

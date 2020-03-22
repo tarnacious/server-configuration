@@ -1,12 +1,12 @@
 - name: Install list of packages
   apt:
-    name: "{{item}}"
+    name: [
+      "bareos",
+      "postgresql",
+      "cifs-utils"
+    ] 
     state: present
     update_cache: yes
-  with_items:
-    - bareos
-    - postgresql
-    - cifs-utils
 
 - name: delete default configurations
   file:
@@ -78,14 +78,14 @@
 - name: Allow access to port 9103 for bacula storage
   ufw:
     rule: allow
-    port: 9103
+    port: "9103"
     from_ip: "{{ hypervisor_ipv6_subnet }}"
 
 - name: copy backup credentials
   template:
     src: templates/backup-credentials
     dest: /etc/backup-credentials
-    mode: 0600
+    mode: "0600"
   notify: remount all
 
 - name: create mount dir /mnt/backup

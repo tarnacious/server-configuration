@@ -1,39 +1,39 @@
 - name: Install list of packages for sendmail
   apt:
-    name: "{{item}}"
+    name: [
+      "sendmail",
+      "mailutils",
+      "sendmail-bin",
+      "sasl2-bin"
+    ]
     state: present
     update_cache: yes
-  with_items:
-    - sendmail
-    - mailutils
-    - sendmail-bin
-    - sasl2-bin
 
 - name: create auth info directory
   file:
     name: /etc/mail/authinfo/
     state: directory
-    mode: 750
+    mode: "750"
 
 - name: copy authentication file
   template:
     src: templates/authinfo
     dest: /etc/mail/authinfo/authinfo
-    mode: 0750
+    mode: "0750"
 
 - name: copy generics table
   template:
     src: templates/genericstable
     dest: /etc/mail/genericstable
     group: smmsp
-    mode: 0750
+    mode: "0750"
 
 - name: copy generic-domains
   template:
     src: templates/generics-domains
     dest: /etc/mail/generics-domains
     group: smmsp
-    mode: 0750
+    mode: "0750"
 
 - name: copy sendmail config
   template:

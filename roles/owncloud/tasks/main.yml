@@ -1,11 +1,11 @@
 - name: Install ca-certificates
   apt:
-    name: "{{item}}"
+    name: [ 
+      "ca-certificates",
+      "apt-transport-https"
+    ]
     state: present
     update_cache: yes
-  with_items:
-    - ca-certificates
-    - apt-transport-https
 
 - apt_key:
     url: https://download.owncloud.org/download/repositories/stable/Debian_10/Release.key
@@ -17,45 +17,37 @@
 
 - name: Install list of packages
   apt:
-    name: "{{item}}"
+    name: [
+      "curl",
+      "apt-transport-https",
+      "apache2",
+      "mariadb-server",
+      "libapache2-mod-php7.0",
+      "openssl",
+      "php-imagick",
+      "php7.3-common",
+      "php7.3-curl",
+      "php7.3-gd",
+      "php7.3-mbstring",
+      "php7.3-imap",
+      "php7.3-intl",
+      "php7.3-json",
+      "php7.3-mbstring",
+      "php7.3-mysql",
+      "php7.3-xml",
+      "php7.3-zip",
+      "php7.3-apcu",
+      "php7.3-redis",
+      "redis-server",
+      "python-mysqldb",
+      "certbot",
+      "python-certbot-apache",
+      "exif",
+      "libav-tools",
+      "libreoffice"
+    ]
     state: present
     update_cache: yes
-  with_items:
-    - curl
-    - apt-transport-https
-    - apache2
-    - mariadb-server
-    - libapache2-mod-php7.0
-    - openssl
-    - php-imagick
-    - php7.3-common
-    - php7.3-curl
-    - php7.3-gd
-    - php7.3-mbstring
-    - php7.3-imap
-    - php7.3-intl
-    - php7.3-json
-      #- php7.0-ldap
-    - php7.3-mbstring
-      #- php7.3-mcrypt
-    - php7.3-mysql
-      #- php7.0-pgsql
-      #- php-smbclient
-      #- php-ssh2
-      #- php7.0-sqlite3
-    - php7.3-xml
-    - php7.3-zip
-    - php7.3-apcu
-    - php7.3-redis
-    - redis-server
-    # ansible
-    - python-mysqldb
-    # certbot
-    - certbot
-    - python-certbot-apache
-    - exif
-    - libav-tools
-    - libreoffice
 
 - name: Install list of packages
   apt:
