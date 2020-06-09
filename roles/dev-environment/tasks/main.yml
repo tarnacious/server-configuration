@@ -16,7 +16,7 @@
 
 - name: Clone dotfiles repository
   git:
-    repo: git@github.com:tarnacious/dotfiles.git
+    repo: https://github.com/tarnacious/dotfiles.git
     dest: /home/tarn/.dotfiles
     version: master
     accept_hostkey: True
