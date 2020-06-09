@@ -58,9 +58,9 @@
 
 - name: Download vim plugin manager
   get_url:
-    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    url: https://raw.githubusercontent.com/junegunn/vim-plug/01aab60adef47c6606aa68c8783f5b994fda9fc4/plug.vim
     dest: /home/tarn/.vim/autoload/plug.vim
-    checksum: sha256:49e4b25f789f10639155863b17dabdccb9d59b0d12ced0299c40a81533660bf3
+    checksum: sha256:e0bc8e5ebfb43d5004e974a8357d21c4c5d40a57f89724b9b43a04c569611a64
 
 - name: Ensure a locale exists
   locale_gen:
