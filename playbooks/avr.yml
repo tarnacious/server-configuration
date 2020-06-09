@@ -1,0 +1,10 @@
+- hosts: avr
+  user: tarn
+  become: yes
+  tasks:
+    - name: set host name
+      hostname:
+        name: "avr"
+  roles:
+    - dev-environment
+    - dev-environment-avr
