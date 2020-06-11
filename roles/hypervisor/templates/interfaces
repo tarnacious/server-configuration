@@ -1,33 +1,23 @@
 auto lo
 iface lo inet loopback
 
-auto enp2s0
-iface enp2s0 inet static
-  address {{ hosts.hypervisor.ipv4 }}
-  netmask 255.255.255.192
-  gateway 136.243.14.193
-  pointopoint 136.243.14.193
-
-iface enp2s0 inet6 static
-  address {{ hosts.hypervisor.ipv6 }}
-  netmask 128
-  gateway fe80::1
-
 auto br0
 iface br0 inet6 static
   address {{ hosts.hypervisor.ipv6 }}
   netmask 64
   bridge_stp off
   bridge_ports none
+  bridge_ports enp2s0
+  gateway fe80::1
   bridge_fd 0
   bridge_maxwait 0
-up ip addr add fe80::1/64 dev br0 scope link
 
 iface br0 inet static
   address {{ hosts.hypervisor.ipv4 }}
-  netmask 255.255.255.255
+  netmask 255.255.255.192
+  gateway 136.243.14.193
+  bridge_ports enp2s0
   bridge_stp off
-  bridge_ports none
-  bridge_fd 0
-  bridge_maxwait 0
-  up ip route add {{ hosts.vpn.ipv4 }}/32 dev br0 scope link
+  bridge_fd 1
+  bridge_hello 2
+  bridge_maxage 12
