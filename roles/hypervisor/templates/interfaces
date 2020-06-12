@@ -14,8 +14,8 @@ iface br0 inet6 static
 
 iface br0 inet static
   address {{ hosts.hypervisor.ipv4 }}
-  netmask 255.255.255.192
-  gateway 136.243.14.193
+  netmask {{ hosts.hypervisor.netmask }}
+  gateway {{ hosts.hypervisor.gateway }}
   bridge_ports enp2s0
   bridge_stp off
   bridge_fd 1
