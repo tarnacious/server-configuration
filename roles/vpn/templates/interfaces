@@ -3,22 +3,16 @@ source /etc/network/interfaces.d/*
 auto lo
 iface lo inet loopback
 
-allow-hotplug {{ internal_interface_device }}
-iface {{ internal_interface_device }} inet static
-gateway {{ bridge_ipv4_gateway }}
-address {{ hosts.vpn.internal.ipv4 }}
-netmask 255.255.255.0
+allow-hotplug enp1s0
 
-allow-hotplug {{ external_interface_device }}
-
-iface {{ external_interface_device }} inet6 static
-gateway {{ ipv6_gateway }}
-address {{ ipv6_address }}
+iface enp1s0 inet6 static
+gateway {{ hosts.hypervisor.ipv5 }}
+address {{ hosts.vpn.ipv6 }}
 netmask 64
-dns-nameserver {{ hosts.vpn.ipv6 }}
+#dns-nameserver {{ hosts.dns.ipv6 }}
 
-iface {{ external_interface_device }} inet static
-gateway {{ ipv4_gateway }}
-address {{ ipv4_address }}
-netmask {{ ipv4_netmask }}
-dns-nameserver {{ hosts.vpn.ipv4 }}
+iface enp1s0 inet static
+gateway {{ hosts.hypervisor.gateway }}
+address {{ hosts.vpn.ipv4 }}
+netmask {{ hosts.hypervisor.netmask }}
+#dns-nameserver {{ hosts.dns.ipv4 }}

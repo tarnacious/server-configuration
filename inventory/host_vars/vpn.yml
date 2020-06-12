@@ -5,7 +5,7 @@ ipv4_device: enp1s0
 ipv6_device: enp2s0
 
 internal_interface_device: 'enp1s0'
-external_interface_device: 'enp2s0'
+external_interface_device: 'enp1s0'
 
 ipv4_gateway: !vault |
   $ANSIBLE_VAULT;1.1;AES256

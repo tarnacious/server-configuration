@@ -1,16 +1,15 @@
-- name: set /etc/apt/preferences.d/limit_unstable
+- name: add buster backports repository
   template:
-    src: templates/limit_unstable
-    dest: /etc/apt/preferences.d/limit_unstable
-
-- name: set /etc/apt/sources.list.d/unstable-wireguard.list
-  template:
-    src: templates/unstable-wireguard.list
-    dest: /etc/apt/sources.list.d/unstable-wireguard.list
+    src: templates/buster-backports.list
+    dest: /etc/apt/sources.list.d/buster-backports.list
 
 - name: install wireguard packages
   apt:
-    name: ["wireguard", "resolvconf"]
+    name: [
+      "wireguard",
+      "wireguard-dkms",
+      "resolvconf"
+    ]
     state: present
     update_cache: yes
 
