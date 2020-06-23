@@ -6,7 +6,7 @@ iface lo inet loopback
 allow-hotplug enp1s0
 
 iface enp1s0 inet6 static
-gateway {{ hosts.hypervisor.ipv5 }}
+gateway {{ hosts.hypervisor.ipv6 }}
 address {{ hosts.vpn.ipv6 }}
 netmask 64
 #dns-nameserver {{ hosts.dns.ipv6 }}
