@@ -1,19 +1,19 @@
-#- name: Install avr development packages
-#  apt:
-#    name: [
-#      'gcc-avr',
-#      'binutils-avr',
-#      'gdb-avr', 
-#      'avr-libc', 
-#      'avrdude',
-#      'build-essential', # for make
-#      'usbutils' # lsusb
-#    ]
+- name: Install avr development packages
+  apt:
+    name: [
+      'gcc-avr',
+      'binutils-avr',
+      'gdb-avr',
+      'avr-libc',
+      'avrdude',
+      'build-essential', # for make
+      'usbutils' # lsusb
+      'freecad',
+      'kicad'
+    ]
 
 - name: Add user to dialout group for /dev/ttyUSB*
   user:
     name: 'tarn'
     groups: dialout
     append: yes
-
-    # git clone --depth 2 https://github.com/arduino/Arduino.git
