@@ -1,0 +1,6 @@
+- name: davfs2 secrets
+  template:
+    src: "secrets"
+    dest: "/etc/davfs2/secrets"
+    mode: "600"
+  become: true
