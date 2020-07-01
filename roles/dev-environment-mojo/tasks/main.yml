@@ -1,0 +1,19 @@
+- name: Install packages
+  apt:
+    name: [
+      'go-dep',
+
+      'python3',
+      'python3-venv'
+    ]
+
+- name: Clone torial repository
+  git:
+    repo: git@gitlab.com:mojoreads/communication-service.git
+    dest: /home/tarn/src/gitlab.com/mojoreads/communication-service
+    version: development
+    accept_hostkey: True
+    force: no
+  become: yes
+  become_user: tarn
+
