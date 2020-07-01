@@ -1,0 +1,38 @@
+- name: /etc/nixos/configuration.nix
+  template:
+    src: "configuration.nix"
+    dest: "/etc/nixos/configuration.nix"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+
+- name: /etc/nixos/hardware-configuration.nix
+  template:
+    src: "hardware-configuration.nix"
+    dest: "/etc/nixos/hardware-configuration.nix"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+
+- name: /etc/nixos/vim.nix
+  template:
+    src: "vim.nix"
+    dest: "/etc/nixos/vim.nix"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+
+- name: /etc/NetworkManager/dispatcher.d/vpn-route
+  template:
+    src: "vpn-route"
+    dest: "/etc/NetworkManager/dispatcher.d/vpn-route"
+    mode: "744"
+    owner: root
+    group: root
+  become: true

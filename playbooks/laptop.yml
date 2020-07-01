@@ -4,3 +4,4 @@
   connection: local
   roles:
     - davfs2-client
+    - laptop
