@@ -9,7 +9,13 @@
       'net-tools',
       'silversearcher-ag',
       'locales',
-      'python3-venv'
+      'python3-venv',
+      'gpgconf',
+      'htop',
+      'iftop',
+      'dnsutils',
+      'build-essential',
+      'postgresql-client'
     ]
     state: present
     update_cache: yes
