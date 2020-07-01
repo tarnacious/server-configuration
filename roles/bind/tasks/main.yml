@@ -54,3 +54,12 @@
   ufw:
     rule: allow
     port: '953'
+
+- name: Link bind munin modules
+  file:
+    src: '/usr/share/munin/plugins/{{ item.src }}'
+    dest: '/etc/munin/plugins/{{ item.dest }}'
+    state: link
+  with_items:
+    - { src: 'bind9_rndc', dest: 'bind9_rndc' }
+    - { src: 'bind9', dest: 'bind9' }
