@@ -128,7 +128,7 @@
     dest: "/etc/icinga2/zones.d/icinga.tarnbarford.net/{{ item.name }}.conf"
   with_items:
     - name: "hypervisor.tarnbarford.net"
-      address6: "{{ hosts.hypervisor.ipv6 }}"
+      address6: "{{ hosts.hypervisor.br0.gateway }}"
     - name: "bacula.tarnbarford.net"
       address6: "{{ hosts.bacula.ipv6 }}"
     - name: "monitoring.tarnbarford.net"

@@ -11,6 +11,6 @@ netmask 255.255.255.0
 
 allow-hotplug {{ ipv6_device }}
 iface {{ ipv6_device }} inet6 static
-gateway {{ hosts.hypervisor.ipv6 }}
+gateway {{ hosts.hypervisor.br0.gateway }}
 address {{ hosts[hostname | replace('-', '_')].ipv6 }}
 netmask 64
