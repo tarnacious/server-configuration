@@ -1,0 +1,18 @@
+- name: /home/tarn/.muttrc
+  template:
+    src: "muttrc"
+    dest: "/home/tarn/.muttrc"
+    owner: tarn
+  become: true
+
+- name: copy mutt configuration files
+  template:
+    src: "{{ item }}"
+    dest: "/home/tarn/.mutt/{{ item }}"
+    owner: tarn
+  with_items:
+    - colours.muttrc
+    - crypto.muttrc
+    - debugproxy.muttrc
+    - mailcap
+    - tarnbarford.muttrc

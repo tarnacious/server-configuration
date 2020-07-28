@@ -1,0 +1,9 @@
+set from      = "tarn@tarnbarford.net"
+set sendmail  = "msmtp -a tarnbarford"
+set mbox      = "+tarnbarford/archive"
+set postponed = "+tarnbarford/INBOX.drafts"
+set record    = "+tarnbarford/sent"
+
+macro index A ":set confirmappend=no delete=yes\n<tag-prefix><save-message>=tarnbarford/archive\n<sync-mailbox>:set confirmappend=yes delete=ask-yes\n"
+macro index X ":set confirmappend=no delete=yes\n<tag-prefix><save-message>=tarnbarford/Spam\n<sync-mailbox>:set confirmappend=yes delete=ask-yes\n"
+
