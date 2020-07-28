@@ -1,69 +1,74 @@
 Host ci
-    HostName ci.brainsome.de 
+    HostName ci.brainsome.de
     User root
     ForwardAgent yes
 
 Host ci-build-1
-    HostName ci-build-1.brainsome.de 
+    HostName ci-build-1.brainsome.de
     User root
     ForwardAgent yes
 
 Host backup
-    HostName backup.brainsome.de 
+    HostName backup.brainsome.de
     User root
     ForwardAgent yes
 
 Host moitoring
-    HostName monitoring.brainsome.de 
+    HostName monitoring.brainsome.de
     User root
     ForwardAgent yes
 
 Host sentry
-    HostName sentry.brainsome.de 
+    HostName sentry.brainsome.de
     User root
     ForwardAgent yes
 
 Host piqd-testing
-    HostName piqd-test.clients.brainsome.de 
+    HostName piqd-test.clients.brainsome.de
     User deploy
     ForwardAgent yes
 
 Host piqd-staging
-    HostName piqd-staging.clients.brainsome.de 
+    HostName piqd-staging.clients.brainsome.de
     User deploy
     ForwardAgent yes
 
 Host piqd-prod
-    HostName piqd-prod.clients.brainsome.de 
+    HostName piqd-prod.clients.brainsome.de
     User deploy
     ForwardAgent yes
 
 Host torial-testing
-    HostName torial-testing.clients.brainsome.de 
+    HostName torial-testing.clients.brainsome.de
     User deploy
     ForwardAgent yes
 
 Host torial-staging
-    HostName torial-staging.clients.brainsome.de 
+    HostName torial-staging.clients.brainsome.de
     User deploy
     ForwardAgent yes
 
 Host torial-prod
-    HostName torial-prod.clients.brainsome.de 
+    HostName torial-prod.clients.brainsome.de
     User deploy
     ForwardAgent yes
 
 Host bloom-prod
-    HostName torial-prod.clients.brainsome.de 
+    HostName torial-prod.clients.brainsome.de
     User deploy
     ForwardAgent yes
 
 Host torial-blog
-    HostName torial-blog.brainsome.de 
+    HostName torial-blog.brainsome.de
     User root
     ForwardAgent yes
 
-Host puppet 
-    HostName puppet.brainsome.de 
+Host puppet
+    HostName puppet.brainsome.de
+    User root
+    ForwardAgent yes
+
+Host literaturmagazin
+    HostName literaturmagazin.mojoreads.de
     User root
     ForwardAgent yes
