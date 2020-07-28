@@ -1,0 +1,8 @@
+- hosts: localhost
+  user: root
+  become: yes
+  connection: local
+  roles:
+    - davfs2-client
+    - mutt
+    - netbook
