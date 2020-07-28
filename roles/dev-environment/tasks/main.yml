@@ -5,6 +5,7 @@
       'git',
       'curl',
       'wget',
+      'unzip',
       'tmux',
       'net-tools',
       'silversearcher-ag',

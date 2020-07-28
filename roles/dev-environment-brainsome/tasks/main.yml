@@ -1,3 +1,7 @@
+- name: set hostname to brainsome
+  hostname:
+    name: "brainsome"
+
 - apt_key:
     url: https://dl.yarnpkg.com/debian/pubkey.gpg
     state: present
@@ -23,7 +27,7 @@
       'netcat',
       'ssh',
       'curl',
-      'redis-server',
+      'redis-tools',
       'memcached',
       'libjpeg-turbo-progs',
       'pngcrush',
@@ -35,6 +39,7 @@
       'postgresql-client-11',
       'rsync',
       'python3-venv',
+      'python3-dev'
       'libtag1-dev',
       #'chromedriver',
       ]
@@ -45,19 +50,39 @@
   git:
     repo: git@github.com:brainsome-de/piqd.git
     dest: /home/tarn/piqd
-    version: master
+    version: testing
     accept_hostkey: True
     force: yes
-  become: yes
+  become: no
   become_user: tarn
 
 - name: Clone torial repository
   git:
     repo: git@github.com:brainsome-de/torial.git
     dest: /home/tarn/torial
+    version: testing
+    accept_hostkey: True
+    force: no
+  become: yes
+  become_user: tarn
+
+- name: Clone infrastructure repository
+  git:
+    repo: git@github.com:brainsome-de/infrastructure.git
+    dest: /home/tarn/infrastructure
     version: master
     accept_hostkey: True
-    force: yes
+    force: no
+  become: yes
+  become_user: tarn
+
+- name: Clone puppet repository
+  git:
+    repo: git@github.com:brainsome-de/puppet5-master.git
+    dest: /home/tarn/puppet
+    version: production
+    accept_hostkey: True
+    force: no
   become: yes
   become_user: tarn
 
@@ -72,3 +97,10 @@
     url: https://github.com/phrase/phraseapp-client/releases/download/1.16.1/phraseapp_linux_amd64
     dest: /usr/local/bin/phrase-app
     mode: '0755'
+
+- name: brainsome ~/.ssh/config 
+  template:
+    src: ssh_config
+    dest: /home/tarn/.ssh/config
+    owner: tarn
+    group: tarn
