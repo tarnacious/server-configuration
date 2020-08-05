@@ -1,4 +1,8 @@
 username: tarn
+git:
+  email: tarn@tarnbarford.net
+  username: tarnacious
+
 bridge_ipv4_address: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   36383734346436373764373438313734393034653635653039363932616164336131346430383137

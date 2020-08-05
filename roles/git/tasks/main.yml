@@ -1,0 +1,21 @@
+- name: Install packages
+  apt:
+    name: ['git']
+    state: present
+    update_cache: yes
+
+- name: Configure config
+  template:
+    src: templates/config
+    dest: /home/{{ username }}/.gitconfig
+    mode: 0600
+  become: yes
+  become_user: "{{ username }}"
+
+- name: Configure ignore
+  template:
+    src: templates/config
+    dest: /home/{{ username }}/.gitignore.global
+    mode: 0600
+  become: yes
+  become_user: "{{ username }}"
