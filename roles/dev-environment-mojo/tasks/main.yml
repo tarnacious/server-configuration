@@ -1,19 +1,46 @@
 - name: Install packages
   apt:
     name: [
-      'go-dep',
-
+      'git',
       'python3',
+      'python3-pip',
       'python3-venv'
     ]
 
-- name: Clone torial repository
+- name: Ensure ~/projects
+  file:
+    path: /home/{{ username }}/projects
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+
+- name: Clone mojo-ansible project
   git:
-    repo: git@gitlab.com:mojoreads/communication-service.git
-    dest: /home/tarn/src/gitlab.com/mojoreads/communication-service
-    version: development
+    repo: "git@github.com:brainsome-de/mojo-ansible.git"
+    dest: "/home/tarn/projects/mojo-ansible"
+    version: "master"
     accept_hostkey: True
     force: no
+    update: no
   become: yes
-  become_user: tarn
+  become_user: "{{ username }}"
 
+- name: Install mojo ansible virtual environment
+  shell: python3 -m venv .
+  become: yes
+  become_user: "{{ username }}"
+  args:
+    chdir: "/home/{{ username }}/projects/mojo-ansible"
+
+- name: Install mojo ansible virtual requirements
+  shell: ./bin/pip install -r requirements.txt
+  become: yes
+  become_user: "{{ username }}"
+  args:
+    chdir: "/home/{{ username }}/projects/mojo-ansible"
+
+- name: Install password file
+  template:
+    src: "templates/password"
+    dest: /home/{{ username }}/projects/mojo-ansible/scripts/password
+    mode: 0600
