@@ -1,0 +1,15 @@
+- apt_key:
+    url: https://dl.yarnpkg.com/debian/pubkey.gpg
+    state: present
+
+- apt_repository:
+    repo: deb https://dl.yarnpkg.com/debian/ stable main
+    state: present
+
+- name: Install packages
+  apt:
+    name: [
+      'nodejs',
+      'npm',
+      'yarn',
+    ]
