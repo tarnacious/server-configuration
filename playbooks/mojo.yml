@@ -2,7 +2,8 @@
   user: root
   become: yes
   roles:
-    - dev-environment
-    - dev-environment-golang
-    - dev-environment-docker
     - dev-environment-mojo
+    - git
+    - dev-environment
+    - vim
+    - tmux
