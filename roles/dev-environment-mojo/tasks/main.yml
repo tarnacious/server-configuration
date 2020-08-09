@@ -14,10 +14,10 @@
     owner: "{{ username }}"
     group: "{{ username }}"
 
-- name: Clone mojo-ansible project
+- name: Clone mojoreads-ansible project
   git:
-    repo: "git@github.com:brainsome-de/mojo-ansible.git"
-    dest: "/home/tarn/projects/mojo-ansible"
+    repo: "git@github.com:brainsome-de/mojoreads-ansible.git"
+    dest: "/home/tarn/projects/mojoreads-ansible"
     version: "master"
     accept_hostkey: True
     force: no
@@ -25,22 +25,22 @@
   become: yes
   become_user: "{{ username }}"
 
-- name: Install mojo ansible virtual environment
+- name: Install mojoreads ansible virtual environment
   shell: python3 -m venv .
   become: yes
   become_user: "{{ username }}"
   args:
-    chdir: "/home/{{ username }}/projects/mojo-ansible"
+    chdir: "/home/{{ username }}/projects/mojoreads-ansible"
 
-- name: Install mojo ansible virtual requirements
+- name: Install mojoreads ansible virtual requirements
   shell: ./bin/pip install -r requirements.txt
   become: yes
   become_user: "{{ username }}"
   args:
-    chdir: "/home/{{ username }}/projects/mojo-ansible"
+    chdir: "/home/{{ username }}/projects/mojoreads-ansible"
 
 - name: Install password file
   template:
     src: "templates/password"
-    dest: /home/{{ username }}/projects/mojo-ansible/scripts/password
+    dest: /home/{{ username }}/projects/mojoreads-ansible/scripts/password
     mode: 0600
