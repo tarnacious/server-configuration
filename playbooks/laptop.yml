@@ -5,3 +5,4 @@
   roles:
     - davfs2-client
     - laptop
+    - mutt
