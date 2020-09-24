@@ -31,21 +31,24 @@
   become: yes
   become_user: tarn
 
-- name: Create symbolic links to dotfiles
+- name: Create ~/bin
   file:
-    src: "/home/tarn/.dotfiles/.{{ item }}"
-    dest: "/home/tarn/.{{ item }}"
-    state: link
+    path: /home/{{ username }}/.bin
+    state: directory
+    group: "{{ username }}"
+    owner: "{{ username }}"
+    recurse: yes
+
+- name: Create ~/bin files
+  template:
+    src: templates/{{ item }}
+    dest: /home/{{ username }}/bin/{{ item }}
+    mode: 0755
+  become: yes
+  become_user: "{{ username }}"
   with_items:
-    - vimrc
-    - gitconfig
-    - gitignore.global
-    - bash_profile
-#    - bashrc
-    - tmux.conf
-    - msmtprc
-    - offlineimaprc
-    - muttrc
+    - decrypt
+    - encrypt
 
 - name: Create ~/.vim directory
   file:
