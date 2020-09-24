@@ -1,0 +1,32 @@
+- name: Install packages
+  apt:
+    name: [
+      'python-virtualenv'
+    ]
+    state: present
+    update_cache: yes
+
+- name: Clone server-configuration repository
+  git:
+    repo: git@github.com:tarnacious/server-configuration.git
+    dest: /home/tarn/server-configuration
+    version: master
+    accept_hostkey: True
+    force: no
+  become: yes
+  become_user: tarn
+
+- name: Install python environment
+  shell: virtualenv .
+  become: yes
+  become_user: tarn
+  args:
+    chdir: /home/tarn/server-configuration
+    creates: /home/tarn/server-configuration/bin
+
+- name: Install python dependences
+  shell: ./bin/pip install -r requirements.txt
+  become: yes
+  become_user: tarn
+  args:
+    chdir: /home/tarn/server-configuration

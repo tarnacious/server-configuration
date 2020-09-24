@@ -1,0 +1,6 @@
+- hosts: server-configuration 
+  user: root
+  become: yes
+  roles:
+    - dev-environment
+    - dev-environment-server-configuration
