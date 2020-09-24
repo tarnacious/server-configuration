@@ -14,7 +14,7 @@
 
 - name: Configure ignore
   template:
-    src: templates/config
+    src: templates/ignore
     dest: /home/{{ username }}/.gitignore.global
     mode: 0600
   become: yes
