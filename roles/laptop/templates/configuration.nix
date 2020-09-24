@@ -22,12 +22,16 @@
 
   networking.extraHosts =
     ''
+    192.168.122.20 api.mojoreads.local
+    192.168.122.20 mojoreads.local
+    192.168.122.20 www.mojoreads.local
+    192.168.122.20 cms.mojoreads.local
     '';
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
   security.wrappers.spice-client-glib-usb-acl-helper.source =  "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
-  nixpkgs.config.allowUnfree = false;
+  nixpkgs.config.allowUnfree = true;
   networking.hostName = "xps-nixos";
   networking.networkmanager.enable = true;
   networking.firewall.checkReversePath = false;
@@ -61,6 +65,7 @@
     wget
     #zoom-us
     #skype
+    slack
     (import ./vim.nix)
     gawk
     nginx
