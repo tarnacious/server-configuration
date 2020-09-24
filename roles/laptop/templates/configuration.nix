@@ -91,11 +91,17 @@
     bind
     virtmanager
     pwgen
+
+    # mail / contacts / calendars
     neomutt
+    khard
+    khal
+    vdirsyncer
     offlineimap
     msmtp
     lynx
     urlview
+
     cifs_utils
     libreoffice
     ack
@@ -112,8 +118,6 @@
     whois
     unzip
     darktable
-    khal
-    vdirsyncer
     wireguard
     freecad
     cura
