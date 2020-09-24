@@ -64,10 +64,15 @@ bind index <space>  collapse-thread
 source ~/.mutt/colours.muttrc
 source ~/.mutt/crypto.muttrc
 
-## Abook
-set query_command= "abook --mutt-query '%s'"
-macro index,pager  a "<pipe-message>abook --add-email-quiet<return>" "Add this sender to Abook"
-bind editor        <Tab> complete-query
 set my_msmtp_pass=`pass Mail/private`
+
+# Contacts
+set query_command = "khard email --parsable %s"
+bind editor <Tab> complete-query
+bind editor ^T    complete
+
+macro index,pager A \
+  "<pipe-message>khard add-email<return>" \
+  "add the sender email address to khard"
 
 alternative_order text/plain text/html

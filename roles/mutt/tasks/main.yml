@@ -3,7 +3,16 @@
     src: "muttrc"
     dest: "/home/tarn/.muttrc"
     owner: tarn
-  become: true
+
+- name: ensure directories
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: tarn
+  with_items:
+    - /home/tarn/.config
+    - /home/tarn/.config/vdirsyncer
+    - /home/tarn/.config/khard
 
 - name: copy mutt configuration files
   template:
@@ -16,3 +25,15 @@
     - debugproxy.muttrc
     - mailcap
     - tarnbarford.muttrc
+
+- name: copy vdirsyncer configuration file
+  template:
+    src: "vdirsyncer.conf"
+    dest: "/home/tarn/.config/vdirsyncer/config"
+    owner: tarn
+
+- name: copy khard configuration file
+  template:
+    src: "khard.conf"
+    dest: "/home/tarn/.config/khard/khard.conf"
+    owner: tarn
