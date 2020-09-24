@@ -80,6 +80,7 @@
     docker_compose
     fzf
     tmux
+    screen
     cryptsetup
     ccrypt
     dhcpcd
