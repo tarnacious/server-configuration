@@ -1,0 +1,21 @@
+- name: Create ~/.profiles directory
+  file:
+    path: /home/{{ username }}/.profiles
+    state: directory
+    group: {{ username }}
+    owner: {{ usergroup }}
+
+- name: ~/.profile
+  template:
+    src: profile
+    dest: "/home/{{ username }}/.profile"
+
+- name: remove ~/.bash_profile
+  template:
+    state: absent
+    path: "/home/{{ username }}/.bash_profile"
+
+- name: remove ~/.bashrc
+  template:
+    state: absent
+    path: "/home/{{ username }}/.bashrc"
