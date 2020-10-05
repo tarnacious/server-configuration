@@ -74,6 +74,8 @@
     nitrokey-app
     firefox
     chromium
+    nmap
+    lsof
     pass
     git
     gnupg
