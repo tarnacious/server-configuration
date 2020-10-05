@@ -11,5 +11,6 @@
      - certificates
      - munin-node
      - icinga-client
+     - icinga-plugins-backup
      - sendmail
      - bacula

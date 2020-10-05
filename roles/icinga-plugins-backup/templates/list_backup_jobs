@@ -1,0 +1,1 @@
+echo "list job=$1" | bconsole

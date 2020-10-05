@@ -1,0 +1,23 @@
+- name: Check backup script 
+  template:
+    src: "check_backup"
+    dest: "/usr/lib/nagios/plugins/check_backup"
+    owner: root
+    group: nagios 
+    mode: "0754"
+
+- name: List backup jobs script
+  template:
+    src: list_backup_jobs
+    dest: /usr/lib/nagios/plugins/list_backup_jobs
+    mode: "4754"
+    owner: root
+    group: nagios 
+
+- name: Sudoers Permissions
+  template:
+    src: backup_sudoers
+    dest: /etc/sudoers.d/10-backup
+    mode: "0400"
+    owner: root
+    group: root 

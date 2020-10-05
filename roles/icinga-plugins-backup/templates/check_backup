@@ -1,0 +1,35 @@
+#!/bin/bash
+    
+## Usage
+##  
+## check_backup -j <jobname>
+##
+  
+JOB_NAME=$2
+echo $JOB_NAME
+LAST_SUCCESS_DATE=$(sudo /usr/lib/nagios/plugins/list_backup_jobs $JOB_NAME | grep $JOB_NAME | awk -F '|' '{ print $5, $10 }' | grep "T" | awk '{ print $1, $2 }' | tail -1)
+echo $LAST_SUCCESS_DATE
+if [[ "$LAST_SUCCESS_DATE" == "" ]]
+then
+        echo "No successful backup found."
+        exit 2
+fi
+
+LAST_SUCCESS_SECONDS=$(date -d "$LAST_SUCCESS_DATE" '+%s')
+SECONDS_SINCE=$(($(date '+%s') - $LAST_SUCCESS_SECONDS))
+HOURS_SINCE=$(($SECONDS_SINCE / 60 / 60))
+    
+if (($HOURS_SINCE < 30));
+then
+        echo "Good. Last backup $HOURS_SINCE hours ago"
+        exit 0             
+fi  
+    
+if (($HOURS_SINCE < 60));  
+then
+        echo "Concerning. Last backup $HOURS_SINCE hours ago"
+        exit 1
+fi  
+    
+echo "Bad. Last backup $HOURS_SINCE hours ago"
+exit 2

@@ -13,6 +13,27 @@ email_password: !vault |
   6161626564303135300a373439626636633664633366613962306237666365376139386530376237
   30303438663130373131333865613538326130613633623832366466306562356264
 
+
+backup_jobs:
+  - bab-database
+  - bab-ssl-certificates
+  - bab-uploads
+  - debugproxy-database
+  - tarnbarford-database
+  - monitoring-rrd
+  - monitoring-lets-encrypt
+  - tarnbarford-net-letsencrypt
+  - tarnbarford-letsencrypt
+  - debugproxy-letsencrypt
+  - owncloud-data
+  - owncloud-letsencrypt
+  - owncloud-database
+  - mail-server-letsencrypt
+  - mail-server-mailboxes
+  - mail-server-database
+  - backup-bareos-fd
+  - BackupCatalog
+
 # icinga
 icinga_mysql_password: !vault |
   $ANSIBLE_VAULT;1.1;AES256

@@ -1,0 +1,3 @@
+{% for job in hostvars['icinga'].backup_jobs %}
+nagios ALL=(ALL) NOPASSWD:/usr/lib/nagios/plugins/list_backup_jobs {{ job }}
+{% endfor %}

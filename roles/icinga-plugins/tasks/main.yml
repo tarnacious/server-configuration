@@ -8,8 +8,9 @@
   copy:
     src: "{{ item }}"
     dest: "/{{ item }}"
-    mode: "a+x"
+    owner: root
+    group: nagios
+    mode: "0754"
   with_items:
     - usr/lib/nagios/plugins/check_mem.pl
     - usr/lib/nagios/plugins/check_raid.pl
-
