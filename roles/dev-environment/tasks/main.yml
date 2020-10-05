@@ -50,28 +50,6 @@
     - decrypt
     - encrypt
 
-- name: Create ~/.vim directory
-  file:
-    path: /home/tarn/.vim
-    state: directory
-    group: tarn
-    owner: tarn
-    recurse: yes
-
-- name: Create ~/.vim/autoload directory
-  file:
-    path: /home/tarn/.vim/autoload
-    state: directory
-    group: tarn
-    owner: tarn
-    recurse: yes
-
-- name: Download vim plugin manager
-  get_url:
-    url: https://raw.githubusercontent.com/junegunn/vim-plug/01aab60adef47c6606aa68c8783f5b994fda9fc4/plug.vim
-    dest: /home/tarn/.vim/autoload/plug.vim
-    checksum: sha256:e0bc8e5ebfb43d5004e974a8357d21c4c5d40a57f89724b9b43a04c569611a64
-
 - name: Ensure a locale exists
   locale_gen:
     name: en_US.UTF-8
