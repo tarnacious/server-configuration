@@ -3,7 +3,7 @@ let
   my-python-packages = python-packages: [
     python-packages.pip
   ];
-  my-python = python36.withPackages my-python-packages;
+  my-python = python37.withPackages my-python-packages;
 in
   pkgs.mkShell {
     buildInputs = [
@@ -18,7 +18,7 @@ in
       export PIP_PREFIX="$(pwd)/.build/pip_packages"
       export PATH=$PATH:$PIP_PREFIX/bin
       export PATH=$PATH:$(pwd)/scripts
-      export PYTHONPATH="$(pwd)/.build/pip_packages/lib/python3.6/site-packages:$PYTHONPATH"
+      export PYTHONPATH="$(pwd)/.build/pip_packages/lib/python3.7/site-packages:$PYTHONPATH"
       unset SOURCE_DATE_EPOCH
     '';
   }
