@@ -36,3 +36,10 @@
     owner: root
     group: root
   become: true
+
+- name: samba secret
+  template:
+    src: "smb-secrets"
+    dest: "/etc/nixos/smb-secrets"
+    mode: "600"
+  become: true
