@@ -1,6 +1,7 @@
 [user]
         name = {{ git.username }}
         email = {{ git.email }}
+        signingkey = {{ git.signingkey }}
 [alias]
         lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
         lg2 = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' --abbrev-commit
@@ -16,4 +17,3 @@
         default = simple
 [core]
         excludesfile = ~/.gitignore.global
-
