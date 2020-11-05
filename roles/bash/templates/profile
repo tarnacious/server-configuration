@@ -1,5 +1,5 @@
 echo running bash_profile
-export PATH=$PATH:$HOME/.bin
+export PATH=$PATH:$HOME/bin
 export PGHOST=localhost
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8

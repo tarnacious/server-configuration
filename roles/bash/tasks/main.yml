@@ -2,8 +2,8 @@
   file:
     path: /home/{{ username }}/.profiles
     state: directory
-    group: {{ username }}
-    owner: {{ usergroup }}
+    group: "{{ username }}"
+    owner: "{{ usergroup }}"
 
 - name: ~/.profile
   template:
@@ -11,11 +11,11 @@
     dest: "/home/{{ username }}/.profile"
 
 - name: remove ~/.bash_profile
-  template:
+  file:
     state: absent
     path: "/home/{{ username }}/.bash_profile"
 
 - name: remove ~/.bashrc
-  template:
+  file:
     state: absent
     path: "/home/{{ username }}/.bashrc"

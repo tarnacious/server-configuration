@@ -33,7 +33,7 @@
 
 - name: Create ~/bin
   file:
-    path: /home/{{ username }}/.bin
+    path: /home/{{ username }}/bin
     state: directory
     group: "{{ username }}"
     owner: "{{ username }}"
