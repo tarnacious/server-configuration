@@ -1,0 +1,7 @@
+<!-- Bus 001 Device 008: ID 03f0:0653 HP, Inc DeskJet 3700 series -->
+<hostdev mode='subsystem' type='usb'>
+  <source>
+    <vendor id='0x03f0'/>
+    <product id='0x0653'/>
+  </source>
+</hostdev>

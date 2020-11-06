@@ -1,0 +1,38 @@
+- name: Create ~/devices
+  file:
+    path: /home/{{ username }}/devices
+    state: directory
+    recurse: yes
+  become: yes
+  become_user: "{{ username }}"
+
+- name: Create ~/devices files
+  template:
+    src: templates/{{ item }}
+    dest: /home/{{ username }}/devices/{{ item }}
+    mode: 0644
+  become: yes
+  become_user: "{{ username }}"
+  with_items:
+    - nitrokey.xml
+    - avrusb.xml
+    - deskjetusb.xml
+        
+- name: Create ~/bin
+  file:
+    path: /home/{{ username }}/bin
+    state: directory
+    recurse: yes
+  become: yes
+  become_user: "{{ username }}"
+
+- name: Create ~/bin files
+  template:
+    src: templates/{{ item }}
+    dest: /home/{{ username }}/bin/{{ item }}
+    mode: 0755
+  become: yes
+  become_user: "{{ username }}"
+  with_items:
+    - attach-device
+    - detach-device

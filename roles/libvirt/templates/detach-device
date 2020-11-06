@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+virsh detach-device avr avrusb.xml
