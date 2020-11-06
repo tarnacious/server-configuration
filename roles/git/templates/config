@@ -17,3 +17,5 @@
         default = simple
 [core]
         excludesfile = ~/.gitignore.global
+[commit]
+        gpgsign = true
