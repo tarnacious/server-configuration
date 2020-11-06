@@ -1,0 +1,1 @@
+rsync --progress -a -e 'ssh -p23' --recursive /mnt/backup/samba-share/  {{ storage_box.user }}@{{ storage_box.user }}.your-storagebox.de:samba-share/

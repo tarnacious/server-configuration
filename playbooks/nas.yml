@@ -1,0 +1,12 @@
+- hosts: nas
+  user: pi
+  become: yes
+  roles:
+    - apt-raspbian
+    - unattended-upgrades
+    - hostname
+    - users
+    - sshd
+    - firewall
+    - wpa_supplicant
+    - nas

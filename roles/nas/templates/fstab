@@ -1,0 +1,5 @@
+proc            		/proc           proc    defaults          0       0
+/dev/mmcblk0p1  		/boot           vfat    defaults          0       2
+/dev/mmcblk0p2  		/               ext4    defaults,noatime  0       1
+/dev/mapper/backup 	/mnt/backup 		ext4 		defaults        	0       0
+{{ storage_box.address }} /mnt/storage  cifs    iocharset=utf8,rw,credentials=/var/storage-credentials,uid=1001,gid=1001,file_mode=0660,dir_mode=0770 0 0

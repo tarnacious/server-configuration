@@ -1,0 +1,100 @@
+- name: Install list of packages
+  apt:
+    name: "cifs-utils"
+    state: present
+    update_cache: yes
+
+- name: fstab
+  template:
+    src: templates/fstab
+    dest: /etc/fstab
+
+- name: crypttab
+  template:
+    src: templates/crypttab
+    dest: /etc/crypttab
+
+- name: ensure /mnt/storage directory 
+  file:
+    path: "/mnt/storage"
+    state: directory  
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0770"
+
+- name: ensure /mnt/backup directory
+  file:
+    path: "/mnt/backup"
+    state: directory  
+    owner: root 
+    group: root
+    mode: "0755"
+
+- name: backup-luks-key
+  template:
+    src: templates/backup-luks-key
+    dest: /var/backup-luks-key
+    mode: "600"
+
+- name: storage-credentials
+  template:
+    src: templates/storage-credentials
+    dest: /var/storage-credentials
+    mode: "600"
+
+- name: ~/.ssh
+  file:
+    path: "/home/{{ username }}/.ssh"
+    state: directory  
+    owner: "{{ username }}" 
+    group: "{{ username }}" 
+    mode: "0700"
+
+- name: ~/.ssh/id_ssh
+  template:
+    src: templates/ssh/id_rsa
+    dest: "/home/{{ username }}/.ssh/id_ssh"
+    owner: "{{ username }}" 
+    group: "{{ username }}" 
+    mode: "600"
+
+- name: ~/.ssh/id_ssh.pub
+  template:
+    src: templates/ssh/id_rsa.pub
+    dest: "/home/{{ username }}/.ssh/id_ssh.pub"
+    owner: "{{ username }}" 
+    group: "{{ username }}" 
+    mode: "600"
+
+- name: backup scripts
+  template:
+    src: "templates/scripts/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: "755"
+  with_items:
+    - sync-backup-volumns
+    - sync-samba-share
+
+- name: Allow 139 for SMB in UFW
+  ufw:
+    rule: allow
+    port: '139'
+    proto: tcp
+
+- name: Allow 445 for SMB in UFW
+  ufw:
+    rule: allow
+    port: '445'
+    proto: tcp
+
+- name: Allow 137 for SMB in UFW
+  ufw:
+    rule: allow
+    port: '137'
+    proto: udp
+
+- name: Allow 138 for SMB in UFW
+  ufw:
+    rule: allow
+    port: '138'
+    proto: udp
