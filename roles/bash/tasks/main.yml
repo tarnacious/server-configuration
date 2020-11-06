@@ -2,20 +2,24 @@
   file:
     path: /home/{{ username }}/.profiles
     state: directory
-    group: "{{ username }}"
-    owner: "{{ usergroup }}"
+    group: "{{ usergroup }}"
+    owner: "{{ username }}"
 
-- name: ~/.profile
+- name: ~/.bashrc
   template:
-    src: profile
-    dest: "/home/{{ username }}/.profile"
+    src: bashrc
+    dest: "/home/{{ username }}/.bashrc"
+    group: "{{ usergroup }}"
+    owner: "{{ username }}"
 
-- name: remove ~/.bash_profile
+- name: ~/.bash_profile
+  template:
+    src: bash_profile
+    dest: "/home/{{ username }}/.bash_profile"
+    group: "{{ usergroup }}"
+    owner: "{{ username }}"
+
+- name: remove ~/.profile
   file:
     state: absent
-    path: "/home/{{ username }}/.bash_profile"
-
-- name: remove ~/.bashrc
-  file:
-    state: absent
-    path: "/home/{{ username }}/.bashrc"
+    path: "/home/{{ username }}/.profile"

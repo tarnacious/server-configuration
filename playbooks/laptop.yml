@@ -3,6 +3,9 @@
   become: yes
   connection: local
   roles:
+    - bash
+    - git
+    - gpg-ssh-agent
     - davfs2-client
     - laptop
     - mutt

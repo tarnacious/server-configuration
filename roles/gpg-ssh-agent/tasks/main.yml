@@ -1,0 +1,6 @@
+- name: ~/.profiles/gpgssh_profile
+  template:
+    src: gpgssh_profile
+    dest: "/home/{{ username }}/.profiles/gpgssh_profile"
+    group: "{{ usergroup }}"
+    owner: "{{ username }}"

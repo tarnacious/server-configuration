@@ -20,3 +20,10 @@
     mode: 0600
   become: yes
   become_user: "{{ username }}"
+
+- name: ~/.profiles/git_profile
+  template:
+    src: git_profile
+    dest: "/home/{{ username }}/.profiles/git_profile"
+    group: "{{ usergroup }}"
+    owner: "{{ username }}"

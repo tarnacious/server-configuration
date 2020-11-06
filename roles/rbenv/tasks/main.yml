@@ -36,3 +36,10 @@
     accept_hostkey: True
   become: yes
   become_user: tarn
+
+- name: ~/.profiles/rbenv_profile
+  template:
+    src: rbenv_profile
+    dest: "/home/{{ username }}/.profiles/rbenv_profile"
+    group: "{{ usergroup }}"
+    owner: "{{ username }}"

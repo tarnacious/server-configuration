@@ -1,0 +1,2 @@
+# return is bash is not interactive
+[[ $- != *i* ]] && return
