@@ -4,7 +4,6 @@
     ./hardware-configuration.nix
   ];
 
-
   swapDevices = [
     {
       device = "/swapfile";
@@ -13,10 +12,9 @@
   ];
 
   fileSystems."/mnt/share" = {
-    device = "{{ samba.address }}";
+    device = "//192.168.0.6/sambashare";
     fsType = "cifs";
     options = let
-        # this line prevents hanging on network split
         automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
     in ["${automount_opts},credentials=/etc/nixos/smb-secrets" "uid=1000" "gid=100"];
   };
@@ -31,10 +29,11 @@
 
   networking.extraHosts =
     ''
-    192.168.122.20 api.mojoreads.local
-    192.168.122.20 mojoreads.local
-    192.168.122.20 www.mojoreads.local
-    192.168.122.20 cms.mojoreads.local
+    192.168.0.6 nas.tarnbarford.net
+    192.168.122.83 api.mojoreads.local
+    192.168.122.83 mojoreads.local
+    192.168.122.83 www.mojoreads.local
+    192.168.122.83 cms.mojoreads.local
     '';
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
