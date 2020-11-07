@@ -71,7 +71,7 @@
   environment.systemPackages = with pkgs; [
     gksu
     wget
-    #zoom-us
+    zoom-us
     #skype
     slack
     (import ./vim.nix)
