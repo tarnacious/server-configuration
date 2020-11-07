@@ -3,6 +3,8 @@
   become: yes
   roles:
     - dev-environment
+    - bash
+    - git
     - rbenv
     - dev-environment-docker
     - dev-environment-brainsome
