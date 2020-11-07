@@ -112,7 +112,8 @@ vim_configurable.customize {
     vimrcConfig.packages.myVimPackage = with pkgs.vimPlugins; {
       # loaded on launch
       start = [
-        youcompleteme
+        # Needs python3 support
+        # YouCompleteMe
         fugitive
         nerdtree
         vim-ruby
