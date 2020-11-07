@@ -1,13 +1,38 @@
+- name: Create login group
+  group:
+    name: "{{ usergroup }}"
+    state: present
+    gid: "1001"
+
 - name: Create login user
   user:
-    name: tarn
-    password: "{{ password }}" 
+    name: "{{ username }}"
+    group: "{{ usergroup }}"
     groups:
      - sudo
     state: present
+    shell: /bin/bash
+    uid: "1001"
+
+- name: ensure home directory
+  file:
+    path: "/home/{{ username }}"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ usergroup }}"
+    mode: "0755"
+
+- name: ensure .ssh directory
+  file:
+    path: "/home/{{ username }}/.ssh"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ usergroup }}"
+    mode: "0700"
 
 - name: Login SSH key
   authorized_key:
     user: tarn
     state: present
     key: "{{ authorized_keys }}"
+  become_user: tarn
