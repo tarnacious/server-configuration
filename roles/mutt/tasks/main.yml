@@ -21,7 +21,6 @@
     owner: tarn
   with_items:
     - colours.muttrc
-    - crypto.muttrc
     - debugproxy.muttrc
     - mailcap
     - tarnbarford.muttrc
@@ -37,3 +36,9 @@
     src: "khard.conf"
     dest: "/home/tarn/.config/khard/khard.conf"
     owner: tarn
+
+- name: copy urlview configuration file
+  template:
+    src: "urlview"
+    dest: "/home/{{ username }}/.urlview"
+    owner: "{{ username }}"

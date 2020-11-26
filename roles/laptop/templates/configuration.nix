@@ -109,8 +109,8 @@
     vdirsyncer
     offlineimap
     msmtp
-    lynx
     urlview
+    gthumb
 
     cifs_utils
     libreoffice
