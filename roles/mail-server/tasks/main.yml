@@ -163,6 +163,11 @@
     - restart postfix
     - restart spamassassin
 
+- name: Enable spamassassin service
+  service:
+    name: spamassassin
+    enabled: yes
+
 - name: set spamassassin configuration
   template:
     src: "templates/spamassassin/{{ item }}"
