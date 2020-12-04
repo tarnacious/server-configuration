@@ -116,23 +116,22 @@
     libreoffice
     ack
     rmlint
-    digikam
     exfat
-    filezilla
     nixops
     gnome3.networkmanagerapplet
     usbutils
-    gcompris
     spice-gtk
     usbredir
     whois
     unzip
-    darktable
     wireguard
     freecad
     cura
     kicad
     solvespace
+
+    ffmpeg
+    imagemagick
   ];
 
   users.users.tarn = {
