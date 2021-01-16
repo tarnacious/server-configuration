@@ -3,7 +3,9 @@
   become: yes
   roles:
     - dev-environment-mojo
+    - bash
     - git
     - dev-environment
     - vim
     - tmux
+    - gpg-ssh-agent
