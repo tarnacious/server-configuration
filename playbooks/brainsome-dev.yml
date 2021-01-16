@@ -6,5 +6,6 @@
     - bash
     - git
     - rbenv
-    - dev-environment-docker
+    - docker
+    - gpg-ssh-agent
     - dev-environment-brainsome
