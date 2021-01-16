@@ -102,6 +102,8 @@
     virtmanager
     pwgen
 
+    digikam
+
     # mail / contacts / calendars
     neomutt
     khard
@@ -132,6 +134,7 @@
 
     ffmpeg
     imagemagick
+    obs-studio
   ];
 
   users.users.tarn = {
