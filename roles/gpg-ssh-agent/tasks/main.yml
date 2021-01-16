@@ -4,3 +4,17 @@
     dest: "/home/{{ username }}/.profiles/gpgssh_profile"
     group: "{{ usergroup }}"
     owner: "{{ username }}"
+
+- name: ~/.gnupg/gpg.conf
+  template:
+    src: gpg.conf
+    dest: "/home/{{ username }}/.gnupg/gpg.conf"
+    group: "{{ usergroup }}"
+    owner: "{{ username }}"
+
+- name: ~/.gnupg/gpg-agent.conf
+  template:
+    src: gpg-agent.conf
+    dest: "/home/{{ username }}/.gnupg/gpg-agent.conf"
+    group: "{{ usergroup }}"
+    owner: "{{ username }}"
