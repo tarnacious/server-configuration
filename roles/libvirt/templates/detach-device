@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
 
-virsh detach-device avr avrusb.xml
+if [ "$#" -ne 2 ]; then
+    echo "Usage: detach-device <domain> ~/devices/<device file>"
+    exit 1
+fi
+
+virsh detach-device $1 $2
