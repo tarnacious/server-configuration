@@ -38,10 +38,11 @@
   networking.extraHosts =
     ''
     192.168.0.6 nas.tarnbarford.net
-    192.168.122.83 api.mojoreads.local
     192.168.122.83 mojoreads.local
+    192.168.122.83 api.mojoreads.local
     192.168.122.83 www.mojoreads.local
     192.168.122.83 cms.mojoreads.local
+    192.168.122.83 bui.mojoreads.local
     '';
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
