@@ -20,6 +20,7 @@ owncloud        IN      A       {{ hosts.hypervisor.ipv4 }}
 debugproxy      IN      A       {{ hosts.hypervisor.ipv4 }}
 @               IN      AAAA    {{ hosts.tarnbarford.ipv6 }}
 owncloud        IN      AAAA    {{ hosts.owncloud.ipv6 }}
+bacula          IN      AAAA    {{ hosts.bacula.ipv6 }}
 mail            IN      AAAA    {{ hosts.mail_server.ipv6 }}
 vpn             IN      AAAA    {{ hosts.vpn.ipv6 }}
 debugproxy      IN      AAAA    {{ hosts.debugproxy.ipv6 }}
