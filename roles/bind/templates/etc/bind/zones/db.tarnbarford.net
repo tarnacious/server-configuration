@@ -17,10 +17,12 @@ icinga          IN      A       {{ hosts.hypervisor.ipv4 }}
 mail            IN      A       {{ hosts.hypervisor.ipv4 }}
 monitoring      IN      A       {{ hosts.hypervisor.ipv4 }}
 owncloud        IN      A       {{ hosts.hypervisor.ipv4 }}
+debugproxy      IN      A       {{ hosts.hypervisor.ipv4 }}
 @               IN      AAAA    {{ hosts.tarnbarford.ipv6 }}
 owncloud        IN      AAAA    {{ hosts.owncloud.ipv6 }}
 mail            IN      AAAA    {{ hosts.mail_server.ipv6 }}
 vpn             IN      AAAA    {{ hosts.vpn.ipv6 }}
+debugproxy      IN      AAAA    {{ hosts.debugproxy.ipv6 }}
 @               IN      MX      1  mail.tarnbarford.net.
 _dmarc          IN      TXT     "v=DMARC1;p=reject;pct=100;rua=mailto:postmaster@tarnbarford.net"
 @               IN      TXT     "v=spf1 mx a -all"
