@@ -8,11 +8,11 @@
     update_cache: yes
 
 - apt_key:
-    url: https://download.owncloud.org/download/repositories/stable/Debian_10/Release.key
+    url: https://download.owncloud.org/download/repositories/10.7.0/Debian_10/Release.key
     state: present
 
 - apt_repository:
-    repo: deb https://download.owncloud.org/download/repositories/stable/Debian_10/ /
+    repo: deb https://download.owncloud.org/download/repositories/10.7.0/Debian_10/ /
     state: present
 
 - name: Install list of packages
@@ -51,7 +51,7 @@
 
 - name: Install list of packages
   apt:
-    name: owncloud-files
+    name: owncloud-complete-files
     state: present
     update_cache: yes
 
