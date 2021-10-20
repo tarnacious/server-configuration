@@ -13,3 +13,4 @@
     - owncloud
     - letsencrypt-apache
     - munin-node
+    - unattended-upgrades
