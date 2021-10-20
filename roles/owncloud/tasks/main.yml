@@ -5,7 +5,6 @@
       "apt-transport-https"
     ]
     state: present
-    update_cache: yes
 
 - apt_key:
     url: https://download.owncloud.org/download/repositories/10.7.0/Debian_10/Release.key
