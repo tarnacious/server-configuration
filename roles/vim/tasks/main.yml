@@ -1,3 +1,9 @@
+- name: Install packages
+  apt:
+    name: ['vim']
+    state: present
+    update_cache: yes
+
 - name: Create ~/.vim directory
   file:
     path: /home/tarn/.vim
