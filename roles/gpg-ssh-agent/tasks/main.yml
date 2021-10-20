@@ -1,3 +1,9 @@
+- name: Install packages
+  apt:
+    name: ['scdaemon', 'gpg']
+    state: present
+    update_cache: yes
+
 - name: ~/.profiles/gpgssh_profile
   template:
     src: gpgssh_profile
