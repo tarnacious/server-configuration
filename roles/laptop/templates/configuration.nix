@@ -79,9 +79,16 @@
   services.gnome3.gnome-keyring.enable = true;
   services.xserver.libinput.enable = true;
 
+  services.printing.enable = true;
+  services.printing.drivers = [ pkgs.hplipWithPlugin ];
+  services.avahi.enable = true;
+  services.avahi.nssmdns = true;
+
   environment.systemPackages = with pkgs; [
+    sane-backends
     gksu
     wget
+    hplip
     zoom-us
     #skype
     slack
@@ -96,6 +103,8 @@
     nmap
     lsof
     pass
+    xsane
+    gnome3.simple-scan
     git
     gnupg
     docker_compose
