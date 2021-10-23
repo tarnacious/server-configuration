@@ -24,11 +24,24 @@
     - debugproxy.muttrc
     - mailcap
     - tarnbarford.muttrc
+    - offlineimap-pass.py
 
 - name: copy vdirsyncer configuration file
   template:
     src: "vdirsyncer.conf"
     dest: "/home/tarn/.config/vdirsyncer/config"
+    owner: tarn
+
+- name: copy msmtp configuration file
+  template:
+    src: "msmtprc"
+    dest: "/home/tarn/.msmtprc"
+    owner: tarn
+
+- name: copy offlineimap configuration file
+  template:
+    src: "offlineimaprc"
+    dest: "/home/tarn/.offlineimaprc"
     owner: tarn
 
 - name: copy khard configuration file

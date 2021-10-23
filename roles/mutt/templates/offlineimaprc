@@ -1,0 +1,35 @@
+[general]
+accounts = tarnbarford, debugproxy
+pythonfile=~/.mutt/offlineimap-pass.py
+
+[Account tarnbarford]
+localrepository = LocalTarnBarford
+remoterepository = RemoteTarnBarford
+
+[Account debugproxy]
+localrepository = LocalDebugProxy
+remoterepository = RemoteDebugProxy
+
+[Repository LocalTarnBarford]
+type = Maildir
+localfolders = ~/Mail/tarnbarford
+
+[Repository LocalDebugProxy]
+type = Maildir
+localfolders = ~/Mail/debugproxy
+
+[Repository RemoteTarnBarford]
+type = IMAP
+remotehost = mail.tarnbarford.net
+remoteuser = tarn@tarnbarford.net
+remotepasseval = get_pass("tarn@tarnbarford.net")
+ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+[Repository RemoteDebugProxy]
+type = IMAP
+remotehost = mail.tarnbarford.net
+remoteuser = hello@debugproxy.com
+remotepasseval = get_pass("hello@debugproxy.com")
+ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
