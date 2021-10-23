@@ -85,12 +85,13 @@
   services.avahi.nssmdns = true;
 
   environment.systemPackages = with pkgs; [
+    vlc
     sane-backends
     gksu
     wget
     hplip
     zoom-us
-    #skype
+    skype
     slack
     (import ./vim.nix)
     gawk
@@ -153,6 +154,7 @@
     solvespace
 
     ffmpeg
+    pinta
     imagemagick
     obs-studio
   ];
