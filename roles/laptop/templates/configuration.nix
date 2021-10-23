@@ -43,6 +43,8 @@
     192.168.122.83 www.mojoreads.local
     192.168.122.83 cms.mojoreads.local
     192.168.122.83 bui.mojoreads.local
+    192.168.122.83 admin.mojoreads.local
+    192.168.122.83 rabbitmq.mojoreads.local
     '';
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
