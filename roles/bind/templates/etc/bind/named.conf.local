@@ -3,9 +3,4 @@ zone "tarnbarford.net" {
     file "/etc/bind/zones/db.tarnbarford.net";
 };
 
-zone "debugproxy.com" {
-    type master;
-    file "/etc/bind/zones/db.debugproxy.com";
-};
-
 include "/etc/bind/zones.rfc1918";

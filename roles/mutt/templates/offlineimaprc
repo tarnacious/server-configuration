@@ -29,7 +29,7 @@ sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 [Repository RemoteDebugProxy]
 type = IMAP
 remotehost = mail.tarnbarford.net
-remoteuser = hello@debugproxy.com
-remotepasseval = get_pass("hello@debugproxy.com")
+remoteuser = hello@debugproxy.tarnbarford.net
+remotepasseval = get_pass("hello@debugproxy.tarnbarford.net")
 ssl = yes
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt

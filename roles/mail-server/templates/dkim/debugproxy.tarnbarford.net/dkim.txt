@@ -1,0 +1,2 @@
+dkim._domainkey.debugproxy.tarnbarford.net	IN	TXT	( "v=DKIM1; k=rsa; "
+	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDqdHqrAAZgJErJITS6a3EOjjwJ8Rn8nqX3SIMpaWxqjkS8FcOrBnj1u3jOPtgp+kXE79l74uKiFPkh/VDE8Oe3AzxUrsx80gWpe/pP1it7ql3GazOptW9cE7qaHbnYkPLp9kk6ePX1wt2Pu4uN+ftIKYGSCKffAwfnSUQHqH7N3QIDAQAB" )  ; ----- DKIM key dkim for debugproxy.tarnbarford.net

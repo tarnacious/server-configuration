@@ -1,2 +1,2 @@
 dkim._domainkey.tarnbarford.net tarnbarford.net:dkim:/etc/postfix/dkim/tarnbarford.net/dkim.private
-dkim._domainkey.debugproxy.com debugproxy.com:dkim:/etc/postfix/dkim/tarnbarford.net/dkim.private
+dkim._domainkey.debugproxy.tarnbarford.net debugproxy.tarnbarford.net:dkim:/etc/postfix/dkim/debugproxy.tarnbarford.net/dkim.private

@@ -1,4 +1,4 @@
-set from      = "hello@debugproxy.com"
+set from      = "hello@debugproxy.tarnbarford.net"
 set sendmail  = "msmtp -a hello_debugproxy"
 set mbox      = "+debugproxy/archive"
 set postponed = "+debugproxy/INBOX.drafts"

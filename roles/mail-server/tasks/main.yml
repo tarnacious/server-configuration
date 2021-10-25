@@ -209,6 +209,23 @@
    - dkim.private
    - dkim.txt
 
+- name: create /etc/postfix/dkim/debugproxy.tarnbarford.net
+  file:
+    path: /etc/postfix/dkim/debugproxy.tarnbarford.net
+    group: opendkim
+    mode: "g+r"
+    state: directory
+
+- name: set debugproxy dkim keys
+  template:
+    src: "templates/dkim/debugproxy.tarnbarford.net/{{ item }}"
+    dest: "/etc/postfix/dkim/debugproxy.tarnbarford.net/{{ item }}"
+    group: opendkim
+    mode: 0640
+  with_items:
+   - dkim.private
+   - dkim.txt
+
 - name: opendkim.conf
   copy:
     src: templates/opendkim.conf
