@@ -21,7 +21,6 @@
     - '/etc/bind/named.conf'
     - '/etc/bind/named.conf.options'
     - '/etc/bind/named.conf.local'
-    - '/etc/bind/zones/db.dodgyaf.xyz'
     - '/etc/bind/zones/db.tarnbarford.net'
     - '/etc/bind/zones/db.internal.tarnbarford.net'
     - '/etc/bind/zones/db.debugproxy.com'

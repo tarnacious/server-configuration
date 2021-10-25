@@ -3,11 +3,6 @@ zone "tarnbarford.net" {
     file "/etc/bind/zones/db.tarnbarford.net";
 };
 
-zone "dodgyaf.xyz" {
-    type master;
-    file "/etc/bind/zones/db.dodgyaf.xyz";
-};
-
 zone "debugproxy.com" {
     type master;
     file "/etc/bind/zones/db.debugproxy.com";
