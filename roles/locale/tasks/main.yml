@@ -1,0 +1,9 @@
+- name: Install list of packages
+  apt:
+    name: "locales"
+    state: present
+
+- name: Ensure a locale exists
+  locale_gen:
+    name: en_US.UTF-8
+    state: present

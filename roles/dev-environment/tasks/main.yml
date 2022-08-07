@@ -39,8 +39,3 @@
   with_items:
     - decrypt
     - encrypt
-
-- name: Ensure a locale exists
-  locale_gen:
-    name: en_US.UTF-8
-    state: present
