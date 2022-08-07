@@ -51,7 +51,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  security.wrappers.spice-client-glib-usb-acl-helper.source =  "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
+  #security.wrappers.spice-client-glib-usb-acl-helper.source =  "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
   nixpkgs.config.allowUnfree = true;
   networking.hostName = "xps-nixos";
   networking.networkmanager.enable = true;
