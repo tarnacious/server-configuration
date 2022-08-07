@@ -1,0 +1,9 @@
+- name: backup scripts
+  template:
+    src: "templates/{{ item }}"
+    dest: "/home/tarn/bin/{{ item }}"
+    mode: "755"
+    become: yes
+    become_user: "{{ username }}"
+  with_items:
+    - sync-backup-volumes
