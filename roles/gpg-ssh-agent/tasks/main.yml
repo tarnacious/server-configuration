@@ -1,8 +1,13 @@
-- name: Install packages
+- name: install packages
   apt:
-    name: ['scdaemon', 'gpg']
+    name: ['scdaemon', 'gpg', 'gpgconf', 'pcscd']
     state: present
     update_cache: yes
+
+- name: install nitrokey udev rules
+  template:
+    src: nitrokey.rules
+    dest: /etc/udev/rules.d/41-nitrokey.rules      
 
 - name: ~/.profiles/gpgssh_profile
   template:
@@ -10,6 +15,14 @@
     dest: "/home/{{ username }}/.profiles/gpgssh_profile"
     group: "{{ usergroup }}"
     owner: "{{ username }}"
+
+- name: ensure .gnupg directory
+  file:
+    dest: "/home/{{ username }}/.gnupg"
+    state: directory
+    group: "{{ usergroup }}"
+    owner: "{{ username }}"
+    mode: 0700
 
 - name: ~/.gnupg/gpg.conf
   template:
