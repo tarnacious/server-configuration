@@ -58,8 +58,8 @@
   networking.firewall.checkReversePath = false;
   virtualisation.docker.enable = true;
   virtualisation.libvirtd.enable = true;
-  virtualisation.libvirtd.qemuOvmf = true;
   hardware.nitrokey.enable = true;
+  virtualisation.libvirtd.qemu.ovmf.enable = true;
   hardware.pulseaudio.enable = true;
   hardware.opengl.enable = true;
   console.font = "latarcyrheb-sun32";
