@@ -83,13 +83,16 @@
   services.xserver.libinput.enable = true;
 
   services.printing.enable = true;
-  services.printing.drivers = [ pkgs.hplipWithPlugin ];
+  services.printing.drivers = [ pkgs.epson-escpr ];
   services.avahi.enable = true;
   services.avahi.nssmdns = true;
 
+  hardware.sane.enable = true;
+  hardware.sane.extraBackends = [ pkgs.utsushi ];
+  services.udev.packages = [ pkgs.utsushi ];
+
   environment.systemPackages = with pkgs; [
     vlc
-    sane-backends
     gksu
     wget
     hplip
@@ -107,7 +110,6 @@
     nmap
     lsof
     pass
-    xsane
     gnome3.simple-scan
     git
     gnupg
@@ -171,6 +173,7 @@
       "qemu-libvirtd"
       "libvirtd" "kvm"
       "lp"
+      "scanner"
       "usb"
       "disk"
       "davfs2"
