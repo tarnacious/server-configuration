@@ -1,0 +1,2 @@
+virsh undefine $1
+rm -rf /var/disks/$1.qcow2

@@ -36,3 +36,6 @@
   with_items:
     - attach-device
     - detach-device
+    - create-vm
+    - remove-vm
+

@@ -1,0 +1,106 @@
+#!/bin/sh
+
+# defaults
+name=
+cpus=4
+ram=4096
+initial_disk=/home/tarn/disks/golden.qcow2
+disk_store=/var/disks
+
+show_help() {
+cat << EOF
+Usage: ${0##*/} [OPTIONS] name
+Creates and starts a virtual machine from an initial image using virt-install.
+The new disks are created in $disk_store
+
+    --ram        amount of memory, default $ram mb
+    --cpus       number of cpus, defaut $cpus
+    --image      initial disk image, default $initial_disk
+    -h -? --help
+                show this help message.
+EOF
+}
+
+
+while :; do
+    case $1 in
+        -h|-\?|--help)
+            show_help
+            exit
+            ;;
+        --cpus)
+            if [ "$2" ]; then
+                cpus=$2
+                shift
+            fi
+            ;;
+        --ram)
+            if [ "$2" ]; then
+                ram=$2
+                shift
+            fi
+            ;;
+        --image)
+            if [ "$2" ]; then
+                initial_disk=$2
+                shift
+            fi
+            ;;
+        -?*)
+            printf 'Unknown option (ignored): %s\n' "$1" >&2
+            ;;
+        *)
+            break
+    esac
+    shift
+done
+
+if [ "$1" == "" ]; then
+  show_help
+  exit
+fi
+
+name=$1
+echo "name: $name"
+echo "cpus: $cpus"
+echo "ram: $ram"
+echo "initial_disk: $initial_disk"
+echo "disk_store: $disk_store"
+echo ""
+
+
+echo "provisioning new vm: $name"
+
+echo "copying initial disk image"
+cp $initial_disk $disk_store/$name.qcow2
+
+echo "importing vm: $1"
+virt-install \
+  --name $name \
+  --ram $ram \
+  --disk path=$disk_store/$name.qcow2 \
+  --vcpus $cpus \
+  --os-type linux \
+  --graphics none \
+  --os-variant debian10 \
+  --console pty,target_type=serial \
+  --noautoconsole \
+  --network bridge=virbr0 \
+  --import
+
+echo "attempting to parse mac address"
+mac=$(virsh dumpxml $name | grep 'mac address' | grep -Po "(?<=')[^']+(?=')")
+
+echo "mac address: $mac"
+
+while [ "$ip_address" = "" ]
+do
+  echo "attempting to get IP address"
+  ip_address=$(virsh net-dhcp-leases default | grep $mac | awk '{ print $5 }' | awk -F'/' '{ print $1 }')
+  if [ "$ip_address" = "" ]; then
+    echo "ip address not yet available, waiting 1 second."
+    sleep 1
+  fi
+done
+
+echo "found ip address: $ip_address"
