@@ -59,6 +59,7 @@
   virtualisation.libvirtd.qemuOvmf = true;
   hardware.nitrokey.enable = true;
   hardware.pulseaudio.enable = true;
+  hardware.opengl.enable = true;
   console.font = "latarcyrheb-sun32";
   console.keyMap = "us";
   i18n.defaultLocale = "en_US.UTF-8";
