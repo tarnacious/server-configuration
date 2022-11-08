@@ -1,17 +1,21 @@
 ## System Configuration
 
 This is the Ansible configuration for my personal computers, virtual machines
-and servers.
-
-Sensitive data is encrypted with ansible-vault.
-
-## Systems
+and servers. Sensitive data is encrypted with ansible-vault.
 
 I use this project to configure my personal laptop, my work laptop, my
 [personal website][1], my [owncloud][3], my mail server, a random Wordpress
 [site][4] I host for a friend, some DNS name servers, a backup system, a
 [monitoring][5] system, a physical server running most of my VMs and a couple
-of VMs I use locally for development.
+of VMs I use locally.
+
+I find Ansible for my personal use-cases pretty perfect as it's only marginally
+more effort than taking notes or writing bash scripts when manually configuring
+systems and I find it significantly better than both when returning to those
+systems months or years later. I've also found it to be very useful for
+managing my laptops and development environments as I can install and configure
+vim, git, tmux, gpg/ssh agents etc across different system with my personal
+preferences.
 
 ## Installing Ansible
 
