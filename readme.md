@@ -1,38 +1,67 @@
-## Server Configuration
+## System Configuration
 
-This is the ansible configuration for my personal servers. Sensitive data is
-encrypted with ansible-vault.
+This is the Ansible configuration for my personal computers, virtual machines
+and servers.
 
-## Servers
+Sensitive data is encrypted with ansible-vault.
 
-The servers currently include:
+## Systems
 
-* [tarnbarford.net](https://tarnbarford.net) - my personal website
-* [debugproxy.com](https://debugproxy.com) - a hosted http/https proxy service
-* [bridgesacrossborders.net](https://bridgesacrossborders.net) - a website I host
-* [owncloud.tarnbarford.net](https://owncloud.tarnbarford.net) - private owncloud server
-* [icinga.tarnbarford.net](https://icinga.tarnbarford.net) - monitoring and alerts (icinga)
-* [monitoring.tarnbarford.net](https://monitoring.tarnbarford.net) - monitoring (munin)
-* mail.tarnbarford.net - public mail server and smtp relay (postfix, dovecot, spamassive, opendkim, opendmarc)
-* ns1.tarnbarford.net - name server (bind9)
-* ns2.tarnbarford.net - name server (bind9)
-* backup system (bareos)
-* root server that hosts most of the servers (KVM)
+I use this project to configure my personal laptop, my work laptop, my
+[personal website][1], my [owncloud][3], my mail server, a random Wordpress
+[site][4] I host for a friend, some DNS name servers, a backup system, a
+[monitoring][5] system, a physical server running most of my VMs and a couple
+of VMs I use locally for development.
 
-## Running playbooks
+## Installing Ansible
 
-With Python 3.3 and above a virtual environment can be setup and ansible
-installed in it like this.
+The Ansible version used should run on Python 3.3 and above.
+
+On Debian-like systems it makes sense to install inside a Python virtual
+environment or something similar.
 
 ```
 python -m venv .
-./bin/pip install -r requirements.txt
+source ./bin/activate
+```
+
+For Nix environments there is configuration which can be used.
+
+```
+nix-shell
 ````
 
-Playbooks describe indivual servers state. All playbooks expect some
-configuration values via group_var or host_vars and a server described in the
-inventory, these are not included in this repository.
+To install the packages on either system
 
 ```
-./bin/ansible-playbook playbooks/tarnbarford.yml
+pip install -r requirements.txt
 ```
+
+## Secrets
+
+Secrets in the inventory are encrypted with Ansible Vault. Ansible will try to
+decrypt the required secrets when running playbooks using a password found
+using the `pass` program with the key `vault/servers`.
+
+Additionally there are two scripts `./scripts/encrypt` and `./scripts/decrypt`
+which I use to encrypt and decrypt secrets in Vim.
+
+# Running Playbooks
+
+Playbooks are used to actually install and configure things. Generally
+playbooks configure a single system.
+
+```
+ansible-playbook playbooks/tarnbarford.yml --ask-become-user
+```
+
+In most cases the `--ask-become-user` option is required to configure things as
+the root user on the target system.
+
+
+[1]: https://tarnbarford.net
+[2]: https://debugproxy.com
+[3]: https://bridgesacrossborders.net
+[4]: https://owncloud.tarnbarford.net
+[5]: https://icinga.tarnbarford.net
+[6]: https://monitoring.tarnbarford.net
