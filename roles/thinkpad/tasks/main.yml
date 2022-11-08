@@ -1,0 +1,43 @@
+- name: /etc/nixos/configuration.nix
+  template:
+    src: "configuration.nix"
+    dest: "/etc/nixos/configuration.nix"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+
+- name: /etc/nixos/hardware-configuration.nix
+  template:
+    src: "hardware-configuration.nix"
+    dest: "/etc/nixos/hardware-configuration.nix"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+
+- name: /etc/nixos/vim.nix
+  template:
+    src: "vim.nix"
+    dest: "/etc/nixos/vim.nix"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+
+    #- name: samba secret
+    #  template:
+    #    src: "smb-secrets"
+    #    dest: "/etc/nixos/smb-secrets"
+    #    mode: "600"
+    #  become: true
+    #
+    #- name: backup secrets
+    #  template:
+    #    src: "backup-secrets"
+    #    dest: "/etc/nixos/backup-secrets"
+    #    mode: "600"
+    #  become: true

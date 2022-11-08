@@ -1,0 +1,12 @@
+- hosts: localhost
+  user: root
+  become: yes
+  connection: local
+  roles:
+    - bash
+    - gpg-ssh-agent
+    - git
+    - mutt
+    - tmux
+    - thinkpad
+

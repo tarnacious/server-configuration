@@ -4,13 +4,6 @@
     ./hardware-configuration.nix
   ];
 
-  swapDevices = [
-    {
-      device = "/swapfile";
-      size = 16384;
-    }
-  ];
-
   fileSystems."/mnt/backup" = {
     device = "//u198293.your-storagebox.de/backup";
     fsType = "cifs";
@@ -48,9 +41,11 @@
     192.168.122.116 rabbitmq.mojoreads.local
     192.168.122.116 mobile.mojoreads.local
     '';
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
+
   #security.wrappers.spice-client-glib-usb-acl-helper.source =  "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
   nixpkgs.config.allowUnfree = true;
   networking.hostName = "xps-nixos";

@@ -8,6 +8,6 @@
     - git
     - gpg-ssh-agent
     - davfs2-client
-    - laptop
+    - dellxps
     - mutt
     - backup-scripts

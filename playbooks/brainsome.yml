@@ -2,10 +2,9 @@
   user: root
   become: yes
   roles:
-    - dev-environment
     - bash
     - git
     - rbenv
     - docker
     - gpg-ssh-agent
-    - dev-environment-brainsome
+    - brainsome

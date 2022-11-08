@@ -1,6 +1,0 @@
-- hosts: ansible-dev
-  user: root
-  become: yes
-  roles:
-    - dev-environment
-    - dev-environment-docker

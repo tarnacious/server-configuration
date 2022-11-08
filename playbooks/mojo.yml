@@ -1,9 +1,0 @@
-- hosts: mojo
-  user: root
-  become: yes
-  roles:
-    - bash
-    - git
-    - vim
-    - tmux
-    - gpg-ssh-agent
