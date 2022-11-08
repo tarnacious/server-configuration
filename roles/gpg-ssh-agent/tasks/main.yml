@@ -3,11 +3,13 @@
     name: ['scdaemon', 'gpg', 'gpgconf', 'pcscd']
     state: present
     update_cache: yes
+  when: ansible_os_family == "Debian"
 
 - name: install nitrokey udev rules
   template:
     src: nitrokey.rules
-    dest: /etc/udev/rules.d/41-nitrokey.rules      
+    dest: /etc/udev/rules.d/41-nitrokey.rules
+  when: ansible_os_family == "Debian"
 
 - name: ~/.profiles/gpgssh_profile
   template:
@@ -23,6 +25,7 @@
     group: "{{ usergroup }}"
     owner: "{{ username }}"
     mode: 0700
+  when: ansible_os_family == "Debian"
 
 - name: ~/.gnupg/gpg.conf
   template:
@@ -30,6 +33,7 @@
     dest: "/home/{{ username }}/.gnupg/gpg.conf"
     group: "{{ usergroup }}"
     owner: "{{ username }}"
+  when: ansible_os_family == "Debian"
 
 - name: ~/.gnupg/gpg-agent.conf
   template:
@@ -37,3 +41,4 @@
     dest: "/home/{{ username }}/.gnupg/gpg-agent.conf"
     group: "{{ usergroup }}"
     owner: "{{ username }}"
+  when: ansible_os_family == "Debian"
