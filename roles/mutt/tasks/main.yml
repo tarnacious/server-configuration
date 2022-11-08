@@ -10,6 +10,7 @@
     state: directory
     owner: tarn
   with_items:
+    - /home/tarn/.mutt
     - /home/tarn/.config
     - /home/tarn/.config/vdirsyncer
     - /home/tarn/.config/khard
