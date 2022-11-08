@@ -30,6 +30,8 @@
   nixpkgs.config.allowUnfree = true;
 
   virtualisation.docker.enable = true;
+  virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd.qemu.ovmf.enable = true;
 
   # Setup keyfile
   boot.initrd.secrets = { "/crypto_keyfile.bin" = null;
@@ -86,8 +88,19 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.tarn = { isNormalUser = true; description = "tarn";
-    extraGroups = [ "networkmanager" "wheel" "docker" ]; packages = with pkgs; [
+  users.users.tarn = {
+    isNormalUser = true;
+    description = "tarn";
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+      "qemu-libvirtd"
+      "libvirtd"
+      "kvm"
+    ];
+
+    packages = with pkgs; [
       firefox
     #  thunderbird
     ];
@@ -115,6 +128,8 @@
 
   slack
 
+  # virtualisation
+  virtmanager
 
   #wget
   ];
