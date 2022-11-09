@@ -113,12 +113,18 @@
 	enableSSHSupport = true;
   };
   environment.systemPackages = with pkgs; [
-	gnupg
-	pass
-	owncloud-client
+
+  # standard tools
+  gnupg
+  pass
   git
   tmux
+  wget
+  bind
 
+  # gui tools
+  filezilla
+  vscode
   pinta
 
   # mail / contacts / calendars
@@ -127,12 +133,15 @@
   khard
   msmtp
 
+  # work
   slack
+
+  # owncloud
+  owncloud-client
 
   # virtualisation
   virtmanager
 
-  #wget
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
