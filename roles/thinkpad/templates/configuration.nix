@@ -125,6 +125,7 @@
   neomutt
   offlineimap
   khard
+  msmtp
 
   slack
 
