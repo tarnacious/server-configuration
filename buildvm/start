@@ -1,0 +1,15 @@
+virt-install                                                    \
+    --connect qemu:///system                                   \
+    --name nixos                                                \
+    --vcpus 1                                                   \
+    --memory 2048                                               \
+    --autostart                                                 \
+    --memballoon virtio                                         \
+    --network default                                           \
+    --boot hd                                                   \
+    --disk result/nixos.qcow2,format=qcow2,bus=virtio           \
+    --noautoconsole                                             \
+    --graphics none                                             \
+    --os-variant centos8                                        \
+    --console pty,target_type=serial                            \
+    --machine q35
