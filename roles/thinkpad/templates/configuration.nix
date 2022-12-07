@@ -148,6 +148,8 @@
   jetbrains.idea-community
   maven
   openjdk8
+
+  libreoffice
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
