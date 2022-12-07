@@ -15,6 +15,7 @@ in {
             vim-lastplace
             vim-nix
             fzf-vim
+            ack-vim
             nerdtree
             markdown-preview-nvim
             coc-nvim
