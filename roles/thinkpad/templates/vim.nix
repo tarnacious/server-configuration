@@ -21,6 +21,7 @@ in {
             coc-tsserver
             coc-java
             coc-pyright
+            coc-prettier
           ];
           opt = [];
         };
@@ -43,6 +44,7 @@ in {
           noremap <leader>tsw :CocCommand tsserver.watchBuild<cr>
           noremap <leader>co :copen
 
+          command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
           " Use tab for trigger completion with characters ahead and navigate.
           " NOTE: There's always complete item selected by default, you may want to enable
