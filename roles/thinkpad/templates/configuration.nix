@@ -114,6 +114,9 @@
   };
   environment.systemPackages = with pkgs; [
 
+  skypeforlinux
+  google-chrome
+
   # standard tools
   gnupg
   pass
