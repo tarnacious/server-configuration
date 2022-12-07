@@ -145,6 +145,9 @@
   # virtualisation
   virtmanager
 
+  jetbrains.idea-community
+  maven
+  openjdk8
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
