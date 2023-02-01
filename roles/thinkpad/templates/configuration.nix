@@ -14,6 +14,11 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
+  boot.kernel.sysctl =
+    {
+      "vm.max_map_count" = 262144;
+    };
+
   networking.extraHosts =
     ''
       127.0.0.1 ybs.local
