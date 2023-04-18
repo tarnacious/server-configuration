@@ -195,6 +195,12 @@
   vlc
   youtube-dl
 
+  # 3d printing
+  cura
+  freecad
+
+
+
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
