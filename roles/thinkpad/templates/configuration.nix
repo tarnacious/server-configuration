@@ -170,6 +170,7 @@
   offlineimap
   khard
   msmtp
+  vdirsyncer
 
   # work
   slack
