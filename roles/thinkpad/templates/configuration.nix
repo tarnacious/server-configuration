@@ -188,6 +188,7 @@
   jetbrains.idea-community
   maven
   openjdk8
+  openjdk17
 
   libreoffice
   ];
