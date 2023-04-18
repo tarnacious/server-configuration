@@ -1,2 +1,2 @@
 ./scripts/gen-ca
-cat ./inventory/ca/fqdns | xargs -n 1 ./scripts/gen-cert
+cat ./playbooks/ca/fqdns | xargs -n 1 ./scripts/gen-cert
