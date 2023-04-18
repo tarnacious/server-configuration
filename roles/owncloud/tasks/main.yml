@@ -1,6 +1,6 @@
 - name: Install ca-certificates
   apt:
-    name: [ 
+    name: [
       "ca-certificates",
       "apt-transport-https"
     ]
