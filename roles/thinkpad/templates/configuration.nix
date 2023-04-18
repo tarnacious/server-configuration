@@ -172,6 +172,10 @@
   msmtp
   vdirsyncer
 
+  # notes
+  joplin
+  joplin-desktop
+
   # work
   slack
 
