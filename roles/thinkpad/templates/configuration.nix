@@ -56,6 +56,16 @@
   boot.initrd.secrets = { "/crypto_keyfile.bin" = null;
   };
 
+  xdg = {
+    portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-wlr
+      ];
+      gtkUsePortal = true;
+    };
+  };
+
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true; # Enables wireless support via
   # wpa_supplicant.
