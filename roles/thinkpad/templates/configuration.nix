@@ -191,6 +191,10 @@
   openjdk17
 
   libreoffice
+
+  vlc
+  youtube-dl
+
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
