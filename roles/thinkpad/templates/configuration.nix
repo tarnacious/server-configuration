@@ -30,6 +30,20 @@
       127.0.0.1 logging.ybs.local
       127.0.0.1 products.ybs.local
       127.0.0.1 media.ybs.local
+      127.0.0.1 book-data.ybs.local
+
+      {{ hosts.hypervisor.ipv6 }} hypervisor
+      {{ hosts.bacula.ipv6 }} bacula bacula.tarnbarford.net
+      {{ hosts.monitoring.ipv6 }} monitoring monitoring.tarnbarford.net
+      {{ hosts.load_balancer.ipv6 }} load-balancer load-balancer.tarnbarford.net
+      {{ hosts.tarnbarford.ipv6 }} tarnbarford tarnbarford.net
+      {{ hosts.bab_website.ipv6 }} bab-website
+      {{ hosts.owncloud.ipv6 }} owncloud owncloud.tarnbarford.net
+      {{ hosts.mail_server.ipv6 }} mail-server mail.tarnbarford.net
+      {{ hosts.debugproxy.ipv6 }} debugproxy debugproxy.com
+      {{ hosts.icinga.ipv6 }} icinga icinga.tarnbarford.net
+      {{ hosts.ns1.ipv6 }} ns1 ns1.tarnbarford.net
+      {{ hosts.ns2.ipv6 }} ns2 ns2.tarnbarford.net
     '';
 
   nixpkgs.config.allowUnfree = true;
