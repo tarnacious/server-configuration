@@ -154,6 +154,11 @@
   tmux
   wget
   bind
+  htop
+  cloc
+  pwgen
+  zip
+  unzip
 
   # gui tools
   filezilla
