@@ -1,7 +1,5 @@
 { pkgs, ... }:
-let
-  unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
-in {
+{
   environment.variables = { EDITOR = "vim"; };
 
   environment.systemPackages = with pkgs; [
@@ -10,7 +8,7 @@ in {
       withNodeJs = true;
 
       configure = {
-        packages.myPlugins = with unstable.vimPlugins; {
+        packages.myPlugins = with pkgs.unstable.vimPlugins; {
           start = [
             vim-lastplace
             vim-nix

@@ -1,2 +1,2 @@
 - name: rebuild nix
-  command: nixos-rebuild switch
+  command: nixos-rebuild switch --flake "/etc/nixos#nixos"
