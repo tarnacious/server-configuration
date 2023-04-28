@@ -11,8 +11,6 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  services.xserver.videoDrivers = [ "nvidia" ];
-
   # Configure keymap in X11
   services.xserver = {
     layout = "au";
@@ -26,6 +24,14 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
+
+
+  #hardware.nvidia.modesetting.enable = true;
+  #hardware.opengl.enable = true;
+  #hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+  #boot.kernelParams = [ "module_blacklist=i915" ];
+  #services.xserver.videoDrivers = [ "nvidia" ];
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
