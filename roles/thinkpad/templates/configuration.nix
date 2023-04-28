@@ -11,6 +11,8 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  services.xserver.videoDrivers = [ "nvidia" ];
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
