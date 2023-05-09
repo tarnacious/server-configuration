@@ -28,6 +28,16 @@
   become: true
   notify: rebuild nix
 
+- name: /etc/nixos/cachix.nix
+  template:
+    src: "cachix.nix"
+    dest: "/etc/nixos/cachix.nix"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+
 - name: /etc/nixos/flake.nix
   template:
     src: "flake.nix"
