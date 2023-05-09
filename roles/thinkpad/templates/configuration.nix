@@ -22,17 +22,31 @@
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
-  services.xserver.displayManager.gdm.wayland = false;
+  services.xserver.displayManager.gdm.wayland = true;
+  hardware.opengl.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
 
-  #hardware.nvidia.modesetting.enable = true;
-  #hardware.opengl.enable = true;
-  #hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-  #boot.kernelParams = [ "module_blacklist=i915" ];
-  #services.xserver.videoDrivers = [ "nvidia" ];
+  specialisation = {
+    external-cuda.configuration = {
+      system.nixos.tags = [ "external-cuda" ];
+      services.xserver.videoDrivers = [ "nvidia" ];
+    };
+    external-gpu.configuration = {
+      system.nixos.tags = [ "external-gpu" ];
+      services.xserver.videoDrivers = [ "nvidia" ];
+      hardware.nvidia.modesetting.enable = true;
+      #hardware.nvidia.powerManagement.enable = false;
+      hardware.nvidia.prime = {
+        sync.allowExternalGpu = true;
+        offload.enable = true;
+        intelBusId = "PCI:0:2:0";
+        nvidiaBusId = "PCI:82:0:0";
+      };
+    };
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
