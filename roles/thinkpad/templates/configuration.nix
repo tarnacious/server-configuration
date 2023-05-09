@@ -182,6 +182,7 @@
   pwgen
   zip
   unzip
+  screen
 
 
   # system tools
