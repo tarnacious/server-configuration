@@ -68,3 +68,9 @@ Host dns
     User tarn
     HostName {{ hosts.dns.ipv6 }}
     ForwardAgent yes
+
+Host robot
+    User tarn
+    HostName {{ hosts.robot.ipv4 }}
+    ForwardAgent yes
+

@@ -119,6 +119,8 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  services.avahi.enable = true;
+  services.avahi.nssmdns = true;
   services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin ];
 
   # services.gnome.gnome-keyring.enable = true;
