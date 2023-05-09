@@ -174,6 +174,7 @@
   # mail / contacts / calendars
   neomutt
   offlineimap
+  urlview
   khard
   msmtp
   vdirsyncer
