@@ -181,6 +181,12 @@
   zip
   unzip
 
+
+  # system tools
+  pciutils
+  lshw
+  cachix
+
   # gui tools
   filezilla
   vscode
