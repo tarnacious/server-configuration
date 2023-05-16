@@ -1,0 +1,5 @@
+- name: "/home/username/.ssh/config"
+  template:
+    src: "templates/config"
+    dest: "/home/{{ username }}/.ssh/config"
+    owner: "{{ username }}"
