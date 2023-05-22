@@ -1,18 +1,14 @@
 - name: Install packages
   apt:
-    name: "{{item}}"
+    name: [
+      'certbot',
+      'python-certbot-nginx',
+      'python-virtualenv',
+      'git',
+      'nginx',
+    ]
     state: present
     update_cache: yes
-  with_items:
-    - certbot
-    - python-certbot-nginx
-    - postgresql
-    - python-virtualenv
-    - python-psycopg2
-    - git
-    - nginx
-    - supervisor
-    - redis-server
 
 - name: Get initial letsencypt SSL certificat
   shell: "systemctl stop nginx && certbot certonly --non-interactive --standalone -d tarnbarford.net --email tarn@tarnbarford.net --agree-tos && systemctl start nginx"
@@ -30,35 +26,7 @@
     shell: /bin/bash
     group: website
 
-- name: Ensures website SSH dir exists
-  file:
-    path: /home/website/.ssh
-    state: directory
-    owner: website
-    group: website
-
-- name: Copy SSH public key
-  template:
-    src: templates/id_rsa.pub
-    dest: /home/website/.ssh/id_rsa.pub
-    owner: website
-    group: website
-    mode: 0600
-
-- name: Copy SSH private key
-  template:
-    src: templates/id_rsa
-    dest: /home/website/.ssh/id_rsa
-    owner: website
-    group: website
-    mode: 0600
-
-- name: create website database
-  postgresql_db:
-    name: website
-  become_user: postgres
-
-- name: create website user
+- name: Create website user
   postgresql_user:
      db: website
      user: website
@@ -66,20 +34,20 @@
   become: yes
   become_user: postgres
 
-- name: Clone repository
+- name: Clone website generator
   git:
-    repo: git@bitbucket.org:tarnacious/author.git
-    dest: /home/website/website
-    version: master
+    repo: https://github.com/tarnacious/website.git
+    dest: /home/website/generator
+    version: main
     accept_hostkey: True
     force: yes
   become: yes
   become_user: website
 
-- name: Posts repository
+- name: Clone posts repository
   git:
     repo: https://github.com/tarnacious/posts.git
-    dest: /home/website/posts
+    dest: /home/website/generator/posts
     version: master
     accept_hostkey: True
     force: yes
@@ -87,41 +55,26 @@
   become_user: website
 
 - name: Install python environment
-  shell: virtualenv .
+  shell: python3 -m venv ./venv
   become: yes
   become_user: website
   args:
-    chdir: /home/website/website
-    creates: /home/website/website/bin
+    chdir: /home/website/generator
+    creates: /home/website/generator/venv
 
 - name: Install python packages
-  shell: ./bin/pip install -r requirements.txt
+  shell: ./venv/bin/pip install -r requirements.txt
   become: yes
   become_user: website
   args:
-    chdir: /home/website/website
+    chdir: /home/website/generator
 
-- name: Copy app.conf
-  template:
-    src: templates/app.conf
-    dest: /home/website/app.conf
-    owner: website
-    group: website
-    mode: 0600
-
-- name: Copy setup.py
-  copy:
-    src: templates/setup.py
-    dest: /home/website/website/setup.py
-    owner: website
-    group: website
-
-- name: Install python packages
-  shell: APP_SETTINGS=/home/website/app.conf ./bin/python setup.py
+- name: Generate site
+  shell: ./venv/bin/python src/generate.py
   become: yes
   become_user: website
   args:
-    chdir: /home/website/website
+    chdir: /home/website/generator
 
 - name: Configure nginx
   copy:
@@ -130,11 +83,3 @@
     owner: root
     group: root
   notify: restart nginx
-
-- name: Configure supervisor
-  copy:
-    src: templates/website.conf
-    dest: /etc/supervisor/conf.d/website.conf
-    owner: root
-    group: root
-  notify: reload supervisor
