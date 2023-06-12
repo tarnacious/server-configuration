@@ -25,7 +25,6 @@
     group: "{{ usergroup }}"
     owner: "{{ username }}"
     mode: 0700
-  when: ansible_os_family == "Debian"
 
 - name: ~/.gnupg/gpg.conf
   template:
@@ -33,7 +32,6 @@
     dest: "/home/{{ username }}/.gnupg/gpg.conf"
     group: "{{ usergroup }}"
     owner: "{{ username }}"
-  when: ansible_os_family == "Debian"
 
 - name: ~/.gnupg/gpg-agent.conf
   template:
@@ -41,4 +39,3 @@
     dest: "/home/{{ username }}/.gnupg/gpg-agent.conf"
     group: "{{ usergroup }}"
     owner: "{{ username }}"
-  when: ansible_os_family == "Debian"
