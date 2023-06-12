@@ -7,15 +7,15 @@
 - name: Install list of packages
   apt:
     name: [
-      "php7.3-mysql",
-      "php7.3-curl",
+      "php7.4-mysql",
+      "php7.4-curl",
       "mariadb-server",
       "mariadb-client",
       "icinga2",
       "icinga2-ido-mysql",
       "icingaweb2",
       "icingacli",
-      "python-mysqldb",
+      "python3-mysqldb",
       "certbot",
       "monitoring-plugins",
       "sendmail-bin",
