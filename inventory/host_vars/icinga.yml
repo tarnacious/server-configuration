@@ -16,19 +16,10 @@ email_password: !vault |
 
 backup_jobs:
   - bab-database
-  - bab-ssl-certificates
   - bab-uploads
-  - debugproxy-database
-  - tarnbarford-database
   - monitoring-rrd
-  - monitoring-lets-encrypt
-  - tarnbarford-net-letsencrypt
-  - tarnbarford-letsencrypt
-  - debugproxy-letsencrypt
   - owncloud-data
-  - owncloud-letsencrypt
   - owncloud-database
-  - mail-server-letsencrypt
   - mail-server-mailboxes
   - mail-server-database
   - backup-bareos-fd
