@@ -3,7 +3,8 @@
     name: [
       'certbot',
       'python-certbot-nginx',
-      'python-virtualenv',
+      'python3-virtualenv',
+      'python3-pip',
       'git',
       'nginx',
     ]
@@ -25,14 +26,6 @@
     name: website
     shell: /bin/bash
     group: website
-
-- name: Create website user
-  postgresql_user:
-     db: website
-     user: website
-     password: password
-  become: yes
-  become_user: postgres
 
 - name: Clone website generator
   git:
