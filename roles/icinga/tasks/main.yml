@@ -143,8 +143,6 @@
       address6: "{{ hosts.owncloud.ipv6 }}"
     - name: "mail.tarnbarford.net"
       address6: "{{ hosts.mail_server.ipv6 }}"
-    - name: "debugproxy.tarnbarford.net"
-      address6: "{{ hosts.debugproxy.ipv6 }}"
     - name: "ns1.tarnbarford.net"
       address6: "{{ hosts.ns1.ipv6 }}"
     - name: "ns2.tarnbarford.net"
