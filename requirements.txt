@@ -1,2 +1,1 @@
-ansible==2.9.27
-lxml==4.2.5
+ansible==8.0.0

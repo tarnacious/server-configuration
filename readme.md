@@ -19,23 +19,22 @@ preferences.
 
 ## Installing Ansible
 
-The Ansible version used should run on Python 3.3 and above.
+The Ansible version used should run on Python 3.10 and above.
 
-On Debian-like systems it makes sense to install inside a Python virtual
-environment or something similar.
+For Nix environments there is configuration which can be used.
+
+```
+nix devlop
+````
+
+Setting up a Python virtual environment
 
 ```
 python -m venv .
 source ./bin/activate
 ```
 
-For Nix environments there is configuration which can be used.
-
-```
-nix-shell
-````
-
-To install the packages on either system
+To install the Python packages
 
 ```
 pip install -r requirements.txt
