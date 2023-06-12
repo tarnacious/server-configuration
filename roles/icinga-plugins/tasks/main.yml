@@ -7,10 +7,10 @@
 - name: Copy icinga client plugins
   copy:
     src: "{{ item }}"
-    dest: "/{{ item }}"
+    dest: "/usr/lib/nagios/plugins/{{ item }}"
     owner: root
     group: nagios
     mode: "0754"
   with_items:
-    - usr/lib/nagios/plugins/check_mem.pl
-    - usr/lib/nagios/plugins/check_raid.pl
+    - check_mem.pl
+    - check_raid.pl
