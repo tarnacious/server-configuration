@@ -174,6 +174,7 @@
   gnupg
   pass
   git
+  git-lfs
   tmux
   wget
   bind
