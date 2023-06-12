@@ -1,0 +1,70 @@
+Host hypervisor
+    HostName {{ hosts.hypervisor.ipv6 }}
+    User tarn
+    ForwardAgent yes
+
+Host bacula
+    HostName {{ hosts.bacula.ipv6 }}
+    User tarn
+    ForwardAgent yes
+
+Host monitoring
+    HostName {{ hosts.monitoring.ipv6 }}
+    User tarn
+    ForwardAgent yes
+
+Host load-balancer
+    HostName {{ hosts.load_balancer.ipv6 }}
+    User tarn
+    ForwardAgent yes
+
+Host tarnbarford
+    HostName {{ hosts.load_balancer.ipv6 }}
+    User tarn
+    ForwardAgent yes
+
+Host bab-website
+    HostName {{ hosts.bab_website.ipv6 }}
+    User tarn
+    ForwardAgent yes
+
+Host owncloud
+    HostName {{ hosts.owncloud.ipv6 }}
+    User tarn
+    ForwardAgent yes
+
+Host mail-server
+    HostName {{ hosts.mail_server.ipv6 }}
+    User tarn
+    ForwardAgent yes
+
+Host debugproxy
+    HostName {{ hosts.debugproxy.ipv6 }}
+    User tarn
+    ForwardAgent yes
+
+Host icinga
+    User tarn
+    HostName {{ hosts.icinga.ipv6 }}
+    User tarn
+    ForwardAgent yes
+
+Host ns1
+    User tarn
+    HostName {{ hosts.ns1.ipv6 }}
+    ForwardAgent yes
+
+Host ns2
+    User tarn
+    HostName {{ hosts.ns2.ipv6 }}
+    ForwardAgent yes
+
+Host vpn
+    User tarn
+    HostName {{ hosts.vpn.ipv6 }}
+    ForwardAgent yes
+
+Host dns
+    User tarn
+    HostName {{ hosts.dns.ipv6 }}
+    ForwardAgent yes
