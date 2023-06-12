@@ -19,7 +19,7 @@
 
 - name: Start PHP-FPM
   service:
-    name: php7.3-fpm
+    name: php7.4-fpm
     state: started
     enabled: True
 
