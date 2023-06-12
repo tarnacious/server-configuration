@@ -72,17 +72,17 @@
       127.0.0.1 book-data.ybs.local
 
       {{ hosts.hypervisor.ipv6 }} hypervisor
-      {{ hosts.bacula.ipv6 }} bacula bacula.tarnbarford.net
-      {{ hosts.monitoring.ipv6 }} monitoring monitoring.tarnbarford.net
-      {{ hosts.load_balancer.ipv6 }} load-balancer load-balancer.tarnbarford.net
-      {{ hosts.tarnbarford.ipv6 }} tarnbarford tarnbarford.net
+      {{ hosts.bacula.ipv6 }} bacula
+      {{ hosts.monitoring.ipv6 }} monitoring
+      {{ hosts.load_balancer.ipv6 }} load-balancer
+      {{ hosts.tarnbarford.ipv6 }} tarnbarford
       {{ hosts.bab_website.ipv6 }} bab-website
-      {{ hosts.owncloud.ipv6 }} owncloud owncloud.tarnbarford.net
-      {{ hosts.mail_server.ipv6 }} mail-server mail.tarnbarford.net
-      {{ hosts.debugproxy.ipv6 }} debugproxy debugproxy.com
-      {{ hosts.icinga.ipv6 }} icinga icinga.tarnbarford.net
-      {{ hosts.ns1.ipv6 }} ns1 ns1.tarnbarford.net
-      {{ hosts.ns2.ipv6 }} ns2 ns2.tarnbarford.net
+      {{ hosts.owncloud.ipv6 }} owncloud
+      {{ hosts.mail_server.ipv6 }} mail-server
+      {{ hosts.debugproxy.ipv6 }} debugproxy
+      {{ hosts.icinga.ipv6 }} icinga
+      {{ hosts.ns1.ipv6 }} ns1
+      {{ hosts.ns2.ipv6 }} ns2
     '';
 
   nixpkgs.config.allowUnfree = true;
