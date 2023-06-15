@@ -184,6 +184,7 @@
   zip
   unzip
   screen
+  imagemagick
 
 
   # system tools
