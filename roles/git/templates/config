@@ -19,3 +19,6 @@
         excludesfile = ~/.gitignore.global
 [commit]
         gpgsign = true
+[init]
+        defaultBranch = main
+
