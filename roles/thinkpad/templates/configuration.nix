@@ -184,8 +184,11 @@
   zip
   unzip
   screen
-  imagemagick
 
+  # conversion tools
+  imagemagick
+  pandoc
+  ffmpeg
 
   # system tools
   pciutils
