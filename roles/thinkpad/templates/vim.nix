@@ -43,6 +43,16 @@
           noremap <leader>tsw :CocCommand tsserver.watchBuild<cr>
           noremap <leader>co :copen
 
+          " Use system clipboard with leader
+          vnoremap <leader>y "+y
+          nnoremap <leader>Y "+yg
+          nnoremap <leader>y "+y
+          nnoremap <leader>yy "+yy
+          nnoremap <leader>p "+p
+          nnoremap <leader>P "+P
+          vnoremap <leader>p "+p
+          vnoremap <leader>P "+P
+
           command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
           " Use tab for trigger completion with characters ahead and navigate.
