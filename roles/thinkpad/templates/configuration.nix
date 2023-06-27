@@ -121,7 +121,7 @@
   services.printing.enable = true;
   services.avahi.enable = true;
   services.avahi.nssmdns = true;
-  services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin ];
+  services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin pkgs.epson-escpr];
 
   # services.gnome.gnome-keyring.enable = true;
 
