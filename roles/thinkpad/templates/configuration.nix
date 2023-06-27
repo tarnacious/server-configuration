@@ -208,6 +208,9 @@
   msmtp
   vdirsyncer
 
+  # wayland
+  wl-clipboard
+
   # notes
   joplin
   joplin-desktop
