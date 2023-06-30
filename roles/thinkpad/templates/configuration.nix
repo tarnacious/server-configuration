@@ -89,8 +89,30 @@
   nixpkgs.config.allowUnfree = true;
 
   virtualisation.docker.enable = true;
-  virtualisation.libvirtd.enable = true;
-  virtualisation.libvirtd.qemu.ovmf.enable = true;
+
+  virtualisation.libvirtd = {
+    enable = true;
+    onShutdown = "suspend";
+    onBoot = "ignore";
+    qemu = {
+      package = pkgs.qemu_kvm;
+      ovmf.enable = true;
+      ovmf.packages = [ pkgs.OVMFFull.fd ];
+      swtpm.enable = true;
+      runAsRoot = true;
+    };
+  };
+
+  environment.etc = {
+    "ovmf/edk2-x86_64-secure-code.fd" = {
+      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
+    };
+
+    "ovmf/edk2-i386-vars.fd" = {
+      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
+    };
+  };
+
 
   # Setup keyfile
   boot.initrd.secrets = { "/crypto_keyfile.bin" = null;
