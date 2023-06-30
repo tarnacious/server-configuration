@@ -11,6 +11,7 @@ $TTL    604800
 ; a records
 ns1             IN      A       {{ hosts.hypervisor.ipv4 }}
 ns2             IN      A       {{ hosts.ns2.ipv4 }}
+australia       IN      A       {{ hosts.australia.ipv4 }}
 @               IN      A       {{ hosts.hypervisor.ipv4 }}
 www             IN      A       {{ hosts.hypervisor.ipv4 }}
 icinga          IN      A       {{ hosts.hypervisor.ipv4 }}
@@ -22,7 +23,7 @@ debugproxy      IN      A       {{ hosts.hypervisor.ipv4 }}
 owncloud        IN      AAAA    {{ hosts.owncloud.ipv6 }}
 bacula          IN      AAAA    {{ hosts.bacula.ipv6 }}
 mail            IN      AAAA    {{ hosts.mail_server.ipv6 }}
-vpn             IN      AAAA    {{ hosts.vpn.ipv6 }}
+australia       IN      AAAA    {{ hosts.australia.ipv6 }}
 debugproxy      IN      AAAA    {{ hosts.debugproxy.ipv6 }}
 @               IN      MX      1  mail.tarnbarford.net.
 debugproxy      IN      MX      1  mail.tarnbarford.net.
