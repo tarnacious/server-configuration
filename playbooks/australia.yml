@@ -1,4 +1,4 @@
-- hosts: vpn
+- hosts: australia
   user: root
   become: yes
   roles:
