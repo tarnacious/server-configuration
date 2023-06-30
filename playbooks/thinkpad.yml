@@ -1,4 +1,4 @@
-- hosts: localhost
+- hosts: thinkpad
   user: root
   become: yes
   connection: local
@@ -9,5 +9,5 @@
     - git
     - mutt
     - tmux
+    - nix-wg-quick
     - thinkpad
-

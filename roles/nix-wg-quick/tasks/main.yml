@@ -1,0 +1,21 @@
+- name: /etc/nixos/vim.nix
+  template:
+    src: "wg-quick.nix"
+    dest: "/etc/nixos/wg-quick.nix"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+
+- name: create /etc/wireguard/keys directory
+  file:
+    path: /etc/wireguard/keys
+    state: directory
+
+- name: set /etc/wireguard/keys/private_key
+  copy:
+    content: "{{ wireguard_private_key }}"
+    dest: "/etc/wireguard/keys/private_key"
+    mode: "0600"
+  notify: rebuild nix

@@ -2,12 +2,9 @@
   user: root
   become: yes
   roles:
-    - vm-networking
     - hostname
     - apt
     - unattended-upgrades
     - sshd
-    - munin-node
     - firewall
     - vpn
-    - icinga-client

@@ -1,39 +1,38 @@
-- name: add buster backports repository
-  template:
-    src: templates/buster-backports.list
-    dest: /etc/apt/sources.list.d/buster-backports.list
-
 - name: install wireguard packages
   apt:
     name: [
       "wireguard",
-      "wireguard-dkms",
-      "resolvconf"
     ]
     state: present
     update_cache: yes
-
-- name: set /etc/network/interfaces
-  template:
-    src: templates/interfaces
-    dest: /etc/network/interfaces
 
 - name: set /etc/wireguard/wg0.conf
   template:
     src: templates/wg0.conf
     dest: /etc/wireguard/wg0.conf
 
-- name: ensure wireguard service started
-  service:
-    name: wg-quick@wg0
-    state: started
-    enabled: true
+- name: create /etc/wireguard/scripts directory
+  file:
+    path: /etc/wireguard/scripts
+    state: directory
+
+- name: set /etc/wireguard/scripts/add-nat-routing.sh
+  template:
+    src: templates/add-nat-routing.sh
+    dest: /etc/wireguard/scripts/add-nat-routing.sh
+    mode: a+x
+
+- name: set /etc/wireguard/scripts/del-nat-routing.sh
+  template:
+    src: templates/del-nat-routing.sh
+    dest: /etc/wireguard/scripts/del-nat-routing.sh
+    mode: a+x
 
 - name: allow wireguard udp port
   ufw:
     rule: allow
     proto: udp
-    port: "{{ wg0_port }}"
+    port: "51194"
 
 - sysctl:
     name: net.ipv4.ip_forward
@@ -48,3 +47,9 @@
     sysctl_set: yes
     state: present
     reload: yes
+
+- name: ensure wireguard service started
+  service:
+    name: wg-quick@wg0
+    state: started
+    enabled: false
