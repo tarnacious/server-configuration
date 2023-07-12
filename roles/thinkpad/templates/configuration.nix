@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 { imports = [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -42,13 +42,23 @@
     external-gpu.configuration = {
       system.nixos.tags = [ "external-gpu" ];
       services.xserver.videoDrivers = [ "nvidia" ];
-      hardware.nvidia.modesetting.enable = true;
-      #hardware.nvidia.powerManagement.enable = false;
-      hardware.nvidia.prime = {
-        sync.allowExternalGpu = true;
-        offload.enable = true;
-        intelBusId = "PCI:0:2:0";
-        nvidiaBusId = "PCI:82:0:0";
+      services.xserver.displayManager.gdm.wayland = lib.mkForce false;
+      services.xserver.enable = true;
+      boot.kernelParams = [ "module_blacklist=i915" ];
+      hardware.nvidia = {
+        nvidiaSettings = true;
+        modesetting.enable = true;
+        powerManagement.enable = false;
+        prime = {
+          sync = {
+            enable = true;
+          }
+          offload = {
+            enable = false;
+          };
+          intelBusId = "PCI:0:2:0";
+          nvidiaBusId = "PCI:82:0:0";
+        };
       };
     };
   };
