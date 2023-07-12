@@ -19,7 +19,7 @@ Host load-balancer
     ForwardAgent yes
 
 Host tarnbarford
-    HostName {{ hosts.load_balancer.ipv6 }}
+    HostName {{ hosts.tarnbarford.ipv6 }}
     User tarn
     ForwardAgent yes
 
