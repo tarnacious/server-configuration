@@ -10,7 +10,7 @@ $TTL    604800
 @               IN      NS      ns2.tarnbarford.net.
 ; a records
 ns1             IN      A       {{ hosts.hypervisor.ipv4 }}
-ns2             IN      A       {{ hosts.ns2.ipv4 }}
+ns2             IN      A       {{ hosts.australia.ipv4 }}
 australia       IN      A       {{ hosts.australia.ipv4 }}
 @               IN      A       {{ hosts.hypervisor.ipv4 }}
 www             IN      A       {{ hosts.hypervisor.ipv4 }}
