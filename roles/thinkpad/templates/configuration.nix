@@ -97,7 +97,7 @@
       {{ hosts.debugproxy.ipv6 }} debugproxy
       {{ hosts.icinga.ipv6 }} icinga
       {{ hosts.ns1.ipv6 }} ns1
-      {{ hosts.ns2.ipv6 }} ns2
+      {{ hosts.australia.ipv6 }} australia
     '';
 
   nixpkgs.config.allowUnfree = true;
