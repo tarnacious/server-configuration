@@ -6,13 +6,13 @@
     ]
     state: present
 
-- apt_key:
-    url: https://download.owncloud.org/download/repositories/10.7.0/Debian_10/Release.key
-    state: present
-
-- apt_repository:
-    repo: deb https://download.owncloud.org/download/repositories/10.7.0/Debian_10/ /
-    state: present
+      #- apt_key:
+      #    url: https://download.owncloud.org/download/repositories/10.7.0/Debian_10/Release.key
+      #    state: present
+      #
+      #- apt_repository:
+      #    repo: deb https://download.owncloud.org/download/repositories/10.7.0/Debian_10/ /
+      #    state: present
 
 - name: Install list of packages
   apt:
