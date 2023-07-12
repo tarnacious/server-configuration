@@ -4,9 +4,10 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-23.05";
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+    nixpkgs-tarn.url = "github:tarnacious/nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixpkgs-tarn }:
     let
       system = "x86_64-linux";
       overlay-unstable = final: prev: {
@@ -18,12 +19,15 @@
         # };
 
       };
+      overlay-tarn = final: prev: {
+        pkgs-tarn = nixpkgs-tarn.legacyPackages.${prev.system};
+      };
     in {
       nixosConfigurations."nixos" = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
           # Overlays-module makes "pkgs.unstable" available in configuration.nix
-          ({ config, pkgs, ... }: { nixpkgs.overlays = [ overlay-unstable ]; })
+          ({ config, pkgs, ... }: { nixpkgs.overlays = [ overlay-unstable overlay-tarn ]; })
           ./configuration.nix
         ];
       };

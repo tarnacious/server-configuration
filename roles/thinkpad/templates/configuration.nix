@@ -231,6 +231,9 @@
   msmtp
   vdirsyncer
 
+  # security
+  pkgs-tarn.nitrocli
+
   # wayland
   wl-clipboard
 
