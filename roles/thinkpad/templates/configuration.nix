@@ -52,7 +52,7 @@
         prime = {
           sync = {
             enable = true;
-          }
+          };
           offload = {
             enable = false;
           };
