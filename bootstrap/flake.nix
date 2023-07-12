@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-23.05";
-    nixpkgs-tarn.url = "github:tarnacious/nixpkgs";
+    nixpkgs-tarn.url = "github:tarnacious/nixpkgs/nitrocli";
   };
 
   outputs = { self, nixpkgs, nixpkgs-tarn }:
@@ -12,10 +12,13 @@
       pkgs = import nixpkgs {
         inherit system;
       };
+      pkgs-tarn = import nixpkgs-tarn {
+        inherit system;
+      };
     in {
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
-          nixpkgs-tarn.nitrocli
+          pkgs-tarn.nitrocli
         ];
       };
     };
