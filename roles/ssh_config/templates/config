@@ -59,9 +59,9 @@ Host ns2
     HostName {{ hosts.ns2.ipv6 }}
     ForwardAgent yes
 
-Host vpn
+Host australia
     User tarn
-    HostName {{ hosts.vpn.ipv6 }}
+    HostName {{ hosts.australia.ipv6 }}
     ForwardAgent yes
 
 Host dns
