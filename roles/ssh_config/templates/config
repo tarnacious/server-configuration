@@ -54,11 +54,6 @@ Host ns1
     HostName {{ hosts.ns1.ipv6 }}
     ForwardAgent yes
 
-Host ns2
-    User tarn
-    HostName {{ hosts.ns2.ipv6 }}
-    ForwardAgent yes
-
 Host australia
     User tarn
     HostName {{ hosts.australia.ipv6 }}
