@@ -1,4 +1,4 @@
-- name: /etc/nixos/vim.nix
+- name: /etc/nixos/wg-quick.nix
   template:
     src: "wg-quick.nix"
     dest: "/etc/nixos/wg-quick.nix"
