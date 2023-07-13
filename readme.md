@@ -55,11 +55,9 @@ Playbooks are used to actually install and configure things. Generally
 playbooks configure a single system.
 
 ```
-ansible-playbook playbooks/tarnbarford.yml --ask-become-user
+ansible-playbook playbooks/tarnbarford.yml
 ```
 
-In most cases the `--ask-become-user` option is required to configure things as
-the root user on the target system.
 
 
 [1]: https://tarnbarford.net
