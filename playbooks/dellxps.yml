@@ -1,13 +1,13 @@
-- hosts: localhost
+- hosts: dellxps
   user: root
   become: yes
   connection: local
   roles:
     - bash
     - libvirt/client/scripts
-    - git
     - gpg-ssh-agent
-    - davfs2-client
-    - dellxps
+    - ssh_config
+    - git
     - mutt
-    - backup-scripts
+    - tmux
+    - dellxps

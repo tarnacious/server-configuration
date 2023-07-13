@@ -1,134 +1,125 @@
-with import <nixpkgs> {};
+{ pkgs, ... }:
+{
+  environment.variables = { EDITOR = "vim"; };
 
-let vim-eyaml = pkgs.vimUtils.buildVimPlugin {
-  name = "vim-eyaml";
-  src = pkgs.fetchFromGitHub {
-    owner = "davewongillies";
-    repo = "vim-eyaml";
-    rev = "876a6873c03ba904601987e86959acbb8e0dd43d";
-    sha256 = "1fllmgwk2a933x8lisrfaz3b5a2cbgs95i18vl9lfcdl68id9nky";
-    };
-  };
+  environment.systemPackages = with pkgs; [
+    (neovim.override {
+      vimAlias = true;
+      withNodeJs = true;
 
-in
-vim_configurable.customize {
-    name = "vim";
-    vimrcConfig.customRC = ''
-    set nocompatible
-    filetype plugin on
-    syntax on
-    filetype indent on
-    syntax enable
-    set wildmenu
-    set hid
-    set showmatch
+      configure = {
+        packages.myPlugins = with pkgs.unstable.vimPlugins; {
+          start = [
+            vim-lastplace
+            vim-nix
+            fzf-vim
+            ack-vim
+            nerdtree
+            markdown-preview-nvim
+            coc-nvim
+            coc-tsserver
+            coc-java
+            coc-pyright
+            coc-prettier
+          ];
+          opt = [];
+        };
+        customRC = ''
+          " your custom vimrc
+          set nocompatible
+          set backspace=indent,eol,start
+          set shiftwidth=2
+          set tabstop=2
+          set expandtab
 
-    " No sound on errors
-    set noerrorbells
-    set novisualbell
-    set t_vb=
-    set tm=500
+          let mapleader = ","
 
-    " don't confuse webpack reloader
-    set backupcopy=yes
+          " Mappings for finding files with fzf
+          nmap ; :Buffers<CR>
+          nmap <Leader>t :Files<CR>
+          nmap <Leader>r :Tags<CR>
 
-    set tabstop=2
-    set shiftwidth=2
-    set expandtab
-    set nu
+          noremap <leader>nt :NERDTree<cr>
+          noremap <leader>tsw :CocCommand tsserver.watchBuild<cr>
+          noremap <leader>co :copen
 
-    let mapleader = ","
+          " Use system clipboard with leader
+          vnoremap <leader>y "+y
+          nnoremap <leader>Y "+yg
+          nnoremap <leader>y "+y
+          nnoremap <leader>yy "+yy
+          nnoremap <leader>p "+p
+          nnoremap <leader>P "+P
+          vnoremap <leader>p "+p
+          vnoremap <leader>P "+P
 
-    nnoremap <leader>y "+y
-    nnoremap <leader>p "+p
+          command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
-    vnoremap <leader>y "+y
-    vnoremap <leader>p "+p
+          " Use tab for trigger completion with characters ahead and navigate.
+          " NOTE: There's always complete item selected by default, you may want to enable
+          " no select by `"suggest.noselect": true` in your configuration file.
+          " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+          " other plugin before putting this into your config.
+          inoremap <silent><expr> <TAB>
+            \ coc#pum#visible() ? coc#pum#next(1) :
+            \ CheckBackspace() ? "\<Tab>" :
+            \ coc#refresh()
+          inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-    " Mappings for finding files with fzf
-    nmap ; :Buffers<CR>
-    nmap <Leader>t :Files<CR>
-    nmap <Leader>r :Tags<CR>
+          function! CheckBackspace() abort
+          let col = col('.') - 1
+          return !col || getline('.')[col - 1]  =~# '\s'
+          endfunction
 
+          nmap <silent> [g <Plug>(coc-diagnostic-prev)
+          nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
-    nnoremap <leader>av ggVG
-    nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-    nnoremap <leader>sv :source $MYVIMRC<cr>
-    nnoremap <leader>ag :Ack<cr>
-    nnoremap <leader>sp :setlocal spell spelllang=en_au<cr>
-    nnoremap <leader>ct :!ctags -R .<cr>
-    nnoremap <leader>nt :NERDTree<cr>
-    nnoremap <leader>at :ALEToggle<CR>
-
-    inoremap jk <esc>
-
-    "Move line by paragraph
-    nnoremap j gj
-    nnoremap k gk
-    vnoremap j gj
-    vnoremap k gk
-
-    "Tab-style buffer switching
-    map <C-S-tab> :bprev<CR>
-    map <C-tab> :bnext<CR>
-
-    set clipboard=unnamed
-
-    let g:slime_target = "tmux"
-
-    "Strip trailing white space
-    fun! <SID>StripTrailingWhitespaces()
-        let l = line(".")
-        let c = col(".")
-        %s/\s\+$//e
-        call cursor(l, c)
-    endfun
-
-    autocmd FileType c,cpp,java,php,ruby,python,coffee,js,javascript,clojure,ld,s,html autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
-    autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-
-    autocmd Filetype scss setlocal ts=2 sts=2 sw=2
-
-    let g:ale_fixers = {'javascript': ['prettier_standard']}
-
-    filetype plugin indent on
-    syntax on
-
-    if executable('ag')
-      let g:ackprg = 'ag --vimgrep'
-    endif
+          " GoTo code navigation.
+          nmap <silent> gd <Plug>(coc-definition)
+          nmap <silent> gy <Plug>(coc-type-definition)
+          nmap <silent> gi <Plug>(coc-implementation)
+          nmap <silent> gr <Plug>(coc-references)
 
 
-    syntax enable
-    set background=dark
-    " colorscheme solarized
+          " Use K to show documentation in preview window.
+          nnoremap <silent> K :call ShowDocumentation()<CR>
 
-    let NERDTreeIgnore = ['\.pyc$', '\.so$', '\.swp$']
-    vnoremap <leader>e s<c-r>=system('tr a-z A-Z', @")[:-2]<cr>
+          function! ShowDocumentation()
+            if CocAction('hasProvider', 'hover')
+              call CocActionAsync('doHover')
+            else
+              call feedkeys('K', 'in')
+            endif
+          endfunction
 
-    map <leader>jr :set makeprg=rubocop <CR>:make % %:r<CR>:copen<CR>
-    '';
+          " Highlight the symbol and its references when holding the cursor.
+          autocmd CursorHold * silent call CocActionAsync('highlight')
 
-    vimrcConfig.packages.myVimPackage = with pkgs.vimPlugins; {
-      # loaded on launch
-      start = [
-        # Needs python3 support
-        # YouCompleteMe
-        fugitive
-        nerdtree
-        vim-ruby
-        vim-puppet
-        fzf
-        fzf-vim
-        fzfWrapper
-        vim-eyaml
-        ack
-        vim-colors-solarized
-        ale
-      ];
-      # manually loadable by calling `:packadd $plugin-name`
-      opt = [];
-      # To automatically load a plugin when opening a filetype, add vimrc lines like:
-      # autocmd FileType php :packadd phpCompletion
-    };
+          " Symbol renaming.
+          nmap <leader>rn <Plug>(coc-rename)
+
+          " Formatting selected code.
+          xmap <leader>f  <Plug>(coc-format-selected)
+          nmap <leader>f  <Plug>(coc-format-selected)
+
+          " Applying codeAction to the selected region.
+          " Example: `<leader>aap` for current paragraph
+          xmap <leader>a  <Plug>(coc-codeaction-selected)
+          nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+          " Remap keys for applying codeAction to the current buffer.
+          nmap <leader>ac  <Plug>(coc-codeaction)
+          " Apply AutoFix to problem on the current line.
+          nmap <leader>qf  <Plug>(coc-fix-current)
+
+
+          let NERDTreeIgnore = ['\.pyc$', '\.so$', '\.swp$']
+
+          " trim trailing whitespace
+          autocmd BufWritePre * %s/\s\+$//e
+
+        '';
+      };
+    }
+  )];
 }

@@ -1,180 +1,270 @@
-{ config, pkgs, ... }:
-{
-  imports = [
-    ./hardware-configuration.nix
-  ];
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
 
-  fileSystems."/mnt/backup" = {
-    device = "//u198293.your-storagebox.de/backup";
-    fsType = "cifs";
-    options = let
-        automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
-    in ["${automount_opts},credentials=/etc/nixos/backup-secrets" "uid=1000" "gid=100"];
+{ config, pkgs, lib, ... }:
+
+{ imports = [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+      ./vim.nix
+      ];
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # Configure keymap in X11
+  services.xserver = {
+    layout = "au";
+    enable = true;
+    xkbVariant = "";
   };
 
-  fileSystems."/mnt/share" = {
-    device = "//192.168.0.6/sambashare";
-    fsType = "cifs";
-    options = let
-        automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
-    in ["${automount_opts},credentials=/etc/nixos/smb-secrets" "uid=1000" "gid=100"];
+  # Enable the GNOME Desktop Environment.
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+  services.xserver.displayManager.gdm.wayland = true;
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
   };
 
-  fileSystems."/mnt/owncloud" = {
-    device = "https://owncloud.tarnbarford.net/remote.php/dav/files/tarn/";
-    fsType = "davfs";
-    options = let
-      davfs2Conf = (pkgs.writeText "davfs2.conf" "secrets /etc/davfs2/secrets");
-    in [ "uid=1000" "gid=100" "conf=${davfs2Conf}" "x-systemd.automount" "noauto"];
-  };
+
+
+  # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.kernel.sysctl =
+    {
+      "vm.max_map_count" = 262144;
+    };
 
   networking.extraHosts =
     ''
-    192.168.0.6 nas.tarnbarford.net
-    192.168.122.116 mojoreads.local
-    192.168.122.116 api.mojoreads.local
-    192.168.122.116 www.mojoreads.local
-    192.168.122.116 cms.mojoreads.local
-    192.168.122.116 bui.mojoreads.local
-    192.168.122.116 media.mojoreads.local
-    192.168.122.116 admin.mojoreads.local
-    192.168.122.116 rabbitmq.mojoreads.local
-    192.168.122.116 mobile.mojoreads.local
+      127.0.0.1 ybs.local
+      127.0.0.1 m.ybs.local
+      127.0.0.1 api.ybs.local
+      127.0.0.1 cms.ybs.local
+      127.0.0.1 admin.ybs.local
+      127.0.0.1 rabbitmq.ybs.local
+      127.0.0.1 logging.ybs.local
+      127.0.0.1 products.ybs.local
+      127.0.0.1 media.ybs.local
+      127.0.0.1 book-data.ybs.local
+
+      {{ hosts.hypervisor.ipv6 }} hypervisor
+      {{ hosts.bacula.ipv6 }} bacula
+      {{ hosts.monitoring.ipv6 }} monitoring
+      {{ hosts.load_balancer.ipv6 }} load-balancer
+      {{ hosts.tarnbarford.ipv6 }} tarnbarford
+      {{ hosts.bab_website.ipv6 }} bab-website
+      {{ hosts.owncloud.ipv6 }} owncloud
+      {{ hosts.mail_server.ipv6 }} mail-server
+      {{ hosts.debugproxy.ipv6 }} debugproxy
+      {{ hosts.icinga.ipv6 }} icinga
+      {{ hosts.ns1.ipv6 }} ns1
+      {{ hosts.australia.ipv6 }} australia
     '';
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
-  #security.wrappers.spice-client-glib-usb-acl-helper.source =  "${pkgs.spice-gtk}/bin/spice-client-glib-usb-acl-helper";
   nixpkgs.config.allowUnfree = true;
-  networking.hostName = "xps-nixos";
-  networking.networkmanager.enable = true;
-  networking.firewall.checkReversePath = false;
+
   virtualisation.docker.enable = true;
-  virtualisation.libvirtd.enable = true;
-  virtualisation.libvirtd.qemu.ovmf.enable = true;
-  #hardware.nitrokey.enable = true;
-  hardware.pulseaudio.enable = true;
-  hardware.opengl.enable = true;
-  console.font = "latarcyrheb-sun32";
-  console.keyMap = "us";
-  i18n.defaultLocale = "en_US.UTF-8";
+
+  virtualisation.libvirtd = {
+    enable = true;
+    onShutdown = "suspend";
+    onBoot = "ignore";
+    qemu = {
+      package = pkgs.qemu_kvm;
+      ovmf.enable = true;
+      ovmf.packages = [ pkgs.OVMFFull.fd ];
+      swtpm.enable = true;
+      runAsRoot = true;
+    };
+  };
+
+  environment.etc = {
+    "ovmf/edk2-x86_64-secure-code.fd" = {
+      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
+    };
+
+    "ovmf/edk2-i386-vars.fd" = {
+      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
+    };
+  };
+
+  security.tpm2.enable = true;
+  security.tpm2.pkcs11.enable = true;  # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
+  security.tpm2.tctiEnvironment.enable = true;  # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
+
+  # Setup keyfile
+  boot.initrd.secrets = { "/crypto_keyfile.bin" = null;
+  };
+
+
+  networking.hostName = "nixos"; # Define your hostname.
+  # networking.wireless.enable = true; # Enables wireless support via
+  # wpa_supplicant.
+
+  # Configure network proxy if necessary networking.proxy.default =
+  # "http://user:password@proxy:port/"; networking.proxy.noProxy =
+  # "127.0.0.1,localhost,internal.domain";
+
+  # Enable networking
+  networking.networkmanager.enable = true;
+
+  # Set your time zone.
   time.timeZone = "Europe/Berlin";
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_AU.utf8";
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+  services.avahi.enable = true;
+  services.avahi.nssmdns = true;
+  services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin pkgs.epson-escpr];
+
+  # services.gnome.gnome-keyring.enable = true;
+
+  # Enable sound with pipewire.
+  sound.enable = true;
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.tarn = {
+    isNormalUser = true;
+    description = "tarn";
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+      "qemu-libvirtd"
+      "libvirtd"
+      "kvm"
+      "tss"
+    ];
+
+    packages = with pkgs; [
+      firefox
+    #  thunderbird
+    ];
+  };
+
+  # List packages installed in system profile. To search, run: $ nix
+  # search wget
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
   };
-  programs.adb.enable = true;
-  programs.seahorse.enable = true;
-  sound.enable = true;
-  services.davfs2.enable = true;
-  services.xserver.enable = true;
-  services.xserver.layout = "us";
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.displayManager.gdm.wayland = false;
-  services.xserver.desktopManager.gnome.enable = true;
-  services.gnome.gnome-keyring.enable = true;
-  services.xserver.libinput.enable = true;
-
-  services.printing.enable = true;
-  services.printing.drivers = [ pkgs.epson-escpr ];
-  services.avahi.enable = true;
-  services.avahi.nssmdns = true;
-
-  hardware.sane.enable = true;
-  hardware.sane.extraBackends = [ pkgs.utsushi ];
-  services.udev.packages = [ pkgs.utsushi ];
-
   environment.systemPackages = with pkgs; [
-    vlc
-    gksu
-    wget
-    hplip
-    zoom-us
-    skype
-    slack
-    (import ./vim.nix)
-    gawk
-    nginx
-    python3
-    owncloud-client
-    nitrokey-app
-    firefox
-    chromium
-    nmap
-    lsof
-    pass
-    gnome3.simple-scan
-    git
-    gnupg
-    docker_compose
-    fzf
-    tmux
-    screen
-    cryptsetup
-    ccrypt
-    dhcpcd
-    htop
-    iotop
-    file
-    ack
-    bind
-    virtmanager
-    pwgen
 
-    digikam
+  skypeforlinux
+  google-chrome
 
-    # mail / contacts / calendars
-    neomutt
-    khard
-    khal
-    vdirsyncer
-    offlineimap
-    msmtp
-    urlview
-    gthumb
+  # standard tools
+  gnupg
+  pass
+  git
+  git-lfs
+  tmux
+  wget
+  bind
+  htop
+  cloc
+  pwgen
+  zip
+  unzip
+  screen
 
-    cifs_utils
-    libreoffice
-    ack
-    rmlint
-    exfat
-    nixops
-    gnome3.networkmanagerapplet
-    usbutils
-    spice-gtk
-    usbredir
-    whois
-    unzip
-    wireguard
-    freecad
-    cura
-    kicad
-    solvespace
+  # conversion tools
+  imagemagick
+  pandoc
+  ffmpeg
 
-    ffmpeg
-    pinta
-    imagemagick
-    obs-studio
+  # system tools
+  pciutils
+  lshw
+  cachix
+
+  # gui tools
+  filezilla
+  vscode
+  pinta
+
+  # mail / contacts / calendars
+  neomutt
+  offlineimap
+  urlview
+  khard
+  msmtp
+  vdirsyncer
+
+  # security
+  pkgs-tarn.nitrocli
+
+  # wayland
+  wl-clipboard
+
+  # notes
+  joplin
+  joplin-desktop
+
+  # work
+  slack
+
+  # owncloud
+  owncloud-client
+
+  # virtualisation
+  virtmanager
+
+  jetbrains.idea-community
+  maven
+  openjdk8
+  openjdk17
+
+  libreoffice
+
+  vlc
+  youtube-dl
+
+  # 3d printing
+  cura
+  freecad
+
+
+
   ];
 
-  users.users.tarn = {
-    isNormalUser = true;
-    extraGroups = [
-      "wheel"
-      "networkmanager"
-      "adbusers"
-      "qemu-libvirtd"
-      "libvirtd" 
-      "kvm"
-      "lp"
-      "scanner"
-      "usb"
-      "disk"
-      "davfs2"
-    ];
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions. programs.mtr.enable = true;
+
+  # List services that you want to enable:
+
+  # Enable the OpenSSH daemon. services.openssh.enable = true;
+
+  networking.firewall = {
+    enable = false;
+    allowedUDPPorts = [ 51820 ]; # wireguard vpn server
   };
 
-  system.stateVersion = "21.11";
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database
+  # versions on your system were taken. It‘s perfectly fine and
+  # recommended to leave this value at the release version of the first
+  # install of this system. Before changing this value read the
+  # documentation for this option (e.g. man configuration.nix or on
+  # https://nixos.org/nixos/options.html).
+  system.stateVersion = "22.05"; # Did you read the comment?
+
 }
