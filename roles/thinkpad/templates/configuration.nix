@@ -218,6 +218,7 @@
   zip
   unzip
   screen
+  openssl
 
   # conversion tools
   imagemagick
