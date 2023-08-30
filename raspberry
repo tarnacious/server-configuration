@@ -1,0 +1,15 @@
+donwload respberry pi os image
+dd to usb
+mount the device
+ - set boot to enable serial
+ - set password in dev/shadow
+connect UART-to-USB pins
+screen /dev/ttyUSB0
+  - systemctl enable openssh
+  - add authorized key
+  - get ip address ifconfig
+ssh pi@ip-address
+  - sudo apt install fswebcam
+  - sudo apt install python3-pip
+  - sudo apt install screen
+  - sudo apt install python3-venv
