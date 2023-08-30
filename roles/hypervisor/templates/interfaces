@@ -21,7 +21,6 @@ iface br0 inet static
   bridge_ports none
   bridge_stp off
   bridge_fd 0
-  up ip route add {{ hosts.vpn.ipv4 }}/32 dev br0
 
 iface br0 inet6 static
   address {{ hosts.hypervisor.br0.gateway }}
