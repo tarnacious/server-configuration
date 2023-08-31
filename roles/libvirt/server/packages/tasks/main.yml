@@ -1,0 +1,14 @@
+- name: Install list of packages
+  apt:
+    name: [
+      'python3',
+      'python3-lxml',
+      'qemu-system-x86',
+      'libvirt-clients',
+      'libvirt-daemon-system',
+      'bridge-utils',
+      'debootstrap',
+      'virtinst',
+    ]
+    state: present
+    update_cache: yes

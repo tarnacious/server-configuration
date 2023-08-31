@@ -1,14 +1,6 @@
 - name: Install list of packages
   apt:
     name: [
-      'python3',
-      'python3-lxml',
-      'qemu-system-x86',
-      'libvirt-clients',
-      'libvirt-daemon-system',
-      'bridge-utils',
-      'debootstrap',
-      'virtinst',
       'ufw',
       'htop'
     ]
@@ -54,18 +46,6 @@
     path: /var/kvm/images
     state: directory
     mode: '0755'
-
-- name: add create vm script
-  copy:
-    src: templates/build_vm
-    dest: /usr/bin/build_vm
-    mode: '0744'
-
-- name: add create domain script
-  copy:
-    src: templates/create_domain
-    dest: /usr/bin/create_domain
-    mode: '0744'
 
 - sysctl:
     name: net.ipv4.ip_forward

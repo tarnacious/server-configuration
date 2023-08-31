@@ -8,4 +8,6 @@
     - munin-node
     - icinga-client
     - icinga-plugins
+    - libvirt/server/packages
+    - libvirt/server/scripts
     - hypervisor
