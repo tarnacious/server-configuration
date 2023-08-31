@@ -4,7 +4,7 @@
   connection: local
   roles:
     - bash
-    - libvirt/scripts
+    - libvirt/client/scripts
     - git
     - gpg-ssh-agent
     - davfs2-client
