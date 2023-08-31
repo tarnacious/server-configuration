@@ -13,12 +13,6 @@
     rule: allow
     port: '22'
 
-# acidentally deleted my local, default should be ok for now
-#- name: set /etc/resolv.conf
-#  copy:
-#    src: templates/resolv.conf
-#    dest: /etc/resolv.conf
-
 - name: set default routed policy to accept
   ufw:
     policy: allow
