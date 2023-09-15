@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -e
+
+CA_DIRECTORY=./playbooks/libvirt-ca
+
+echo "Creating directory $CA_DIRECTORY"
+mkdir -p $CA_DIRECTORY
+cd $CA_DIRECTORY
+
+echo "Generating CA"
+SUBJECT="/C=DE/ST=Berlin/L=Berlin/O=tarnbarford.net/OU=tarnbarford.net/CN=libvirt.tarnabarford.net"
+openssl genrsa 4096 > ca.key
+openssl req -new -x509 -sha256 -days 365 -key ca.key -subj "$SUBJECT" > ca.crt
+
+echo "Generating server certificates"
+SUBJECT="/C=DE/ST=Berlin/L=Berlin/O=tarnbarford.net/OU=tarnbarford.net/CN=hypervisor.tarnbarford.net"
+openssl genrsa 4096 > server.key
+openssl req -new -key server.key -subj $SUBJECT > server.csr
+openssl x509 -req -days 365 -sha256 -in server.csr -CA ca.crt -CAkey ca.key -set_serial 3 > server.crt
+rm server.csr
+
+echo "Generating client certificates"
+SUBJECT="/C=DE/ST=Berlin/L=Berlin/O=tarnbarford.net/OU=tarnbarford.net/CN=thinkpad"
+openssl genrsa 4096 > client.key
+openssl req -new -key client.key -subj $SUBJECT > client.csr
+openssl x509 -req -days 365 -sha256 -in client.csr -CA ca.crt -CAkey ca.key -set_serial 3 > client.crt
+rm client.csr
+
+echo "Encrypt certificates"
+cd -
+ansible-vault encrypt $CA_DIRECTORY/ca.key
+ansible-vault encrypt $CA_DIRECTORY/ca.crt
+ansible-vault encrypt $CA_DIRECTORY/server.key
+ansible-vault encrypt $CA_DIRECTORY/server.crt
+ansible-vault encrypt $CA_DIRECTORY/client.key
+ansible-vault encrypt $CA_DIRECTORY/client.crt
+
+echo "Done"

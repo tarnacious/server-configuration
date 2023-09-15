@@ -10,4 +10,5 @@
     - icinga-plugins
     - libvirt/server/packages
     - libvirt/server/scripts
+    - libvirt/server/tls
     - hypervisor

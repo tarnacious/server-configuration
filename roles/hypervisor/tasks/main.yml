@@ -61,3 +61,8 @@
     sysctl_set: yes
     state: present
     reload: yes
+
+- name: Allow libvirt tls access
+  ufw:
+    rule: allow
+    port: 16514

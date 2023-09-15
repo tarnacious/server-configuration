@@ -14,6 +14,7 @@ ns2             IN      A       {{ hosts.australia.ipv4 }}
 australia       IN      A       {{ hosts.australia.ipv4 }}
 @               IN      A       {{ hosts.hypervisor.ipv4 }}
 www             IN      A       {{ hosts.hypervisor.ipv4 }}
+hypervisor      IN      A       {{ hosts.hypervisor.ipv4 }}
 icinga          IN      A       {{ hosts.hypervisor.ipv4 }}
 mail            IN      A       {{ hosts.hypervisor.ipv4 }}
 monitoring      IN      A       {{ hosts.hypervisor.ipv4 }}

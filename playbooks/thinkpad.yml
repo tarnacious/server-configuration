@@ -5,10 +5,11 @@
   roles:
     - bash
     - gpg-ssh-agent
-    - libvirt/client/scripts
     - ssh_config
     - git
     - mutt
     - tmux
     - nix-wg-quick
+    - libvirt/client/scripts
+    - libvirt/client/certificates
     - thinkpad

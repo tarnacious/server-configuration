@@ -1,0 +1,29 @@
+- name: create certificate directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /etc/pki/CA/
+    - /etc/pki/libvirt/
+    - /etc/pki/libvirt/private/
+
+- name: copy libvirt ca certificate
+  copy:
+    src: libvirt-ca/ca.crt
+    dest: /etc/pki/CA/cacert.pem
+  notify: restart libvirtd
+
+- name: copy libvirt private key
+  copy:
+    src: libvirt-ca/server.key
+    dest: /etc/pki/libvirt/private/serverkey.pem
+    mode: "600"
+    owner: root
+    group: root
+  notify: restart libvirtd
+
+- name: copy libvirt public key
+  copy:
+    src: libvirt-ca/server.crt
+    dest: /etc/pki/libvirt/servercert.pem
+  notify: restart libvirtd
