@@ -1,3 +1,5 @@
 text/html; firefox %s > /dev/null
 image/*; gthumb %s > /dev/null
 application/pdf; evince %s > /dev/null
+text/calendar; khal import %s
+application/ics; khal import %s

@@ -14,6 +14,7 @@
     - /home/tarn/.config
     - /home/tarn/.config/vdirsyncer
     - /home/tarn/.config/khard
+    - /home/tarn/.config/khal
 
 - name: copy mutt configuration files
   template:
@@ -31,6 +32,12 @@
   template:
     src: "vdirsyncer.conf"
     dest: "/home/tarn/.config/vdirsyncer/config"
+    owner: tarn
+
+- name: copy khal configuration file
+  template:
+    src: "khal.conf"
+    dest: "/home/tarn/.config/khal/config"
     owner: tarn
 
 - name: copy msmtp configuration file

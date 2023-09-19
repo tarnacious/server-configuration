@@ -240,6 +240,7 @@
   offlineimap
   urlview
   khard
+  khal
   msmtp
   vdirsyncer
 
