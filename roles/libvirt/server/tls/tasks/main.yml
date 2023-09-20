@@ -8,13 +8,13 @@
     - /etc/pki/libvirt/private/
     - /etc/pki/libvirt-vnc/
 
-- name: copy libvirt ca certificate
+- name: copy libvirtd ca certificate
   copy:
     src: libvirt-ca/ca.crt
     dest: /etc/pki/CA/cacert.pem
   notify: restart libvirtd
 
-- name: copy libvirt private key
+- name: copy libvirtd private key
   copy:
     src: libvirt-ca/server.key
     dest: /etc/pki/libvirt/private/serverkey.pem
@@ -23,7 +23,7 @@
     group: root
   notify: restart libvirtd
 
-- name: copy libvirt public key
+- name: copy libvirtd public key
   copy:
     src: libvirt-ca/server.crt
     dest: /etc/pki/libvirt/servercert.pem

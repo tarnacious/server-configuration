@@ -2,6 +2,7 @@
   file:
     path: "{{ item }}"
     state: directory
+    owner: tarn
   loop:
     - /home/tarn/.pki/CA/
     - /home/tarn/.pki/libvirt/
@@ -13,16 +14,20 @@
   copy:
     src: "libvirt-ca/ca.crt"
     dest: "/home/tarn/.pki/libvirt/cacert.pem"
+    owner: tarn
 
 - name: copy libvirt client private key
   copy:
     src: "libvirt-ca/client.key"
     dest: "/home/tarn/.pki/libvirt/clientkey.pem"
+    owner: tarn
 
 - name: copy libvirt client public key
   copy:
     src: "libvirt-ca/client.crt"
     dest: "/home/tarn/.pki/libvirt/clientcert.pem"
+    owner: tarn
+
 
 - name: copy virt-manager vnc ca certificate
   copy:
