@@ -66,3 +66,9 @@
   ufw:
     rule: allow
     port: 16514
+
+- name: Allow libvirt vnc tls access
+  ufw:
+    rule: allow
+    port: 5900:5910
+    proto: tcp

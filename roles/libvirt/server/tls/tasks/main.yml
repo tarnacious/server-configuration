@@ -6,6 +6,7 @@
     - /etc/pki/CA/
     - /etc/pki/libvirt/
     - /etc/pki/libvirt/private/
+    - /etc/pki/libvirt-vnc/
 
 - name: copy libvirt ca certificate
   copy:
@@ -26,4 +27,28 @@
   copy:
     src: libvirt-ca/server.crt
     dest: /etc/pki/libvirt/servercert.pem
+  notify: restart libvirtd
+
+- name: copy libvirt qemu configuration
+  copy:
+    src: templates/qemu.conf
+    dest: /etc/libvirt/qemu.conf
+  notify: restart libvirtd
+
+- name: copy libvirt-vnc ca certificate
+  copy:
+    src: libvirt-ca/ca.crt
+    dest: /etc/pki/libvirt-vnc/ca-cert.pem
+  notify: restart libvirtd
+
+- name: copy libvirt-vnc private key
+  copy:
+    src: libvirt-ca/server.key
+    dest: /etc/pki/libvirt-vnc/server-key.pem
+  notify: restart libvirtd
+
+- name: copy libvirt-vnc public key
+  copy:
+    src: libvirt-ca/server.crt
+    dest: /etc/pki/libvirt-vnc/server-cert.pem
   notify: restart libvirtd

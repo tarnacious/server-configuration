@@ -6,6 +6,8 @@
     - /home/tarn/.pki/CA/
     - /home/tarn/.pki/libvirt/
     - /home/tarn/.pki/libvirt/private
+    - /home/tarn/.pki/libvirt-vnc/
+    - /home/tarn/.pki/libvirt-vnc/private
 
 - name: copy libvirt ca certificate
   copy:
@@ -21,3 +23,27 @@
   copy:
     src: "libvirt-ca/client.crt"
     dest: "/home/tarn/.pki/libvirt/clientcert.pem"
+
+- name: copy virt-manager vnc ca certificate
+  copy:
+    src: "libvirt-ca/ca.crt"
+    dest: "/home/tarn/.pki/CA/cacert.pem"
+    owner: tarn
+
+- name: copy virt-manager vnc client public key
+  copy:
+    src: "libvirt-ca/client.crt"
+    dest: "/home/tarn/.pki/libvirt-vnc/clientcert.pem"
+    owner: tarn
+
+- name: copy virt-manager vnc client private key
+  copy:
+    src: "libvirt-ca/client.key"
+    dest: "/home/tarn/.pki/libvirt-vnc/private/clientkey.pem"
+    owner: tarn
+
+- name: copy virt-viewer vnc client private key
+  copy:
+    src: "libvirt-ca/client.key"
+    dest: "/home/tarn/.pki/libvirt/private/clientkey.pem"
+    owner: tarn
