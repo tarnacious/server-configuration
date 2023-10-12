@@ -15,8 +15,6 @@ mailboxes +tarnbarford/INBOX \
           +tarnbarford/brainsome \
           +tarnbarford/INBOX.drafts \
           +tarnbarford/monitoring \
-          +tarnbarford/piqd-staging \
-          +tarnbarford/piqd-testing \
           +tarnbarford/Spam \
           +debugproxy/INBOX \
           +debugproxy/sent \
