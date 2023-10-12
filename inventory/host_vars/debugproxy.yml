@@ -2,7 +2,7 @@ hostname: "debugproxy"
 fqdn: "debugproxy.tarnbarford.net"
 client_name: "debugproxy-fd"
 
-repo: "git@github.com:tarnacious/debugproxy.git"
+repo: "https://github.com/tarnacious/debugproxy.git"
 domain: "debugproxy.tarnbarford.net"
 branch: master
 
@@ -10,7 +10,7 @@ ipv4_device: enp1s0
 ipv6_device: enp2s0
 
 debugproxy_domain: debugproxy.tarnbarford.net
-debugproxy_email: hello@debugproxy.tarnbarford.net
+debugproxy_email: debugproxy@tarnbarford.net
 
 google_captcha_secret: !vault |
   $ANSIBLE_VAULT;1.1;AES256

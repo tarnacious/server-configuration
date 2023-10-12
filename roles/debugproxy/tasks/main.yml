@@ -5,14 +5,15 @@
       'python3',
       'fail2ban',
       'nodejs',
-      'python-psycopg2',
+      'python3-psycopg2',
       'postgresql',
       'libpq-dev',
       'redis-server',
-      'python3-dev',
       'build-essential',
       'libffi-dev',
       'libssl-dev',
+      'python3-dev',
+      'python3-pip',
       'python3-venv',
       'supervisor',
       'certbot ',
@@ -32,7 +33,7 @@
 - include: firewall.yml
 - include: postgres.yml
 - include: debugproxy.yml
-#  not handling re-running 
+#  not handling re-running
 #- include: certbot.yml
 - include: haproxy.yml
 - include: supervisor.yml

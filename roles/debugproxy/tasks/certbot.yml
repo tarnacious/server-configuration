@@ -1,5 +1,5 @@
 - name: stop nginx
-  service: 
+  service:
     name: nginx
     state: stopped
 
@@ -9,6 +9,6 @@
     creates: "/etc/letsencrypt/live/{{ debugproxy_domain }}"
 
 - name: restart nginx
-  service: 
+  service:
     name: nginx
     state: started

@@ -8,7 +8,6 @@
     - unattended-upgrades
     - firewall
     - certificates
-    - backup-client
     - munin-node
     - icinga-client
     - icinga-plugins

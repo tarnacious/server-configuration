@@ -7,7 +7,7 @@
 - name: Install apt packages
   apt:
     name: [
-      'python-pip',
+      'python3-pip',
       'munin-node',
       'libnet-cidr-perl',
       'libdbd-pg-perl',
@@ -15,12 +15,15 @@
     ]
     state: present
 
-- name: install pip packages
-  pip:
-    name: [
-      'pymunin',
-      'psutil'
-    ]
+# Apparently we can't install system packages like this, need to look into a
+# virtualenv for this.
+#
+#- name: install pip packages
+#  pip:
+#    name: [
+#      'pymunin',
+#      'psutil'
+#    ]
 
 - name: Munin Plugin Configuration
   template:
@@ -43,42 +46,42 @@
     - { src: 'postgres_autovacuum', dest: 'postgres_autovacuum' }
     - { src: 'postgres_bgwriter', dest: 'postgres_bgwriter' }
     - { src: 'postgres_cache_', dest: 'postgres_cache_debugproxy' }
-    - { src: 'postgres_checkpoints', dest: 'postgres_checkpoints' } 
-    - { src: 'postgres_connections_', dest: 'postgres_connections_debugproxy' } 
-    - { src: 'postgres_connections_db', dest: 'postgres_connections_db' } 
-    - { src: 'postgres_locks_', dest: 'postgres_locks_debugproxy' } 
-    - { src: 'postgres_oldest_prepared_xact_', dest: 'postgres_oldest_prepared_xact_debugproxy' } 
-    - { src: 'postgres_prepared_xacts_', dest: 'postgres_prepared_xacts_debugproxy' } 
-    - { src: 'postgres_querylength_', dest: 'postgres_querylength_debugproxy' } 
-    - { src: 'postgres_scans_', dest: 'postgres_scans_debugproxy' } 
-    - { src: 'postgres_size_', dest: 'postgres_size_debugproxy' } 
-    - { src: 'postgres_transactions_', dest: 'postgres_transactions_debugproxy' } 
-    - { src: 'postgres_tuples_', dest: 'postgres_tuples_debugproxy' } 
-    - { src: 'postgres_users', dest: 'postgres_users' } 
-    - { src: 'postgres_xlog', dest: 'postgres_xlog' } 
-    - { src: 'uptime', dest: 'uptime' } 
-    - { src: 'users', dest: 'users' } 
-    - { src: 'apt', dest: 'apt' } 
-    - { src: 'df_abs', dest: 'df_abs' } 
-    - { src: 'fw_conntrack', dest: 'fw_conntrack' } 
-    - { src: 'fw_forwarded_local', dest: 'fw_forwarded_local' } 
-    - { src: 'fw_packets', dest: 'fw_packets' } 
-    - { src: 'if_', dest: 'if_eno1' } 
-    - { src: 'if_err_', dest: 'if_err_eno1' } 
-    - { src: 'munin_stats', dest: 'munin_stats' } 
-    - { src: 'entropy', dest: 'entropy' } 
-    - { src: 'cpu', dest: 'cpu' } 
-    - { src: 'interrupts', dest: 'interrupts' } 
-    - { src: 'memory', dest: 'memory' } 
-    - { src: 'load', dest: 'load' } 
-    - { src: 'processes', dest: 'processes' } 
-    - { src: 'open_files', dest: 'open_files' } 
-    - { src: 'open_inodes', dest: 'open_inodes' } 
-    - { src: 'nginx_request', dest: 'nginx_request' } 
-    - { src: 'nginx_status', dest: 'nginx_status' } 
-    - { src: 'haproxy_', dest: 'haproxy_frontend' } 
-    - { src: 'haproxy_', dest: 'haproxy_backend' } 
-    - { src: 'haproxy_ng', dest: 'haproxy_ng' } 
+    - { src: 'postgres_checkpoints', dest: 'postgres_checkpoints' }
+    - { src: 'postgres_connections_', dest: 'postgres_connections_debugproxy' }
+    - { src: 'postgres_connections_db', dest: 'postgres_connections_db' }
+    - { src: 'postgres_locks_', dest: 'postgres_locks_debugproxy' }
+    - { src: 'postgres_oldest_prepared_xact_', dest: 'postgres_oldest_prepared_xact_debugproxy' }
+    - { src: 'postgres_prepared_xacts_', dest: 'postgres_prepared_xacts_debugproxy' }
+    - { src: 'postgres_querylength_', dest: 'postgres_querylength_debugproxy' }
+    - { src: 'postgres_scans_', dest: 'postgres_scans_debugproxy' }
+    - { src: 'postgres_size_', dest: 'postgres_size_debugproxy' }
+    - { src: 'postgres_transactions_', dest: 'postgres_transactions_debugproxy' }
+    - { src: 'postgres_tuples_', dest: 'postgres_tuples_debugproxy' }
+    - { src: 'postgres_users', dest: 'postgres_users' }
+    - { src: 'postgres_xlog', dest: 'postgres_xlog' }
+    - { src: 'uptime', dest: 'uptime' }
+    - { src: 'users', dest: 'users' }
+    - { src: 'apt', dest: 'apt' }
+    - { src: 'df_abs', dest: 'df_abs' }
+    - { src: 'fw_conntrack', dest: 'fw_conntrack' }
+    - { src: 'fw_forwarded_local', dest: 'fw_forwarded_local' }
+    - { src: 'fw_packets', dest: 'fw_packets' }
+    - { src: 'if_', dest: 'if_eno1' }
+    - { src: 'if_err_', dest: 'if_err_eno1' }
+    - { src: 'munin_stats', dest: 'munin_stats' }
+    - { src: 'entropy', dest: 'entropy' }
+    - { src: 'cpu', dest: 'cpu' }
+    - { src: 'interrupts', dest: 'interrupts' }
+    - { src: 'memory', dest: 'memory' }
+    - { src: 'load', dest: 'load' }
+    - { src: 'processes', dest: 'processes' }
+    - { src: 'open_files', dest: 'open_files' }
+    - { src: 'open_inodes', dest: 'open_inodes' }
+    - { src: 'nginx_request', dest: 'nginx_request' }
+    - { src: 'nginx_status', dest: 'nginx_status' }
+    - { src: 'haproxy_', dest: 'haproxy_frontend' }
+    - { src: 'haproxy_', dest: 'haproxy_backend' }
+    - { src: 'haproxy_ng', dest: 'haproxy_ng' }
 
 - file:
     path: '/etc/munin/plugins/{{ item.dest }}'

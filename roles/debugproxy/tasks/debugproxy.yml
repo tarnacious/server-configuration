@@ -8,23 +8,23 @@
   become: yes
   become_user: debugproxy
 
-- name: Copy settings.py   
-  template:                
-    src: templates/debugproxy/settings.py.j2   
+- name: Copy settings.py
+  template:
+    src: templates/debugproxy/settings.py.j2
     dest: /home/debugproxy/debugproxy/config/default_settings.py
 
-- name: Copy logging.ini   
+- name: Copy logging.ini
   copy:
     src: templates/debugproxy/logging.ini
     dest: /home/debugproxy/debugproxy/config/logging.ini
 
-- name: Add logging dir    
-  file:                    
+- name: Add logging dir
+  file:
     path: /var/log/debugproxy
-    state: directory       
-    owner: debugproxy      
-    group: debugproxy 
- 
+    state: directory
+    owner: debugproxy
+    group: debugproxy
+
 - name: Install python environment
   shell: python3 -m venv /home/debugproxy/debugproxy
   become: yes
@@ -58,27 +58,28 @@
   become: yes
   become_user: debugproxy
 
-- name: npm intall  
-  shell: npm install 
-  args:
-    chdir: /home/debugproxy/debugproxy/proxyui
-  become: yes
-  become_user: debugproxy
-
-- name: npm dist  
-  shell: npm run dist 
-  args:
-    chdir: /home/debugproxy/debugproxy/proxyui
-  become: yes
-  become_user: debugproxy
+# we need to use node 10 here, on the server it's currently installed with nvm
+#- name: npm intall
+#  shell: npm install
+#  args:
+#    chdir: /home/debugproxy/debugproxy/proxyui
+#  become: yes
+#  become_user: debugproxy
+#
+#- name: npm dist
+#  shell: npm run dist
+#  args:
+#    chdir: /home/debugproxy/debugproxy/proxyui
+#  become: yes
+#  become_user: debugproxy
 
 - name: Create /etc/cron.d/debugproxy_cron
   template:
     src: templates/cron/debugproxy_cron
     dest: /etc/cron.d/debugproxy_cron
 
-- name: Copy proxy certificates 
-  copy: 
+- name: Copy proxy certificates
+  copy:
     src: templates/certificates/{{ item.name }}
     dest: /home/debugproxy/.mitmproxy/{{ item.name }}
     owner: debugproxy
