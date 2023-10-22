@@ -1,0 +1,3 @@
+hostname: "demo"
+ipv4_device: enp1s0
+ipv6_device: enp2s0

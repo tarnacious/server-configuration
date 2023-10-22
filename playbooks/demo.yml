@@ -1,0 +1,6 @@
+- hosts: demo
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
