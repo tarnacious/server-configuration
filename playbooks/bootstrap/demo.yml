@@ -1,0 +1,12 @@
+- hosts: demo
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
+  tasks:
+    - name: Reboot the server
+      command: reboot
+      async: 0
+      poll: 0
+      ignore_errors: yes
