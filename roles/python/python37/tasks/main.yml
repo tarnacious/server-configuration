@@ -1,0 +1,44 @@
+- name: Install build dependencies
+  apt:
+    name:
+      - build-essential
+      - libsqlite3-dev
+      - zlib1g-dev
+      - libncurses-dev
+      - libgdbm-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libssl-dev
+      - libdb-dev
+      - libffi-dev
+    state: present
+
+- name: Create /opt directory
+  ansible.builtin.file:
+    path: /opt
+    state: directory
+
+- name: Download Python source tarball
+  get_url:
+    url: https://www.python.org/ftp/python/3.7.17/Python-3.7.17.tgz
+    dest: /opt/Python-3.7.17.tgz
+
+- name: Extract Python source tarball
+  unarchive:
+    src: /opt/Python-3.7.17.tgz
+    dest: /opt/
+    remote_src: yes
+  args:
+    creates: /opt/Python-3.7.17
+
+- name: Run configure
+  command: ./configure
+  args:
+    chdir: /opt/Python-3.7.17
+    creates: /opt/Python-3.7.17/python
+
+- name: Run make
+  command: make
+  args:
+    chdir: /opt/Python-3.7.17
+    creates: /opt/Python-3.7.17/python
