@@ -26,12 +26,19 @@
     group: debugproxy
 
 - name: Install python environment
-  shell: python3 -m venv /home/debugproxy/debugproxy
+  shell: /opt/Python-3.7.17/python -m venv /home/debugproxy/debugproxy
   become: yes
   become_user: debugproxy
 
 - name: Install wheel package
   shell: ./bin/pip install wheel
+  args:
+    chdir: /home/debugproxy/debugproxy/
+  become: yes
+  become_user: debugproxy
+
+- name: Install setuptools package
+  shell: ./bin/pip install -U setuptools
   args:
     chdir: /home/debugproxy/debugproxy/
   become: yes
@@ -77,6 +84,13 @@
   template:
     src: templates/cron/debugproxy_cron
     dest: /etc/cron.d/debugproxy_cron
+
+- name: Create /home/debugproxy/.mitmproxy config directory
+  file:
+    path: /home/debugproxy/.mitmproxy
+    state: directory
+    owner: debugproxy
+    group: debugproxy
 
 - name: Copy proxy certificates
   copy:

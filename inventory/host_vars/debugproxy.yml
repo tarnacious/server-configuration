@@ -4,7 +4,7 @@ client_name: "debugproxy-fd"
 
 repo: "https://github.com/tarnacious/debugproxy.git"
 domain: "debugproxy.tarnbarford.net"
-branch: master
+branch: main
 
 ipv4_device: enp1s0
 ipv6_device: enp2s0

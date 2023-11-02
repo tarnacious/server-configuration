@@ -4,11 +4,12 @@
   roles:
     - vm-networking
     - hostname
-    - apt
+    #- apt-bookworm
+    - python/python37
     - unattended-upgrades
     - firewall
     - certificates
-    - munin-node
-    - icinga-client
-    - icinga-plugins
+    #- munin-node
+    #- icinga-client
+    #- icinga-plugins
     - debugproxy

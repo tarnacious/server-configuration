@@ -27,14 +27,13 @@
     update_cache: yes
 
 
+- include: user.yml
 - include: munin.yml
 - include: timezone.yml
-- include: user.yml
 - include: firewall.yml
 - include: postgres.yml
 - include: debugproxy.yml
-#  not handling re-running
-#- include: certbot.yml
+- include: certbot.yml
 - include: haproxy.yml
 - include: supervisor.yml
 - include: nginx.yml
