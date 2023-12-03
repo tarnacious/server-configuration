@@ -1,0 +1,9 @@
+- name: /etc/nixos/flake.nix
+  template:
+    src: "vim.nix"
+    dest: "/etc/nixos/flake.nix"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
