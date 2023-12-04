@@ -53,6 +53,14 @@
           vnoremap <leader>p "+p
           vnoremap <leader>P "+P
 
+          function! OpenSelectedWordInBrowser()
+            let selected_word = expand("<cWORD>")
+            let url = "https://dict.leo.org/german-english/" . selected_word
+            silent! execute "!xdg-open " . url
+          endfunction
+
+          noremap <Leader>g :call OpenSelectedWordInBrowser()<CR>
+
           command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
           " Use tab for trigger completion with characters ahead and navigate.
