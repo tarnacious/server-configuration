@@ -192,92 +192,94 @@
     ];
   };
 
-  # List packages installed in system profile. To search, run: $ nix
-  # search wget
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
+  programs = {
+    gnome-terminal.enable = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+    bash.shellAliases = {
+      myvim = "nix run ~/projects/vim2/ --";
+    };
   };
+
+
   environment.systemPackages = with pkgs; [
+    skypeforlinux
+    google-chrome
 
-  skypeforlinux
-  google-chrome
+    # standard tools
+    gnupg
+    pass
+    git
+    git-lfs
+    tmux
+    wget
+    bind
+    htop
+    cloc
+    pwgen
+    zip
+    unzip
+    screen
+    openssl
 
-  # standard tools
-  gnupg
-  pass
-  git
-  git-lfs
-  tmux
-  wget
-  bind
-  htop
-  cloc
-  pwgen
-  zip
-  unzip
-  screen
-  openssl
+    # conversion tools
+    imagemagick
+    pandoc
+    ffmpeg
 
-  # conversion tools
-  imagemagick
-  pandoc
-  ffmpeg
+    # system tools
+    pciutils
+    lshw
+    cachix
 
-  # system tools
-  pciutils
-  lshw
-  cachix
+    # gui tools
+    filezilla
+    vscode
+    pinta
 
-  # gui tools
-  filezilla
-  vscode
-  pinta
+    # mail / contacts / calendars
+    neomutt
+    offlineimap
+    urlview
+    khard
+    khal
+    msmtp
+    vdirsyncer
 
-  # mail / contacts / calendars
-  neomutt
-  offlineimap
-  urlview
-  khard
-  khal
-  msmtp
-  vdirsyncer
+    # security
+    pkgs-tarn.nitrocli
 
-  # security
-  pkgs-tarn.nitrocli
+    # wayland
+    wl-clipboard
 
-  # wayland
-  wl-clipboard
+    # notes
+    joplin
+    joplin-desktop
 
-  # notes
-  joplin
-  joplin-desktop
+    # work
+    slack
 
-  # work
-  slack
+    # owncloud
+    owncloud-client
 
-  # owncloud
-  owncloud-client
+    # virtualisation
+    virtmanager
 
-  # virtualisation
-  virtmanager
+    jetbrains.idea-community
+    maven
+    openjdk8
+    openjdk17
 
-  jetbrains.idea-community
-  maven
-  openjdk8
-  openjdk17
+    libreoffice
 
-  libreoffice
+    vlc
+    youtube-dl
 
-  vlc
-  youtube-dl
-
-  # 3d printing
-  cura
-  freecad
-
-
-
+    # 3d printing
+    cura
+    freecad
   ];
 
   networking.firewall = {
