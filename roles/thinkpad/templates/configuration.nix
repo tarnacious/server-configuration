@@ -112,6 +112,10 @@
     };
   };
 
+  fonts.fonts = with pkgs; [
+    (nerdfonts.override { fonts = [ "FiraCode" "Hack" "Terminus" "Monoid" "JetBrainsMono" ]; })
+  ];
+
   environment.etc = {
     "ovmf/edk2-x86_64-secure-code.fd" = {
       source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
