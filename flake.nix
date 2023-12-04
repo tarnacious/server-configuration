@@ -13,6 +13,12 @@
           pkgs.python310Packages.virtualenv
           pkgs.python310Packages.lxml
         ];
+        shellHook = ''
+          if [ ! -e "./venv" ]; then
+            python -m venv ./venv
+          fi
+          . ./venv/bin/activate
+        '';
       };
     };
 }
