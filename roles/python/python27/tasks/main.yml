@@ -1,0 +1,43 @@
+- name: Install build dependencies
+  apt:
+    name:
+      - build-essential
+      - libsqlite3-dev
+      - zlib1g-dev
+      - libncurses-dev
+      - libgdbm-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libssl-dev
+      - libdb-dev
+    state: present
+
+- name: Create /opt directory
+  ansible.builtin.file:
+    path: /opt
+    state: directory
+
+- name: Download Python source tarball
+  get_url:
+    url: https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
+    dest: /opt/Python-2.7.18.tgz
+
+- name: Extract Python source tarball
+  unarchive:
+    src: /opt/Python-2.7.18.tgz
+    dest: /opt/
+    remote_src: yes
+  args:
+    creates: /opt/Python-2.7.18
+
+- name: Run configure
+  command: ./configure
+  args:
+    chdir: /opt/Python-2.7.18
+    creates: /opt/Python-2.7.18/python
+
+- name: Run make
+  command: make
+  args:
+    chdir: /opt/Python-2.7.18
+    creates: /opt/Python-2.7.18/python
