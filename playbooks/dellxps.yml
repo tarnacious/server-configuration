@@ -10,5 +10,6 @@
     - git
     - mutt
     - tmux
+    - nix/flakes
     - nix/vim
     - dellxps

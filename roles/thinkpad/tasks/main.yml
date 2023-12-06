@@ -28,16 +28,6 @@
   become: true
   notify: rebuild nix
 
-- name: /etc/nixos/flake.nix
-  template:
-    src: "flake.nix"
-    dest: "/etc/nixos/flake.nix"
-    mode: "644"
-    owner: root
-    group: root
-  become: true
-  notify: rebuild nix
-
     #- name: samba secret
     #  template:
     #    src: "smb-secrets"

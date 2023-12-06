@@ -1,6 +1,6 @@
 - name: /etc/nixos/flake.nix
   template:
-    src: "vim.nix"
+    src: "flake.nix"
     dest: "/etc/nixos/flake.nix"
     mode: "644"
     owner: root
