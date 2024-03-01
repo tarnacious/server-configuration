@@ -12,5 +12,5 @@
      - munin-node
      - icinga-client
      - icinga-plugins-backup
-     - sendmail
+     - server/sendmail
      - bacula

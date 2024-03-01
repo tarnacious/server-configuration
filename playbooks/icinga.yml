@@ -8,7 +8,7 @@
     - unattended-upgrades
     - sshd
     - firewall
-    - sendmail
+    - server/sendmail
     - icinga
     - certificates
     - munin-node
