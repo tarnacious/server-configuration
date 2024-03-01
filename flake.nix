@@ -9,6 +9,7 @@
     in {
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
+          pkgs.openssl
           pkgs.python310
           pkgs.python310Packages.virtualenv
           pkgs.python310Packages.lxml
