@@ -64,6 +64,7 @@
       {{ hosts.icinga.ipv6 }} icinga
       {{ hosts.ns1.ipv6 }} ns1
       {{ hosts.australia.ipv6 }} australia
+      {{ hosts.snapper.ipv6 }} snapper
     '';
 
   nixpkgs.config.allowUnfree = true;

@@ -23,3 +23,4 @@ ff02::3 ip6-allhosts
 {{ hosts.ns1.ipv6 }} ns1 ns1.tarnbarford.net
 {{ hosts.australia.ipv6 }} ns2 ns2.tarnbarford.net
 {{ hosts.australia.ipv6 }} australia australia.tarnbarford.net
+{{ hosts.snapper.ipv6 }} snapper

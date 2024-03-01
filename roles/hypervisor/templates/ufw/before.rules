@@ -114,6 +114,9 @@ COMMIT
 # icinga
 -I FORWARD -o virbr0 -d  {{ hosts.icinga.ipv4 }} -j ACCEPT
 
+# snapper
+-I FORWARD -o virbr0 -d  {{ hosts.snapper.ipv4 }} -j ACCEPT
+
 # ns1
 -I FORWARD -o virbr0 -d  {{ hosts.ns1.ipv4 }} -j ACCEPT
 
