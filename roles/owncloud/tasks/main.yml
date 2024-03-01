@@ -60,17 +60,17 @@
     dest: /etc/mysql/mariadb.conf.d/50-server.cnf
   notify: restart mariadb
 
-- name: Ensure owncloud database
-  mysql_db:
-    name: owncloud
-    state: present
-
-- name: Ensure owncloud database user
-  mysql_user:
-    name: owncloud
-    password: "{{ owncloud_db_password }}"
-    priv: 'owncloud.*:ALL'
-    state: present
+    #- name: Ensure owncloud database
+    #  mysql_db:
+    #    name: owncloud
+    #    state: present
+    #
+    #- name: Ensure owncloud database user
+    #  mysql_user:
+    #    name: owncloud
+    #    password: "{{ owncloud_db_password }}"
+    #    priv: 'owncloud.*:ALL'
+    #    state: present
 
 - name: Apache default website config
   template:
