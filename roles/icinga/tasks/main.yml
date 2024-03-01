@@ -145,8 +145,6 @@
       address6: "{{ hosts.mail_server.ipv6 }}"
     - name: "ns1.tarnbarford.net"
       address6: "{{ hosts.ns1.ipv6 }}"
-    - name: "ns2.tarnbarford.net"
-      address6: "{{ hosts.ns2.ipv6 }}"
   notify: restart icinga2
 
 - name: Allow http and https through firewall
