@@ -1,0 +1,49 @@
+- name: Install packages
+  apt:
+    name: [
+      'certbot',
+      'nginx',
+    ]
+    state: present
+    update_cache: yes
+
+- name: Allow HTTP/S ports in UFW
+  ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+
+- name: Allow HTTP/S ports in UFW
+  ufw:
+    rule: allow
+    port: '443'
+    proto: tcp
+
+- name: Get initial letsencypt SSL certificat
+  shell: "systemctl stop nginx && certbot certonly --non-interactive --standalone -d snapper.tarnbarford.net --email tarn@tarnbarford.net --agree-tos && systemctl start nginx"
+  args:
+    creates: "/etc/letsencrypt/live/snapper.tarnbarford.net/cert.pem"
+
+- name: Configure nginx
+  copy:
+    src: templates/nginx.conf
+    dest: /etc/nginx/sites-enabled/default
+    owner: root
+    group: root
+  notify: restart nginx
+
+- name: Configure systemd unit
+  template:
+    src: templates/snapper.service
+    dest: /etc/systemd/system/snapper.service
+    owner: root
+    group: root
+  notify: reload systemd
+
+- name: Ensure the service is enabled and started
+  systemd:
+    name: snapper
+    state: stopped
+    enabled: yes
+
+

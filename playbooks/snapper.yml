@@ -1,0 +1,10 @@
+- hosts: snapper
+  user: root
+  become: yes
+  roles:
+    - vm-networking
+    - hostname
+    - sshd
+    - firewall
+    - letsencrypt-nginx
+    - services/snapper-api
