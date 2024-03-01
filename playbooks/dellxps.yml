@@ -10,6 +10,8 @@
     - git
     - mutt
     - tmux
+    - libvirt/client/scripts
+    - libvirt/client/certificates
     - nix/flakes
     - nix/vim
     - dellxps
