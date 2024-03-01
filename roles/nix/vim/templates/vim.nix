@@ -19,6 +19,7 @@
             coc-nvim
             coc-tsserver
             coc-java
+            coc-go
             coc-pyright
             coc-prettier
           ];

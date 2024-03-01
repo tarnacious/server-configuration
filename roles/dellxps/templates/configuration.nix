@@ -185,6 +185,7 @@
   zip
   unzip
   screen
+  file
 
   # conversion tools
   imagemagick
@@ -208,6 +209,7 @@
   khard
   msmtp
   vdirsyncer
+  gthumb
 
   # security
   pkgs-tarn.nitrocli
@@ -230,8 +232,9 @@
 
   jetbrains.idea-community
   maven
-  openjdk8
   openjdk17
+  android-studio
+  gccgo
 
   libreoffice
 
