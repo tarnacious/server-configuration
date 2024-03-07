@@ -13,5 +13,5 @@
     - libvirt/client/scripts
     - libvirt/client/certificates
     - nix/flakes
-    - nix/vim
+    - nix/wg-quick
     - dellxps

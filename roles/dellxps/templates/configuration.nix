@@ -3,6 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./wg-quick.nix
     ./cachix.nix
   ];
 
