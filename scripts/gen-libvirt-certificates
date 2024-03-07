@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-CA_DIRECTORY=./playbooks/libvirt-ca
+CA_DIRECTORY=./roles/libvirt/ca
 
 echo "Creating directory $CA_DIRECTORY"
 mkdir -p $CA_DIRECTORY

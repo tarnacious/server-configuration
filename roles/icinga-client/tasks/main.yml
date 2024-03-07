@@ -16,19 +16,19 @@
 
 - name: "copy {{ fqdn }} certificate"
   copy:
-    src: "ca/client_keys/{{ fqdn }}.crt"
+    src: "../ca/client_keys/{{ fqdn }}.crt"
     dest: "/etc/icinga2/pki/client.crt"
   notify: restart icinga2
 
 - name: "copy {{ fqdn }} private key"
   copy:
-    src: "ca/client_keys/{{ fqdn }}.key"
+    src: "../ca/client_keys/{{ fqdn }}.key"
     dest: "/etc/icinga2/pki/client.key"
   notify: restart icinga2
 
 - name: copy ca certificate
   copy:
-    src: "ca/ca.crt"
+    src: "../ca/ca.crt"
     dest: "/etc/icinga2/pki/ca.crt"
   notify: restart icinga2
 

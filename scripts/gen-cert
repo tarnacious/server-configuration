@@ -9,8 +9,8 @@ fi
 ANSIBLE_VAULT=$(find . -name 'ansible-vault' | head -n 1)
 DECRYPT="$ANSIBLE_VAULT decrypt"
 ENCRYPT="$ANSIBLE_VAULT encrypt"
-CA_CERT_DIR=./playbooks/ca
-CERT_DIR=./playbooks/ca/client_keys
+CA_CERT_DIR=./roles/ca
+CERT_DIR=./roles/ca/client_keys
 COMMON_NAME=$1 
 SUBJECT="/C=DE/ST=Berlin/L=Berlin/O=tarnbarford.net/OU=tarnbarford.net/CN=$COMMON_NAME"
 

@@ -10,13 +10,13 @@
 
 - name: copy libvirtd ca certificate
   copy:
-    src: libvirt-ca/ca.crt
+    src: ../../ca/ca.crt
     dest: /etc/pki/CA/cacert.pem
   notify: restart libvirtd
 
 - name: copy libvirtd private key
   copy:
-    src: libvirt-ca/server.key
+    src: ../../ca/server.key
     dest: /etc/pki/libvirt/private/serverkey.pem
     mode: "600"
     owner: root
@@ -25,7 +25,7 @@
 
 - name: copy libvirtd public key
   copy:
-    src: libvirt-ca/server.crt
+    src: ../../ca/server.crt
     dest: /etc/pki/libvirt/servercert.pem
   notify: restart libvirtd
 
@@ -37,18 +37,18 @@
 
 - name: copy libvirt-vnc ca certificate
   copy:
-    src: libvirt-ca/ca.crt
+    src: ../../ca/ca.crt
     dest: /etc/pki/libvirt-vnc/ca-cert.pem
   notify: restart libvirtd
 
 - name: copy libvirt-vnc private key
   copy:
-    src: libvirt-ca/server.key
+    src: ../../ca/server.key
     dest: /etc/pki/libvirt-vnc/server-key.pem
   notify: restart libvirtd
 
 - name: copy libvirt-vnc public key
   copy:
-    src: libvirt-ca/server.crt
+    src: ../../ca/server.crt
     dest: /etc/pki/libvirt-vnc/server-cert.pem
   notify: restart libvirtd

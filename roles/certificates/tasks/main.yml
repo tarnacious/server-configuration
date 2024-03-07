@@ -5,18 +5,18 @@
 
 - name: "copy {{ fqdn }} certificate"
   copy:
-    src: "ca/client_keys/{{ fqdn }}.crt"
+    src: "../ca/client_keys/{{ fqdn }}.crt"
     dest: "/etc/ssl/certs/client.crt"
   register: certificates
 
 - name: "copy {{ fqdn }} private key"
   copy:
-    src: "ca/client_keys/{{ fqdn }}.key"
+    src: "../ca/client_keys/{{ fqdn }}.key"
     dest: "/etc/ssl/certs/client.key"
   register: certificates
 
 - name: copy ca certificate
   copy:
-    src: "ca/ca.crt"
+    src: "../ca/ca.crt"
     dest: "/etc/ssl/certs/ca.crt"
   register: certificates
