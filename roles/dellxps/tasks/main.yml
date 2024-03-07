@@ -11,6 +11,7 @@
     - configuration.nix
     - hardware-configuration.nix
     - cachix.nix
+    - flake.nix
 
 
     #- name: samba secret

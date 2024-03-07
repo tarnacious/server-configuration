@@ -1,57 +1,50 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+{ config, pkgs, lib, nvim-config, ... }:
 
-{ config, pkgs, lib, ... }:
+{
+  imports = [
+    ./hardware-configuration.nix
+    ./cachix.nix
+  ];
 
-{ imports = [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./vim.nix
-      ];
 
+  nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  time.timeZone = "Europe/Berlin";
+  i18n.defaultLocale = "en_AU.utf8";
+  sound.enable = true;
 
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "au";
-    enable = true;
-    xkbVariant = "";
-  };
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  services.xserver.displayManager.gdm.wayland = true;
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-  };
-
-
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.kernel.sysctl =
-    {
-      "vm.max_map_count" = 262144;
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
     };
 
-  networking.extraHosts =
-    ''
-      127.0.0.1 ybs.local
-      127.0.0.1 m.ybs.local
-      127.0.0.1 api.ybs.local
-      127.0.0.1 cms.ybs.local
-      127.0.0.1 admin.ybs.local
-      127.0.0.1 rabbitmq.ybs.local
-      127.0.0.1 logging.ybs.local
-      127.0.0.1 products.ybs.local
-      127.0.0.1 media.ybs.local
-      127.0.0.1 book-data.ybs.local
+    kernel.sysctl = {
+      "vm.max_map_count" = 262144;
+    };
+  };
 
+  hardware = {
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
+    pulseaudio = {
+      enable = false;
+    };
+  };
+
+  networking = {
+    hostName = "nixos";
+    networkmanager.enable = true;
+
+    firewall = {
+      enable = false;
+      allowedUDPPorts = [ 51820 ]; # wireguard vpn server
+    };
+
+    extraHosts = ''
       {{ hosts.hypervisor.ipv6 }} hypervisor
       {{ hosts.bacula.ipv6 }} bacula
       {{ hosts.monitoring.ipv6 }} monitoring
@@ -66,81 +59,98 @@
       {{ hosts.australia.ipv6 }} australia
       {{ hosts.snapper.ipv6 }} snapper
     '';
+  };
 
-  nixpkgs.config.allowUnfree = true;
+  services = {
+    xserver = {
+      layout = "au";
+      enable = true;
+      xkbVariant = "";
+      displayManager = {
+        gdm = {
+          enable = true;
+          wayland = true;
+        };
+      };
+      desktopManager = {
+        gnome.enable = true;
+      };
+    };
 
-  virtualisation.docker.enable = true;
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
 
-  virtualisation.libvirtd = {
-    enable = true;
-    onShutdown = "suspend";
-    onBoot = "ignore";
-    qemu = {
-      package = pkgs.qemu_kvm;
-      ovmf.enable = true;
-      ovmf.packages = [ pkgs.OVMFFull.fd ];
-      swtpm.enable = true;
-      runAsRoot = true;
+    avahi = {
+      enable = true;
+      nssmdns = true;
+    };
+
+    printing = {
+      enable = true;
+      drivers = [ pkgs.gutenprint pkgs.gutenprintBin pkgs.epson-escpr];
     };
   };
 
-  environment.etc = {
-    "ovmf/edk2-x86_64-secure-code.fd" = {
-      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
+  virtualisation = {
+    docker = {
+      enable = true;
     };
 
-    "ovmf/edk2-i386-vars.fd" = {
-      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
+    libvirtd = {
+      enable = true;
+      onShutdown = "suspend";
+      onBoot = "ignore";
+      qemu = {
+        package = pkgs.qemu_kvm;
+        ovmf.enable = true;
+        ovmf.packages = [ pkgs.OVMFFull.fd ];
+        swtpm.enable = true;
+        runAsRoot = true;
+      };
     };
   };
 
-  security.tpm2.enable = true;
-  security.tpm2.pkcs11.enable = true;  # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
-  security.tpm2.tctiEnvironment.enable = true;  # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
-
-  # Setup keyfile
-  boot.initrd.secrets = { "/crypto_keyfile.bin" = null;
+  security = {
+    tpm2 = {
+      enable = true;
+      pkcs11.enable = true;
+      tctiEnvironment.enable = true;
+    };
   };
 
+  specialisation = {
+    egpu.configuration = {
+      system.nixos.tags = [ "egpu" ];
+      services.xserver.videoDrivers = [ "nvidia" ];
+      services.xserver.displayManager.gdm.wayland = lib.mkForce false;
 
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true; # Enables wireless support via
-  # wpa_supplicant.
+      hardware.nvidia = {
+        modesetting.enable = true;
+        powerManagement.enable = false;
+        powerManagement.finegrained = false;
+        open = false;
+        nvidiaSettings = true;
+        package = config.boot.kernelPackages.nvidiaPackages.stable;
+        prime = {
+          sync.enable = true;
+          allowExternalGpu = true;
+          nvidiaBusId = "PCI:6:0:0";
+          intelBusId = "PCI:0:2:0";
+        };
+      };
 
-  # Configure network proxy if necessary networking.proxy.default =
-  # "http://user:password@proxy:port/"; networking.proxy.noProxy =
-  # "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-
-  # Set your time zone.
-  time.timeZone = "Europe/Berlin";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_AU.utf8";
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-  services.avahi.enable = true;
-  services.avahi.nssmdns = true;
-  services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin pkgs.epson-escpr];
-
-  # services.gnome.gnome-keyring.enable = true;
-
-  # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
+      programs.steam = {
+        enable = true;
+        remotePlay.openFirewall = true;
+        dedicatedServer.openFirewall = true;
+      };
+    };
   };
 
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.tarn = {
     isNormalUser = true;
     description = "tarn";
@@ -156,111 +166,113 @@
 
     packages = with pkgs; [
       firefox
-    #  thunderbird
     ];
   };
 
-  # List packages installed in system profile. To search, run: $ nix
-  # search wget
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
+  programs = {
+    gnupg = {
+      agent = {
+        enable = true;
+        enableSSHSupport = true;
+      };
+    };
   };
+
+  environment.etc = {
+    "ovmf/edk2-x86_64-secure-code.fd" = {
+      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
+    };
+
+    "ovmf/edk2-i386-vars.fd" = {
+      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
+    };
+  };
+
   environment.systemPackages = with pkgs; [
+    skypeforlinux
+    google-chrome
 
-  skypeforlinux
-  google-chrome
+    # standard tools
+    gnupg
+    pass
+    git
+    git-lfs
+    tmux
+    wget
+    bind
+    htop
+    cloc
+    pwgen
+    zip
+    unzip
+    screen
+    file
 
-  # standard tools
-  gnupg
-  pass
-  git
-  git-lfs
-  tmux
-  wget
-  bind
-  htop
-  cloc
-  pwgen
-  zip
-  unzip
-  screen
-  file
+    # conversion tools
+    imagemagick
+    pandoc
+    ffmpeg
 
-  # conversion tools
-  imagemagick
-  pandoc
-  ffmpeg
+    # system tools
+    pciutils
+    lshw
+    cachix
 
-  # system tools
-  pciutils
-  lshw
-  cachix
+    # gui tools
+    filezilla
+    vscode
+    pinta
 
-  # gui tools
-  filezilla
-  vscode
-  pinta
+    # mail / contacts / calendars
+    neomutt
+    offlineimap
+    urlview
+    khard
+    msmtp
+    vdirsyncer
+    gthumb
 
-  # mail / contacts / calendars
-  neomutt
-  offlineimap
-  urlview
-  khard
-  msmtp
-  vdirsyncer
-  gthumb
+    # security
+    pkgs-tarn.nitrocli
 
-  # security
-  pkgs-tarn.nitrocli
+    # wayland
+    wl-clipboard
 
-  # wayland
-  wl-clipboard
+    # notes
+    joplin
+    joplin-desktop
 
-  # notes
-  joplin
-  joplin-desktop
+    # work
+    slack
 
-  # work
-  slack
+    # owncloud
+    owncloud-client
 
-  # owncloud
-  owncloud-client
+    # virtualisation
+    virt-manager
 
-  # virtualisation
-  virtmanager
+    jetbrains.idea-community
+    maven
+    openjdk17
+    android-studio
+    gccgo
 
-  jetbrains.idea-community
-  maven
-  openjdk17
-  android-studio
-  gccgo
+    libreoffice
 
-  libreoffice
+    vlc
+    youtube-dl
 
-  vlc
-  youtube-dl
+    # 3d printing
+    cura
+    freecad
 
-  # 3d printing
-  cura
-  freecad
+    # text generation
+    # ollama
 
+    gnome.cheese
 
-
+    nvim-config.packages.${"x86_64-linux"}.default 
   ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions. programs.mtr.enable = true;
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon. services.openssh.enable = true;
-
-  networking.firewall = {
-    enable = false;
-    allowedUDPPorts = [ 51820 ]; # wireguard vpn server
-  };
-
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database
