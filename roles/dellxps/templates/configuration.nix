@@ -268,7 +268,7 @@
     freecad
 
     # text generation
-    # ollama
+    ollama
 
     gnome.cheese
 
