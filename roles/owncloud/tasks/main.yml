@@ -116,3 +116,12 @@
     src: templates/config.php
     dest:  /var/www/owncloud/config/config.php
   notify: restart apache2
+
+- name: Allow web ports through firewall
+  ufw:
+    rule: allow
+    port: '{{ item }}'
+    proto: tcp
+  with_items:
+    - '80'
+    - '443'

@@ -41,7 +41,7 @@
     networkmanager.enable = true;
 
     firewall = {
-      enable = false;
+      enable = true;
       allowedUDPPorts = [ 51820 ]; # wireguard vpn server
     };
 
