@@ -9,6 +9,7 @@
     - sshd
     - certificates
     - backup-client
+    - firewall
     - icinga-client
     - owncloud
     - letsencrypt-apache
