@@ -1,2 +1,2 @@
 - name: restart bacula-fd
-  action: service name=bareos-fd state=restarted
+  action: service name=bacula-fd state=restarted

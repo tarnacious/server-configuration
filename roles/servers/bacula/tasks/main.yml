@@ -1,0 +1,60 @@
+- name: copy nix configration files
+  template:
+    src: "{{ item }}"
+    dest: "/etc/nixos/{{ item }}"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+  loop:
+    - flake.nix
+    - configuration.nix
+
+- name: create config directory
+  ansible.builtin.file:
+    path: /etc/bacula
+    state: directory
+
+- name: create working directory
+  ansible.builtin.file:
+    path: /var/lib/bacula
+    state: directory
+       
+- name: create scripts directory
+  ansible.builtin.file:
+    path: /home/tarn/scripts
+    state: directory
+
+- name: create scripts directory
+  ansible.builtin.file:
+    path: /var/log/bacula
+    state: directory
+
+- name: copy bacula configuration files
+  template:
+    src: "{{ item }}"
+    dest: "/etc/bacula/{{ item }}"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+  loop:
+    - bacula-dir.conf
+    - bacula-fd.conf
+    - bacula-sd.conf
+    - bconsole.conf
+
+- name: copy smtp credentials
+  template:
+    src: templates/smtp-password
+    dest: /etc/bacula/smtp-password
+    mode: "0600"
+
+- name: copy backup credentials
+  template:
+    src: templates/backup-credentials
+    dest: /etc/bacula/storagebox-credentials
+    mode: "0600"
+  notify: remount all

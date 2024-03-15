@@ -28,6 +28,7 @@ mail            IN      AAAA    {{ hosts.mail_server.ipv6 }}
 australia       IN      AAAA    {{ hosts.australia.ipv6 }}
 debugproxy      IN      AAAA    {{ hosts.debugproxy.ipv6 }}
 git             IN      AAAA    {{ hosts.tarnbarford.ipv6 }}
+monitoring      IN      AAAA    {{ hosts.monitoring.ipv6 }}
 @               IN      MX      1  mail.tarnbarford.net.
 debugproxy      IN      MX      1  mail.tarnbarford.net.
 _dmarc          IN      TXT     "v=DMARC1;p=reject;pct=100;rua=mailto:postmaster@tarnbarford.net"

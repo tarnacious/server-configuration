@@ -2,15 +2,5 @@
   user: root
   become: yes
   roles:
-     - vm-networking
-     - hostname
-     - apt
-     - unattended-upgrades
-     - sshd
-     - firewall
-     - certificates
-     - munin-node
-     - icinga-client
-     - icinga-plugins-backup
-     - server/sendmail
-     - bacula
+    - certificates
+    - servers/bacula

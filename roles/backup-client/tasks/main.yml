@@ -1,19 +1,22 @@
+- name: Add an Apt signing key
+  ansible.builtin.apt_key:
+    url: https://www.bacula.org/downloads/Bacula-4096-Distribution-Verification-key.asc
+    state: present
+
+- name: Remove specified repository from sources list
+  ansible.builtin.apt_repository:
+    repo: deb http://www.bacula.org/packages/65f153d70b81a/debs/13.0.3 bullseye main
+
 - name: Install packages
   apt:
-    name: "bareos-filedaemon"
+    name: "bacula-client"
     state: present
     update_cache: yes
 
-- name: copy director configuration
-  template:
-    src: templates/bareos-dir.conf
-    dest: /etc/bareos/bareos-fd.d/director/bareos-dir.conf
-  notify: restart bacula-fd
-
 - name: copy client configuration
   template:
-    src: templates/myself.conf
-    dest: /etc/bareos/bareos-fd.d/client/myself.conf
+    src: templates/bacula-fd.conf
+    dest: /opt/bacula/etc/bacula-fd.conf 
   notify: restart bacula-fd
 
 - name: Allow backup in UFW

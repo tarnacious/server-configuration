@@ -1,3 +1,0 @@
-/dev/vda1 /boot                              ext4    sync 0       2
-/dev/vda2 /                                  ext4    errors=remount-ro 0       1
-//u198293.your-storagebox.de/backup /mnt/backup  cifs    iocharset=utf8,rw,credentials=/etc/backup-credentials,uid=107,gid=111,file_mode=0660,dir_mode=0770 0 0

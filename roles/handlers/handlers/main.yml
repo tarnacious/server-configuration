@@ -1,2 +1,7 @@
 - name: rebuild nix
   command: nixos-rebuild switch --flake "/etc/nixos#nixos"
+
+- name: remount all
+  command: mount -a
+  args:
+    warn: no
