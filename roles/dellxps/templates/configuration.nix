@@ -7,7 +7,6 @@
     ./cachix.nix
   ];
 
-
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   time.timeZone = "Europe/Berlin";
@@ -60,6 +59,7 @@
       {{ hosts.australia.ipv6 }} australia
       {{ hosts.snapper.ipv6 }} snapper
     '';
+
   };
 
   services = {
@@ -179,101 +179,112 @@
     };
   };
 
-  environment.etc = {
-    "ovmf/edk2-x86_64-secure-code.fd" = {
-      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
+  environment = {
+    # Used for runnning windows vm guests
+    etc = {
+      "ovmf/edk2-x86_64-secure-code.fd" = {
+        source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
+      };
+
+      "ovmf/edk2-i386-vars.fd" = {
+        source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
+      };
     };
 
-    "ovmf/edk2-i386-vars.fd" = {
-      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
-    };
+    interactiveShellInit = ''
+      alias wg-australia-start='systemctl start wg-quick-wg0'
+      alias wg-australia-status='systemctl status wg-quick-wg0'
+      alias wg-australia-stop='systemctl stop wg-quick-wg0'
+      alias what-is-my-ip='curl ifconfig.me'
+      alias vim=nvim
+    '';
+
+    systemPackages = with pkgs; [
+      skypeforlinux
+      google-chrome
+
+      # standard tools
+      gnupg
+      pass
+      git
+      git-lfs
+      tmux
+      wget
+      bind
+      htop
+      cloc
+      pwgen
+      zip
+      unzip
+      screen
+      file
+
+      # conversion tools
+      imagemagick
+      pandoc
+      ffmpeg
+
+      # system tools
+      pciutils
+      lshw
+      cachix
+
+      # gui tools
+      filezilla
+      vscode
+      pinta
+
+      # mail / contacts / calendars
+      neomutt
+      offlineimap
+      urlview
+      khard
+      msmtp
+      vdirsyncer
+      gthumb
+
+      # security
+      pkgs-tarn.nitrocli
+
+      # wayland
+      wl-clipboard
+
+      # notes
+      joplin
+      joplin-desktop
+
+      # work
+      slack
+
+      # owncloud
+      owncloud-client
+
+      # virtualisation
+      virt-manager
+
+      jetbrains.idea-community
+      maven
+      openjdk17
+      android-studio
+      gccgo
+
+      libreoffice
+
+      vlc
+      youtube-dl
+
+      # 3d printing
+      cura
+      freecad
+
+      # text generation
+      ollama
+
+      gnome.cheese
+
+      nvim-config.packages.${"x86_64-linux"}.default 
+    ];
   };
-
-  environment.systemPackages = with pkgs; [
-    skypeforlinux
-    google-chrome
-
-    # standard tools
-    gnupg
-    pass
-    git
-    git-lfs
-    tmux
-    wget
-    bind
-    htop
-    cloc
-    pwgen
-    zip
-    unzip
-    screen
-    file
-
-    # conversion tools
-    imagemagick
-    pandoc
-    ffmpeg
-
-    # system tools
-    pciutils
-    lshw
-    cachix
-
-    # gui tools
-    filezilla
-    vscode
-    pinta
-
-    # mail / contacts / calendars
-    neomutt
-    offlineimap
-    urlview
-    khard
-    msmtp
-    vdirsyncer
-    gthumb
-
-    # security
-    pkgs-tarn.nitrocli
-
-    # wayland
-    wl-clipboard
-
-    # notes
-    joplin
-    joplin-desktop
-
-    # work
-    slack
-
-    # owncloud
-    owncloud-client
-
-    # virtualisation
-    virt-manager
-
-    jetbrains.idea-community
-    maven
-    openjdk17
-    android-studio
-    gccgo
-
-    libreoffice
-
-    vlc
-    youtube-dl
-
-    # 3d printing
-    cura
-    freecad
-
-    # text generation
-    ollama
-
-    gnome.cheese
-
-    nvim-config.packages.${"x86_64-linux"}.default 
-  ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database

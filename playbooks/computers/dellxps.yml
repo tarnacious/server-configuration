@@ -12,6 +12,5 @@
     - tmux
     - libvirt/client/scripts
     - libvirt/client/certificates
-    - nix/flakes
     - nix/wg-quick
     - dellxps
