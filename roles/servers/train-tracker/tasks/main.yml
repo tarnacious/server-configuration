@@ -1,0 +1,26 @@
+- name: copy nix configration files
+  template:
+    src: "{{ item }}"
+    dest: "/etc/nixos/{{ item }}"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+  loop:
+    - flake.nix
+    - configuration.nix
+
+- name: create www directory 
+  ansible.builtin.file:
+    path: /var/www/trains
+    state: directory
+
+      #- name: copy bacula configuration files
+      #  template:
+      #    src: "index.html"
+      #    dest: "/var/www/trains"
+      #    mode: "644"
+      #    owner: root
+      #    group: root
+      #  become: true

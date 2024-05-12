@@ -76,3 +76,9 @@ Host bab-website
   ProxyJump hypervisor.tarnbarford.net
   User tarn
   ForwardAgent yes
+
+Host train-tracker
+  HostName {{ hosts.trains.ipv4 }}
+  ProxyJump hypervisor.tarnbarford.net
+  User tarn
+  ForwardAgent yes

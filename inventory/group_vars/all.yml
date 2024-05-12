@@ -119,6 +119,9 @@ hosts:
   bacula:
     ipv4: "192.168.122.21"
     ipv6: "2a01:4f8:211:2845::21"
+  trains:
+    ipv4: "192.168.122.24"
+    ipv6: "2a01:4f8:211:2845::24"
   monitoring:
     ipv4: !vault |
       $ANSIBLE_VAULT;1.1;AES256

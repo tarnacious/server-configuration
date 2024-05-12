@@ -117,6 +117,9 @@ COMMIT
 # snapper
 -I FORWARD -o virbr0 -d  {{ hosts.snapper.ipv4 }} -j ACCEPT
 
+# trains
+-I FORWARD -o virbr0 -d  {{ hosts.trains.ipv4 }} -j ACCEPT
+
 # ns1
 -I FORWARD -o virbr0 -d  {{ hosts.ns1.ipv4 }} -j ACCEPT
 

@@ -1,0 +1,5 @@
+- hosts: trains
+  user: root
+  become: yes
+  roles:
+    - servers/train-tracker
