@@ -1,0 +1,42 @@
+qemu-img create -f qcow2 /var/kvm/images/nixos-base.qcow2 20G
+
+curl -o /var/kvm/installers/latest-nixos-gnome-x86_64-linux.iso https://channels.nixos.org/nixos-23.11/latest-nixos-gnome-x86_64-linux.iso
+
+nix-shell -p vim
+sudo vim /etc/nixos/configuration.nix
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  networking.hostName = "base-nixos"; 
+  environment.systemPackages = with pkgs; [
+     vim
+     python3
+  ];
+  services.openssh.enable = true;
+  boot.kernelParams = [
+     "console=ttyS0,115200"
+     "console=tty1"
+  ];
+
+sudo nixos-rebuild switch
+
+export LIBVIRT_DEFAULT_URI=qemu+tls://hypervisor.tarnbarford.net:16514/system
+
+
+  mkdir ~/.ssh
+  chmod 0700 ~/.ssh/
+  curl https://github.com/tarnacious.keys > ~/.ssh/authorized_keys 
+  chmod 600 ~/.ssh/authorized_keys
+
+
+virt-install \
+  --name nixos-base \
+  --network bridge=virbr0 \
+  --network bridge=br0 \
+  --disk /var/kvm/images/nixos-base.qcow2 \
+  --vcpu 4 \
+  --memory 4096 \
+  --os-variant generic \
+  --console pty,target_type=virtio \
+  --serial pty \
+  --graphics vnc \
+  --cdrom /var/kvm/installers/latest-nixos-gnome-x86_64-linux.iso

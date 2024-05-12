@@ -1,0 +1,5 @@
+To sync calandars and contacts:
+
+  vdirsyncer sync
+  vdirsyncer discover
+

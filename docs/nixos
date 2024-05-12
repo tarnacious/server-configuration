@@ -1,0 +1,6 @@
+
+## rebuild without internet access 
+
+    --option substitute false
+    --option binary-caches ""
+
