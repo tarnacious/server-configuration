@@ -10,9 +10,9 @@
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
           pkgs.openssl
-          pkgs.python310
-          pkgs.python310Packages.virtualenv
-          pkgs.python310Packages.lxml
+          pkgs.python311
+          pkgs.python311Packages.ansible
+          pkgs.python311Packages.ansible-core
         ];
         shellHook = ''
           if [ ! -e "./venv" ]; then
