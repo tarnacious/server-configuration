@@ -2,7 +2,7 @@
   description = "NixOS configuration with two or more channels";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-23.05";
+    nixpkgs.url = "nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
     nixpkgs-tarn.url = "github:tarnacious/nixpkgs";
   };
@@ -33,3 +33,4 @@
       };
     };
 }
+

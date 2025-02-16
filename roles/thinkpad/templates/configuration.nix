@@ -9,11 +9,15 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  virtualisation.spiceUSBRedirection.enable = true;
+
   # Configure keymap in X11
   services.xserver = {
-    layout = "au";
     enable = true;
-    xkbVariant = "";
+    xkb = {
+      variant = "";
+      layout = "au";
+    };
   };
 
   # Firmware updates
@@ -24,15 +28,22 @@
   services.xserver.desktopManager.gnome.enable = true;
   services.xserver.displayManager.gdm.wayland = true;
   hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    # removed upgrading to nixos 24.11
+    #driSupport = true;
   };
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
 
   specialisation = {
     external-cuda.configuration = {
       system.nixos.tags = [ "external-cuda" ];
       services.xserver.videoDrivers = [ "nvidia" ];
+      hardware.nvidia = {
+        open = true;
+      };
     };
     external-gpu.configuration = {
       system.nixos.tags = [ "external-gpu" ];
@@ -41,6 +52,7 @@
       services.xserver.enable = true;
       boot.kernelParams = [ "module_blacklist=i915" ];
       hardware.nvidia = {
+        open = true;
         nvidiaSettings = true;
         modesetting.enable = true;
         powerManagement.enable = false;
@@ -112,7 +124,7 @@
     };
   };
 
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" "Hack" "Terminus" "Monoid" "JetBrainsMono" ]; })
   ];
 
@@ -155,13 +167,12 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
   services.avahi.enable = true;
-  services.avahi.nssmdns = true;
+  services.avahi.nssmdns4 = true;
   services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin pkgs.epson-escpr];
 
   # services.gnome.gnome-keyring.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -223,6 +234,7 @@
     unzip
     screen
     openssl
+    inetutils
 
     # conversion tools
     imagemagick
@@ -242,14 +254,15 @@
     # mail / contacts / calendars
     neomutt
     offlineimap
-    urlview
+    # urlview
+    # Consider switching to an alternative such as `pkgs.extract_url` or `pkgs.urlscan`.
     khard
     khal
     msmtp
     vdirsyncer
 
     # security
-    pkgs-tarn.nitrocli
+    #pkgs-tarn.nitrocli
 
     # wayland
     wl-clipboard
@@ -265,7 +278,7 @@
     owncloud-client
 
     # virtualisation
-    virtmanager
+    virt-manager
 
     jetbrains.idea-community
     maven
@@ -275,10 +288,12 @@
     libreoffice
 
     vlc
-    youtube-dl
+    # youtube-dl
+    # youtube-dl is unmaintained, migrate to yt-dlp, if possible
 
     # 3d printing
-    cura
+    # disable for now, upgrading to 24.11
+    # cura
     freecad
   ];
 
@@ -297,3 +312,4 @@
   system.stateVersion = "22.05"; # Did you read the comment?
 
 }
+
