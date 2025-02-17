@@ -27,17 +27,3 @@
     group: root
   become: true
   notify: rebuild nix
-
-    #- name: samba secret
-    #  template:
-    #    src: "smb-secrets"
-    #    dest: "/etc/nixos/smb-secrets"
-    #    mode: "600"
-    #  become: true
-    #
-    #- name: backup secrets
-    #  template:
-    #    src: "backup-secrets"
-    #    dest: "/etc/nixos/backup-secrets"
-    #    mode: "600"
-    #  become: true
