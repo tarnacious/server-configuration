@@ -11,6 +11,7 @@
     - tmux
     - libvirt/client/scripts
     - libvirt/client/certificates
+    - nix/storage-box
     - nix/flakes
     - nix/wg-quick
     - nix/vim

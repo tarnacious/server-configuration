@@ -5,6 +5,7 @@
       ./cachix.nix
       ./vim.nix
       ./wg-quick.nix
+      ./storage-box.nix
       ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];

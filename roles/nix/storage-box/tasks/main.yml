@@ -1,0 +1,16 @@
+- name: /etc/nixos/storage-box.nix
+  template:
+    src: "storage-box.nix"
+    dest: "/etc/nixos/storage-box.nix"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+
+- name: storage box secrets
+  template:
+    src: "storage-box-secrets"
+    dest: "/etc/nixos/storage-box-secrets"
+    mode: "600"
+  become: true
