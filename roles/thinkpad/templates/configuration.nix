@@ -82,17 +82,6 @@
 
   networking.extraHosts =
     ''
-      127.0.0.1 ybs.local
-      127.0.0.1 m.ybs.local
-      127.0.0.1 api.ybs.local
-      127.0.0.1 cms.ybs.local
-      127.0.0.1 admin.ybs.local
-      127.0.0.1 rabbitmq.ybs.local
-      127.0.0.1 logging.ybs.local
-      127.0.0.1 products.ybs.local
-      127.0.0.1 media.ybs.local
-      127.0.0.1 book-data.ybs.local
-
       {{ hosts.hypervisor.ipv6 }} hypervisor
       {{ hosts.bacula.ipv6 }} bacula
       {{ hosts.monitoring.ipv6 }} monitoring
