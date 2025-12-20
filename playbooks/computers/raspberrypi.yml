@@ -1,7 +1,0 @@
-- hosts: raspberrypi
-  user: root
-  become: yes
-  roles:
-    - hostname
-    - sendmail
-    - local-backup

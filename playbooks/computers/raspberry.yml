@@ -1,0 +1,5 @@
+- hosts: raspberry
+  user: root
+  become: yes
+  roles:
+    - server/sendmail
