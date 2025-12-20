@@ -3,7 +3,6 @@
 { imports = [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./cachix.nix
-      ./vim.nix
       ./wg-quick.nix
       ./storage-box.nix
       ];
@@ -25,9 +24,9 @@
   services.fwupd.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  services.xserver.displayManager.gdm.wayland = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.wayland = true;
   hardware.opengl = {
     # removed upgrading to nixos 24.11
     #driSupport = true;
@@ -118,24 +117,8 @@
     onBoot = "ignore";
     qemu = {
       package = pkgs.qemu_kvm;
-      ovmf.enable = true;
-      ovmf.packages = [ pkgs.OVMFFull.fd ];
       swtpm.enable = true;
       runAsRoot = true;
-    };
-  };
-
-  fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" "Hack" "Terminus" "Monoid" "JetBrainsMono" ]; })
-  ];
-
-  environment.etc = {
-    "ovmf/edk2-x86_64-secure-code.fd" = {
-      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
-    };
-
-    "ovmf/edk2-i386-vars.fd" = {
-      source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
     };
   };
 
@@ -163,7 +146,7 @@
   time.timeZone = "Europe/Berlin";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_AU.utf8";
+  i18n.defaultLocale = "en_AU.UTF-8";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -174,7 +157,7 @@
   # services.gnome.gnome-keyring.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -217,7 +200,6 @@
 
 
   environment.systemPackages = with pkgs; [
-    skypeforlinux
     google-chrome
 
     # standard tools
@@ -296,6 +278,8 @@
     # disable for now, upgrading to 24.11
     # cura
     freecad
+
+    nvim-config-pkg
   ];
 
   networking.firewall = {

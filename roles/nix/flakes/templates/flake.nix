@@ -2,32 +2,42 @@
   description = "NixOS configuration with two or more channels";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-24.11";
+    nixpkgs.url = "nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
     nixpkgs-tarn.url = "github:tarnacious/nixpkgs";
+
+    nvim-config = {
+      url = "github:tarnacious/nvim-config";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nixpkgs-tarn }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixpkgs-tarn, nvim-config }:
     let
       system = "x86_64-linux";
-      overlay-unstable = final: prev: {
-        unstable = nixpkgs-unstable.legacyPackages.${prev.system};
-        # use this variant if unfree packages are needed:
-        # unstable = import nixpkgs-unstable {
-        #   inherit system;
-        #   config.allowUnfree = true;
-        # };
 
+      overlay-unstable = final: prev: {
+        unstable = nixpkgs-unstable.legacyPackages.${system};
       };
+
       overlay-tarn = final: prev: {
-        pkgs-tarn = nixpkgs-tarn.legacyPackages.${prev.system};
+        pkgs-tarn = nixpkgs-tarn.legacyPackages.${system};
+      };
+
+      overlay-nvim = final: prev: {
+        nvim-config-pkg = nvim-config.packages.${system}.default;
       };
     in {
-      nixosConfigurations."nixos" = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
-          # Overlays-module makes "pkgs.unstable" available in configuration.nix
-          ({ config, pkgs, ... }: { nixpkgs.overlays = [ overlay-unstable overlay-tarn ]; })
+          ({ ... }: {
+            nixpkgs.overlays = [
+              overlay-unstable
+              overlay-tarn
+              overlay-nvim
+            ];
+          })
           ./configuration.nix
         ];
       };
