@@ -36,6 +36,13 @@
     enable32Bit = true;
   };
 
+  services.xserver.libinput = {
+    enable = true;
+    touchpad = {
+      tapping = false;          # disables tap-to-click
+      disableWhileTyping = true;
+    };
+  };
 
   specialisation = {
     external-cuda.configuration = {
