@@ -1,5 +1,5 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
   outputs = { self, nixpkgs }:
     let
       system = "x86_64-linux";
@@ -10,9 +10,9 @@
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
           pkgs.openssl
-          pkgs.python311
-          pkgs.python311Packages.ansible
-          pkgs.python311Packages.ansible-core
+          pkgs.python314
+          pkgs.python314Packages.ansible
+          pkgs.python314Packages.ansible-core
         ];
         shellHook = ''
           if [ ! -e "./venv" ]; then
