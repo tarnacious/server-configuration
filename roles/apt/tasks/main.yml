@@ -1,4 +1,4 @@
-- name: Copy default buster sources
+- name: Copy default trixie sources
   copy:
     src: templates/sources.list
     dest: /etc/apt/sources.list
