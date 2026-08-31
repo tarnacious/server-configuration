@@ -1,16 +1,39 @@
-## Name servers
+Name servers
 
-The name servers for tarnbarford.net are:
+The authoritative name servers for tarnbarford.net are:
 
-    ns1.tarnbarford.net
-    ns2.tarnbarford.net
+ns1.tarnbarford.net
+ns2.tarnbarford.net
 
-These are Debian servers running bind. They are configured by the `bind` role.
+Both are Debian servers running BIND9 and are configured by the bind role.
 
-The servers can be checked with `dig`
+BIND uses separate public and trusted views. Public clients receive authoritative, non-recursive DNS service, while trusted clients receive additional internal records used by services such as the mail server.
 
-    dig +short tarnbarford.net A @ns2.tarnbarford.net
+The authoritative servers can be checked with `dig`, for example:
 
-There is another DNS server that is used resolve names internally, it is also a
-Debian system running bind, how it's configured as a recursive resolver by the
-`bind-recursive`.
+```
+dig +short tarnbarford.net A @ns1.tarnbarford.net
+dig +short tarnbarford.net A @ns2.tarnbarford.net
+```
+
+Check that the servers are authoritative for the zone:
+
+```
+dig +noall +answer +authority tarnbarford.net @ns1.tarnbarford.net
+dig +noall +answer +authority tarnbarford.net @ns2.tarnbarford.net
+```
+
+The internal zone is only available to trusted clients:
+
+```
+dig +short internal.tarnbarford.net A @ns1.tarnbarford.net
+dig +short internal.tarnbarford.net A @ns2.tarnbarford.net
+```
+
+The authoritative servers are non-recursive. A query for an unrelated domain should not be resolved recursively:
+
+```
+dig +noall +comments example.com @ns1.tarnbarford.net
+dig +noall +comments example.com @ns2.tarnbarford.net
+```
+
