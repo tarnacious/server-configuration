@@ -15,7 +15,6 @@
   services.xserver = {
     enable = true;
     xkb = {
-      variant = "";
       layout = "au";
     };
   };
@@ -26,7 +25,6 @@
   # Enable the GNOME Desktop Environment.
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
-  services.displayManager.gdm.wayland = true;
   hardware.opengl = {
     # removed upgrading to nixos 24.11
     #driSupport = true;
@@ -55,7 +53,6 @@
     external-gpu.configuration = {
       system.nixos.tags = [ "external-gpu" ];
       services.xserver.videoDrivers = [ "nvidia" ];
-      services.xserver.displayManager.gdm.wayland = lib.mkForce false;
       services.xserver.enable = true;
       boot.kernelParams = [ "module_blacklist=i915" ];
       hardware.nvidia = {
@@ -251,32 +248,18 @@
     joplin
     joplin-desktop
 
-    # work
-    slack
-
     # owncloud
     owncloud-client
 
     # virtualisation
     virt-manager
 
-    jetbrains.idea-community
-    maven
-    openjdk8
-    openjdk17
-
-    libreoffice
-
     vlc
-    # youtube-dl
-    # youtube-dl is unmaintained, migrate to yt-dlp, if possible
-
-    # 3d printing
-    # disable for now, upgrading to 24.11
-    # cura
     freecad
+    opencode
 
     nvim-config-pkg
+    llm-agents.pi
   ];
 
   networking.firewall = {
