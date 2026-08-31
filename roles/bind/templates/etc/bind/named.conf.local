@@ -2,5 +2,3 @@ zone "tarnbarford.net" {
     type master;
     file "/etc/bind/zones/db.tarnbarford.net";
 };
-
-include "/etc/bind/zones.rfc1918";
