@@ -35,40 +35,71 @@ mkdir -p "$(dirname "${DISK_PATH}")"
 echo "Creating qcow2 disk image: ${DISK_PATH} (${SIZE})"
 qemu-img create -f qcow2 "${DISK_PATH}" "${SIZE}"
 
-# Load nbd module if not loaded
-if ! lsmod | grep -q nbd; then
-    echo "Loading nbd kernel module..."
-    modprobe nbd max_part=8
-fi
-
-# Find a free nbd device
+# Check if we can use nbd
+USE_NBD=false
 NBD_DEV=""
-for i in $(seq 0 7); do
-    if ! lsblk /dev/nbd${i} &>/dev/null 2>&1 && [ -e "/dev/nbd${i}" ]; then
-        NBD_DEV="/dev/nbd${i}"
-        break
-    fi
-done
+MODULE_WAS_LOADED=false
 
-if [ -z "${NBD_DEV}" ]; then
-    echo "ERROR: No free nbd device found (checked nbd0-7)"
-    exit 1
+# Try to load nbd module if not loaded
+if lsmod | grep -q nbd; then
+    # Module is already loaded, check for free devices
+    for i in $(seq 0 15); do
+        if [ -e "/dev/nbd${i}" ] && ! lsblk /dev/nbd${i} &>/dev/null 2>&1; then
+            NBD_DEV="/dev/nbd${i}"
+            USE_NBD=true
+            break
+        fi
+    done
+else
+    # Try to load the module
+    if modprobe nbd max_part=16 2>/dev/null; then
+        MODULE_WAS_LOADED=true
+        # Wait for device nodes to appear
+        sleep 1
+        for i in $(seq 0 15); do
+            if [ -e "/dev/nbd${i}" ] && ! lsblk /dev/nbd${i} &>/dev/null 2>&1; then
+                NBD_DEV="/dev/nbd${i}"
+                USE_NBD=true
+                break
+            fi
+        done
+    fi
 fi
 
-echo "Using nbd device: ${NBD_DEV}"
-
-# Connect the qcow2 image via nbd
-qemu-nbd --connect="${NBD_DEV}" "${DISK_PATH}"
-
-# Wait for device to be ready
-sleep 2
-
-# Format with ext4 and label
-echo "Formatting with ext4 filesystem and label '${LABEL}'"
-mkfs.ext4 -L "${LABEL}" "${NBD_DEV}"
-
-# Disconnect the nbd device
-qemu-nbd --disconnect "${NBD_DEV}"
+if [ "${USE_NBD}" = true ] && [ -n "${NBD_DEV}" ]; then
+    echo "Using nbd device: ${NBD_DEV}"
+    
+    # Connect the qcow2 image via nbd
+    qemu-nbd --connect="${NBD_DEV}" "${DISK_PATH}"
+    
+    # Wait for device to be ready
+    sleep 2
+    
+    # Format with ext4 and label
+    echo "Formatting with ext4 filesystem and label '${LABEL}'"
+    mkfs.ext4 -L "${LABEL}" "${NBD_DEV}"
+    
+    # Disconnect the nbd device
+    qemu-nbd --disconnect "${NBD_DEV}"
+    
+    # Clean up: unload module if we loaded it
+    if [ "${MODULE_WAS_LOADED}" = true ]; then
+        # Check if any nbd devices are still in use before unloading
+        if ! lsblk /dev/nbd* &>/dev/null 2>&1; then
+            echo "Unloading nbd kernel module..."
+            modprobe -r nbd 2>/dev/null || echo "WARNING: Could not unload nbd module (may be in use by other processes)"
+        else
+            echo "WARNING: NBD module not unloaded - other nbd devices may still be in use"
+        fi
+    fi
+else
+    # Fallback: create qcow2 image without formatting
+    # User will need to format it later when attached to a VM
+    echo "WARNING: NBD not available, skipping filesystem formatting"
+    echo "The qcow2 image has been created but not formatted."
+    echo "You can format it later by attaching it to a VM and running:"
+    echo "  mkfs.ext4 -L ${LABEL} /dev/vdX"
+fi
 
 echo "Successfully created and formatted disk:"
 echo "  Path: ${DISK_PATH}"
