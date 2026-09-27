@@ -145,21 +145,15 @@
   };
 
   security.tpm2.enable = true;
-  security.tpm2.pkcs11.enable = true; # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
-  security.tpm2.tctiEnvironment.enable = true; # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
+  security.tpm2.pkcs11.enable = true;
+  security.tpm2.tctiEnvironment.enable = true;
 
   # Setup keyfile
   boot.initrd.secrets = {
     "/crypto_keyfile.bin" = null;
   };
 
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true; # Enables wireless support via
-  # wpa_supplicant.
-
-  # Configure network proxy if necessary networking.proxy.default =
-  # "http://user:password@proxy:port/"; networking.proxy.noProxy =
-  # "127.0.0.1,localhost,internal.domain";
+  networking.hostName = "nixos";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -180,8 +174,6 @@
     pkgs.epson-escpr
   ];
 
-  # services.gnome.gnome-keyring.enable = true;
-
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -192,7 +184,7 @@
     pulse.enable = true;
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.tarn = {
     isNormalUser = true;
     description = "tarn";
@@ -208,7 +200,6 @@
 
     packages = with pkgs; [
       firefox
-      #  thunderbird
     ];
   };
 
@@ -260,15 +251,10 @@
     # mail / contacts / calendars
     neomutt
     offlineimap
-    # urlview
-    # Consider switching to an alternative such as `pkgs.extract_url` or `pkgs.urlscan`.
     khard
     khal
     msmtp
     vdirsyncer
-
-    # security
-    #pkgs-tarn.nitrocli
 
     # wayland
     wl-clipboard
