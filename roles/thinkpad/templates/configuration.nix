@@ -64,9 +64,19 @@
   specialisation = {
     external-cuda.configuration = {
       system.nixos.tags = [ "external-cuda" ];
-      services.xserver.videoDrivers = [ "nvidia" ];
       hardware.nvidia = {
         open = true;
+      };
+      services.xserver.videoDrivers = [ "nvidia" ];
+      services.ollama = {
+        enable = true;
+        package = pkgs.ollama-cuda;
+      };
+      services.open-webui = {
+        enable = true;
+        environment = {
+          OLLAMA_BASE_URL = "http://127.0.0.1:11434";
+        };
       };
     };
     external-gpu.configuration = {
@@ -241,7 +251,6 @@
     # system tools
     pciutils
     lshw
-    #cachix
 
     # gui tools
     filezilla
@@ -277,6 +286,7 @@
     freecad
     opencode
     nvim-config-pkg
+    llm-agents.pi
   ];
 
   networking.firewall = {
