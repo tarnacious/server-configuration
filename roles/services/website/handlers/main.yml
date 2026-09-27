@@ -1,0 +1,12 @@
+---
+- name: Define ownCloud VM
+  community.libvirt.virt:
+    command: define
+    name: "ocis"
+    xml: "{{ lookup('template', 'templates/owncloud.xml.j2') }}"
+
+- name: Start ownCloud VM
+  community.libvirt.virt:
+    command: start
+    name: "ocis"
+    state: running

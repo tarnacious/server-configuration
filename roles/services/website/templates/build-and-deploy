@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+SRC="{{ tarnbarford_workspace_path }}"
+IMAGE_DIR="{{ tarnbarford_image_dir }}"
+NEW_IMAGE="$IMAGE_DIR/{{ tarnbarford_vm_name }}-new.qcow2"
+CURRENT_IMAGE="$IMAGE_DIR/{{ tarnbarford_vm_name }}.qcow2"
+OLD_IMAGE="$IMAGE_DIR/{{ tarnbarford_vm_name }}-old.qcow2"
+VM="{{ tarnbarford_vm_name }}"
+
+cd "$SRC"
+
+echo "Building disk image..."
+nix build .#{{ tarnbarford_vm_name }}-image
+
+echo "Copying new image..."
+cp result/{{ tarnbarford_vm_name }}.qcow2 "$NEW_IMAGE"
+chmod 0644 "$NEW_IMAGE"
+
+# Make sure the new image is actually there before touching the current one.
+if [[ ! -s "$NEW_IMAGE" ]]; then
+    echo "ERROR: New image is missing or empty: $NEW_IMAGE" >&2
+    exit 1
+fi
+
+echo "Checking VM state..."
+state=$(virsh domstate "$VM" 2>/dev/null) || {
+    echo "ERROR: Failed to determine state of $VM" >&2
+    exit 1
+}
+
+echo "VM state: $state"
+
+if [[ "$state" == "running" ]]; then
+    echo "Stopping $VM..."
+    virsh destroy "$VM"
+fi
+
+# Keep the previous image as a rollback copy.
+if [[ -e "$OLD_IMAGE" ]]; then
+    rm -f "$OLD_IMAGE"
+fi
+
+if [[ -e "$CURRENT_IMAGE" ]]; then
+    mv "$CURRENT_IMAGE" "$OLD_IMAGE"
+fi
+
+mv "$NEW_IMAGE" "$CURRENT_IMAGE"
+
+echo "Starting $VM..."
+virsh start "$VM"
+
+echo "Deployment complete."

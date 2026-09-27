@@ -1,0 +1,62 @@
+---
+- name: Create workspace directory
+  ansible.builtin.file:
+    path: "{{ tarnbarford_workspace_path }}"
+    state: directory
+    owner: tarn
+    group: tarn
+    mode: '0755'
+
+- name: nix flake configuration
+  ansible.builtin.template:
+    src: templates/{{ item }}
+    dest: "{{ tarnbarford_workspace_path }}/"
+    owner: tarn
+    group: tarn
+    mode: '0644'
+  loop:
+    - flake.nix
+    - guest.nix
+    - configuration.nix
+
+- name: Build and deploy scripts
+  ansible.builtin.template:
+    src: "templates/{{ item }}"
+    dest: "{{ tarnbarford_workspace_path }}/{{ item }}"
+    owner: tarn
+    group: tarn
+    mode: '0755'
+  loop:
+    - build-and-deploy
+
+- name: Create logs disk
+  ansible.builtin.command: qemu-img create -f qcow2 "{{ tarnbarford_logs_disk }}" "{{ tarnbarford_logs_disk_size }}"
+  args:
+    creates: "{{ tarnbarford_logs_disk }}"
+
+- name: Create certificates disk
+  ansible.builtin.command: qemu-img create -f qcow2 "{{ tarnbarford_certificates_disk }}" "{{ tarnbarford_certificates_disk_size }}"
+  args:
+    creates: "{{ tarnbarford_certificates_disk }}"
+
+- name: Create keys disk
+  ansible.builtin.command: qemu-img create -f qcow2 "{{ tarnbarford_keys_disk }}" "{{ tarnbarford_keys_disk_size }}"
+  args:
+    creates: "{{ tarnbarford_keys_disk }}"
+
+- name: Create website disk
+  ansible.builtin.command: qemu-img create -f qcow2 "{{ tarnbarford_website_disk }}" "{{ tarnbarford_website_disk_size }}"
+  args:
+    creates: "{{ tarnbarford_website_disk }}"
+
+- name: Define VM
+  community.libvirt.virt:
+    command: define
+    name: "{{ tarnbarford_vm_name }}"
+    xml: "{{ lookup('template', 'templates/domain.xml') }}"
+
+#- name: Start ownCloud VM
+#  community.libvirt.virt:
+#    command: start
+#    name: "ocis"
+#    state: running

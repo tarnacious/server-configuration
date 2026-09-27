@@ -1,2 +1,78 @@
 hostname: "hypervisor"
 fqdn: "hypervisor.tarnbarford.net"
+
+tarnbarford_fqdn: "tarnbarford.net"
+tarnbarford_ipv4: "192.168.122.9"
+tarnbarford_ipv6: "2a01:4f8:211:2845::9"
+tarnbarford_ipv4_mac: "52:54:00:51:25:a8"
+tarnbarford_ipv4_bridge: "virbr0"
+tarnbarford_ipv4_target_dev: "vnet_tarnbarford_0"
+tarnbarford_ipv6_mac: "52:54:00:68:08:e0"
+tarnbarford_ipv6_bridge: "br0"
+tarnbarford_ipv6_target_dev: "vnet_tarnbarford_1"
+tarnbarford_vm_uuid: "c3c58632-dd48-4550-a7e6-09a9e2e537f5"
+tarnbarford_vm_memory: 4
+tarnbarford_vm_vcpu: 2
+
+# Website VM configuration
+tarnbarford_vm_name: "website"
+tarnbarford_workspace_path: "/home/tarn/builders/website"
+tarnbarford_image_dir: "/var/kvm/images"
+tarnbarford_disk_size: 20
+
+# Network configuration
+tarnbarford_ipv4_prefix: 24
+tarnbarford_ipv6_prefix: 64
+tarnbarford_nameservers: '[ "1.1.1.1" "1.0.0.1" ]'
+tarnbarford_ipv4_gateway: "{{ gateway4 }}"
+tarnbarford_ipv6_gateway: "{{ gateway6 }}"
+
+# Disk configuration
+tarnbarford_disk_image: "{{ tarnbarford_image_dir }}/{{ tarnbarford_vm_name }}.qcow2"
+tarnbarford_logs_disk: "{{ tarnbarford_image_dir }}/{{ tarnbarford_vm_name }}-logs.qcow2"
+tarnbarford_certificates_disk: "{{ tarnbarford_image_dir }}/{{ tarnbarford_vm_name }}-certificates.qcow2"
+tarnbarford_keys_disk: "{{ tarnbarford_image_dir }}/{{ tarnbarford_vm_name }}-keys.qcow2"
+tarnbarford_website_disk: "{{ tarnbarford_image_dir }}/{{ tarnbarford_vm_name }}-website.qcow2"
+tarnbarford_logs_disk_size: "1G"
+tarnbarford_certificates_disk_size: "1G"
+tarnbarford_keys_disk_size: "1G"
+tarnbarford_website_disk_size: "1G"
+
+# Device labels
+tarnbarford_root_label: "nixos"
+tarnbarford_logs_label: "logs"
+tarnbarford_certificates_label: "certificates"
+tarnbarford_keys_label: "keys"
+tarnbarford_website_label: "website"
+
+# Interface names
+tarnbarford_ipv4_interface: "enp0s2"
+tarnbarford_ipv6_interface: "enp0s3"
+
+# Website configuration
+tarnbarford_web_root: "/var/www/{{ tarnbarford_fqdn }}"
+tarnbarford_website_user: "website"
+tarnbarford_website_group: "website"
+tarnbarford_website_home: "/var/lib/{{ tarnbarford_website_user }}"
+
+# ACME configuration
+tarnbarford_acme_email: "tarn@{{ tarnbarford_fqdn }}"
+
+# Git repositories
+tarnbarford_website_repo: "https://github.com/tarnacious/website.git"
+tarnbarford_website_repo_branch: "main"
+tarnbarford_posts_repo: "https://github.com/tarnacious/posts.git"
+tarnbarford_posts_repo_branch: "master"
+
+# Logrotate configuration
+tarnbarford_logrotate_size: "10M"
+tarnbarford_logrotate_rotate: 5
+
+# Journald configuration
+tarnbarford_journald_system_max_use: "100M"
+tarnbarford_journald_system_keep_free: "200M"
+tarnbarford_journald_max_retention: "7days"
+
+# Systemd timer configuration
+tarnbarford_timer_on_boot_sec: "1min"
+tarnbarford_timer_on_unit_active_sec: "30min"

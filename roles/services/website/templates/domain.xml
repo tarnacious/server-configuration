@@ -1,0 +1,70 @@
+<domain type='kvm'>
+  <name>{{ tarnbarford_vm_name }}</name>
+  <uuid>{{ tarnbarford_vm_uuid }}</uuid>
+
+  <memory unit='GiB'>{{ tarnbarford_vm_memory }}</memory>
+  <vcpu>{{ tarnbarford_vm_vcpu }}</vcpu>
+
+  <os>
+    <type arch='x86_64'>hvm</type>
+    <boot dev='hd'/>
+  </os>
+
+  <devices>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='{{ tarnbarford_disk_image }}'/>
+      <target dev='vda' bus='virtio'/>
+    </disk>
+
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='{{ tarnbarford_logs_disk }}'/>
+      <target dev='vdb' bus='virtio'/>
+      <serial>{{ tarnbarford_logs_label }}</serial>
+    </disk>
+
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='{{ tarnbarford_certificates_disk }}'/>
+      <target dev='vdc' bus='virtio'/>
+      <serial>{{ tarnbarford_certificates_label }}</serial>
+    </disk>
+
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='{{ tarnbarford_keys_disk }}'/>
+      <target dev='vdd' bus='virtio'/>
+      <serial>{{ tarnbarford_keys_label }}</serial>
+    </disk>
+
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='{{ tarnbarford_website_disk }}'/>
+      <target dev='vde' bus='virtio'/>
+      <serial>{{ tarnbarford_website_label }}</serial>
+    </disk>
+
+    <interface type='bridge'>
+      <mac address='{{ tarnbarford_ipv4_mac }}'/>
+      <source bridge='{{ tarnbarford_ipv4_bridge }}'/>
+      <target dev='{{ tarnbarford_ipv4_target_dev }}'/>
+      <model type='virtio'/>
+    </interface>
+
+    <interface type='bridge'>
+      <mac address='{{ tarnbarford_ipv6_mac }}'/>
+      <source bridge='{{ tarnbarford_ipv6_bridge }}'/>
+      <target dev='{{ tarnbarford_ipv6_target_dev }}'/>
+      <model type='virtio'/>
+    </interface>
+
+    <serial type='pty'>
+      <target type='isa-serial' port='0'/>
+    </serial>
+
+    <console type='pty'>
+      <target type='serial' port='0'/>
+    </console>
+  </devices>
+</domain>
