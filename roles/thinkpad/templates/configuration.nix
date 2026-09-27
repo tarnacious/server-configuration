@@ -31,14 +31,6 @@
 
   virtualisation.spiceUSBRedirection.enable = true;
 
-  # Configure keymap in X11
-  services.xserver = {
-    enable = true;
-    xkb = {
-      layout = "au";
-    };
-  };
-
   # Firmware updates
   services.fwupd.enable = true;
 
@@ -54,13 +46,22 @@
     enable32Bit = true;
   };
 
-  hardware.libinput = {
+  services.xserver = {
     enable = true;
-    touchpad = {
-      tapping = false; # disables tap-to-click
-      disableWhileTyping = true;
+    libinput = {
+      enable = true;
+      touchpad = {
+        tapping = false; # disables tap-to-click
+        disableWhileTyping = true;
+      };
     };
+    xkb = {
+      layout = "au";
+    };
+
   };
+
+
   specialisation = {
     external-cuda.configuration = {
       system.nixos.tags = [ "external-cuda" ];
@@ -126,7 +127,6 @@
       {{ hosts.icinga.ipv6 }} icinga
       {{ hosts.ns1.ipv6 }} ns1
       {{ hosts.australia.ipv6 }} australia
-      {{ hosts.raspberry.ipv4 }} raspberry
     '';
 
   nixpkgs.config.allowUnfree = true;
@@ -272,7 +272,12 @@
     freecad
     opencode
     nvim-config-pkg
+
+
     llm-agents.pi
+
+    # needed for installing pi plugins
+    nodejs
   ];
 
   networking.firewall = {
