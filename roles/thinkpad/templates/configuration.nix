@@ -1,13 +1,33 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
-{ imports = [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./cachix.nix
-      ./wg-quick.nix
-      ./storage-box.nix
-      ];
+{
+  imports = [
+    ./hardware-configuration.nix
+    ./wg-quick.nix
+    ./storage-box.nix
+  ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings = {
+    substituters = [
+      "https://cache.nixos.org/"
+      "https://cache.nixos-cuda.org"
+    ];
+
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
+    ];
+  };
+
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   virtualisation.spiceUSBRedirection.enable = true;
 
@@ -34,14 +54,13 @@
     enable32Bit = true;
   };
 
-  services.xserver.libinput = {
+  hardware.libinput = {
     enable = true;
     touchpad = {
-      tapping = false;          # disables tap-to-click
+      tapping = false; # disables tap-to-click
       disableWhileTyping = true;
     };
   };
-
   specialisation = {
     external-cuda.configuration = {
       system.nixos.tags = [ "external-cuda" ];
@@ -79,10 +98,9 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
-  boot.kernel.sysctl =
-    {
-      "vm.max_map_count" = 262144;
-    };
+  boot.kernel.sysctl = {
+    "vm.max_map_count" = 262144;
+  };
 
   networking.extraHosts =
     ''
@@ -117,13 +135,13 @@
   };
 
   security.tpm2.enable = true;
-  security.tpm2.pkcs11.enable = true;  # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
-  security.tpm2.tctiEnvironment.enable = true;  # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
+  security.tpm2.pkcs11.enable = true; # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
+  security.tpm2.tctiEnvironment.enable = true; # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
 
   # Setup keyfile
-  boot.initrd.secrets = { "/crypto_keyfile.bin" = null;
+  boot.initrd.secrets = {
+    "/crypto_keyfile.bin" = null;
   };
-
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true; # Enables wireless support via
@@ -146,7 +164,11 @@
   services.printing.enable = true;
   services.avahi.enable = true;
   services.avahi.nssmdns4 = true;
-  services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin pkgs.epson-escpr];
+  services.printing.drivers = [
+    pkgs.gutenprint
+    pkgs.gutenprintBin
+    pkgs.epson-escpr
+  ];
 
   # services.gnome.gnome-keyring.enable = true;
 
@@ -159,7 +181,6 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.tarn = {
@@ -177,7 +198,7 @@
 
     packages = with pkgs; [
       firefox
-    #  thunderbird
+      #  thunderbird
     ];
   };
 
@@ -191,7 +212,6 @@
       myvim = "nix run ~/projects/vim2/ --";
     };
   };
-
 
   environment.systemPackages = with pkgs; [
     google-chrome
@@ -221,7 +241,7 @@
     # system tools
     pciutils
     lshw
-    cachix
+    #cachix
 
     # gui tools
     filezilla
@@ -245,8 +265,7 @@
     wl-clipboard
 
     # notes
-    joplin
-    joplin-desktop
+    joplin-cli
 
     # owncloud
     owncloud-client
@@ -257,9 +276,7 @@
     vlc
     freecad
     opencode
-
     nvim-config-pkg
-    llm-agents.pi
   ];
 
   networking.firewall = {
