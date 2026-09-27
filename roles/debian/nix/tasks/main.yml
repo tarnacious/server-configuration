@@ -1,0 +1,63 @@
+- name: Install mandatory and recommended system utilities via APT
+  ansible.builtin.apt:
+    name:
+      - nix-bin
+      - nix-setup-systemd
+      - git
+      - curl
+      - ca-certificates
+    state: present
+    update_cache: yes
+
+- name: Ensure the system Nix configuration directory exists
+  ansible.builtin.file:
+    path: /etc/nix
+    state: directory
+    mode: '0755'
+
+- name: Enable experimental Nix Command and Flakes features
+  ansible.builtin.lineinfile:
+    path: /etc/nix/nix.conf
+    line: "experimental-features = nix-command flakes"
+    create: yes
+    mode: '0644'
+  notify: Restart Nix Daemon
+
+- name: Ensure current user is in the kvm group for nested VM hardware acceleration
+  ansible.builtin.user:
+    name: "tarn"
+    groups: kvm
+    append: yes
+
+- name: Add user tarn to the native debian nix-users security group
+  ansible.builtin.user:
+    name: tarn
+    groups: nix-users
+    append: yes
+
+- name: Inject permanent multi-user Nix environment paths into bashrc
+  ansible.builtin.blockinfile:
+    path: /home/tarn/.bashrc
+    marker: "# {mark} ANSIBLE MANAGED NIX PATH BINDINGS"
+    block: |
+      export NIX_REMOTE=daemon
+      if [ -d /nix/var/nix/profiles/default/bin ]; then
+        export PATH="$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
+      fi
+
+- name: Register the official Nixpkgs stable channel for user tarn
+  ansible.builtin.command:
+    cmd: nix-channel --add https://nixos.org nixpkgs
+  become: true
+  become_user: tarn
+  args:
+    creates: /home/tarn/.nix-channels
+
+- name: Pull downstream metadata and index the registered Nix channel
+  ansible.builtin.command:
+    cmd: nix-channel --update nixpkgs
+  become: true
+  become_user: tarn
+  args:
+    creates: /home/tarn/.nix-defexpr/channels/nixpkgs
+

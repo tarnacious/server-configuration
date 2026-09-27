@@ -1,0 +1,32 @@
+- name: Install mandatory and recommended system utilities via APT
+  ansible.builtin.apt:
+    name:
+      - nix-bin
+      - nix-setup-systemd
+      - git
+      - curl
+      - ca-certificates
+    state: present
+    update_cache: yes
+
+- name: Ensure the system Nix configuration directory exists
+  ansible.builtin.file:
+    path: /etc/nix
+    state: directory
+    mode: '0755'
+
+- name: Enable experimental Nix Command and Flakes features
+  ansible.builtin.lineinfile:
+    path: /etc/nix/nix.conf
+    line: "experimental-features = nix-command flakes"
+    create: yes
+    mode: '0644'
+  notify: Restart Nix Daemon
+
+- name: Ensure current user is in the kvm group for nested VM hardware acceleration
+  ansible.builtin.user:
+    name: "{{ ansible_env.USER }}"
+    groups: kvm
+    append: yes
+
+
