@@ -293,5 +293,8 @@
   # https://nixos.org/nixos/options.html).
   system.stateVersion = "22.05"; # Did you read the comment?
 
-}
+  environment.interactiveShellInit = ''
+    alias vim='nvim'
+  '';
 
+}
