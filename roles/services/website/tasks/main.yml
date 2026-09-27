@@ -29,6 +29,14 @@
   loop:
     - build-and-deploy
 
+- name: Install hypervisor instructions README
+  ansible.builtin.template:
+    src: "templates/README.md"
+    dest: "{{ tarnbarford_workspace_path }}/README.md"
+    owner: tarn
+    group: tarn
+    mode: '0644'
+
 - name: Create logs disk
   ansible.builtin.command: qemu-img create -f qcow2 "{{ tarnbarford_logs_disk }}" "{{ tarnbarford_logs_disk_size }}"
   args:
