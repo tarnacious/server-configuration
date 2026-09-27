@@ -1,0 +1,3 @@
+---
+# Default directory for hypervisor tools scripts
+hypervisor_tools_dir: "/usr/local/bin/hypervisor-tools"

@@ -1,0 +1,76 @@
+#!/bin/bash
+# Generic script to create and format a qcow2 disk image
+# Usage: create-qcow2-disk <path> <label> <size>
+# Example: create-qcow2-disk /var/kvm/images/website-data.qcow2 website 1G
+
+set -euo pipefail
+
+# Check for root
+if [ "$(id -u)" -ne 0 ]; then
+    echo "ERROR: This script must be run as root" >&2
+    exit 1
+fi
+
+# Check arguments
+if [ $# -ne 3 ]; then
+    echo "Usage: $0 <path> <label> <size>"
+    echo "Example: $0 /var/kvm/images/website-data.qcow2 website 1G"
+    exit 1
+fi
+
+DISK_PATH="$1"
+LABEL="$2"
+SIZE="$3"
+
+# Check if image already exists
+if [ -f "${DISK_PATH}" ]; then
+    echo "ERROR: Disk image already exists at ${DISK_PATH}"
+    exit 1
+fi
+
+# Create parent directory if it doesn't exist
+mkdir -p "$(dirname "${DISK_PATH}")"
+
+# Create the qcow2 image
+echo "Creating qcow2 disk image: ${DISK_PATH} (${SIZE})"
+qemu-img create -f qcow2 "${DISK_PATH}" "${SIZE}"
+
+# Load nbd module if not loaded
+if ! lsmod | grep -q nbd; then
+    echo "Loading nbd kernel module..."
+    modprobe nbd max_part=8
+fi
+
+# Find a free nbd device
+NBD_DEV=""
+for i in $(seq 0 7); do
+    if ! lsblk /dev/nbd${i} &>/dev/null 2>&1 && [ -e "/dev/nbd${i}" ]; then
+        NBD_DEV="/dev/nbd${i}"
+        break
+    fi
+done
+
+if [ -z "${NBD_DEV}" ]; then
+    echo "ERROR: No free nbd device found (checked nbd0-7)"
+    exit 1
+fi
+
+echo "Using nbd device: ${NBD_DEV}"
+
+# Connect the qcow2 image via nbd
+qemu-nbd --connect="${NBD_DEV}" "${DISK_PATH}"
+
+# Wait for device to be ready
+sleep 2
+
+# Format with ext4 and label
+echo "Formatting with ext4 filesystem and label '${LABEL}'"
+mkfs.ext4 -L "${LABEL}" "${NBD_DEV}"
+
+# Disconnect the nbd device
+qemu-nbd --disconnect "${NBD_DEV}"
+
+echo "Successfully created and formatted disk:"
+echo "  Path: ${DISK_PATH}"
+echo "  Label: ${LABEL}"
+echo "  Size: ${SIZE}"

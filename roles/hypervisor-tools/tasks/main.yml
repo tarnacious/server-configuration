@@ -1,0 +1,25 @@
+---
+- name: Create hypervisor tools directory
+  ansible.builtin.file:
+    path: "{{ hypervisor_tools_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install hypervisor tools scripts (without .sh extension)
+  ansible.builtin.copy:
+    src: "scripts/{{ item }}"
+    dest: "{{ hypervisor_tools_dir }}/{{ item }}"
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - create-qcow2-disk
+
+- name: Ensure hypervisor tools directory is on PATH
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    regexp: '^PATH="'
+    line: 'PATH="{{ hypervisor_tools_dir }}:${PATH}"'
+    backrefs: yes

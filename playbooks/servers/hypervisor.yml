@@ -12,3 +12,4 @@
     - libvirt/server/scripts
     - libvirt/server/tls
     - hypervisor
+    - hypervisor-tools
