@@ -270,6 +270,7 @@
 
     vlc
     freecad
+    openscad
     opencode
     nvim-config-pkg
 
