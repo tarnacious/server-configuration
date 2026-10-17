@@ -260,7 +260,7 @@
     wl-clipboard
 
     # notes
-    joplin-cli
+    unstable.joplin-cli
 
     # owncloud
     owncloud-client
