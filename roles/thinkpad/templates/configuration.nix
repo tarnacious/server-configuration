@@ -271,6 +271,7 @@
     vlc
     freecad
     openscad
+    blender
     opencode
     nvim-config-pkg
 
