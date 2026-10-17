@@ -18,6 +18,16 @@
   become: true
   notify: rebuild nix
 
+- name: /etc/nixos/flake.lock
+  template:
+    src: "flake.lock"
+    dest: "/etc/nixos/flake.lock"
+    mode: "644"
+    owner: root
+    group: root
+  become: true
+  notify: rebuild nix
+
 - name: /etc/nixos/hardware-configuration.nix
   template:
     src: "hardware-configuration.nix"
