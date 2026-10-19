@@ -49,6 +49,36 @@ python3 roles/hypervisor-tools/tests/test-create-qcow2-disk.py
 
 Tests mock disk commands and device paths; they never format real devices.
 
+### set-qcow2-password
+
+Mounts an **offline**, whole-filesystem QCOW2 keys disk and atomically writes a
+mode-0600 password hash for NixOS. It does not edit `/etc/shadow` or a root image.
+
+**Usage:**
+```bash
+sudo set-qcow2-password /var/kvm/images/website-keys.qcow2 tarn
+```
+
+This prompts for the password twice and writes `/tarn-password` inside the image.
+Passwords are piped to OpenSSL, never passed as command-line arguments. Existing
+hashes survive password mismatch or hashing failure.
+
+Shut down every VM using the image first. The helper checks active system-libvirt
+domains (including backing stores) and keeps QEMU's exclusive image locking
+enabled to reject other writers. Never use this with tools that bypass image
+locking. It shares the disk creator's NBD lock, unmounts before disconnecting,
+and leaves the device attached for manual recovery if unmount fails.
+
+Requires root, system-libvirt access (`virsh`), Python 3, QEMU NBD, OpenSSL,
+util-linux, coreutils and the NBD module. Only whole-filesystem images are
+supported, not partitioned VM root disks. The helper leaves the NBD module loaded.
+
+**Offline checks:**
+```bash
+bash -n roles/hypervisor-tools/scripts/set-qcow2-password
+python3 roles/hypervisor-tools/tests/test-set-qcow2-password.py
+```
+
 ## Target
 
 This role is targeted at Debian-based systems.

@@ -16,6 +16,9 @@
     mode: '0755'
   loop:
     - create-qcow2-disk
+    - set-qcow2-password
+  tags:
+    - hypervisor-tools-scripts
 
 - name: Ensure hypervisor tools directory is on PATH
   ansible.builtin.lineinfile:

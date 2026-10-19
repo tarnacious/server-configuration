@@ -19,6 +19,8 @@
     "/keys" = {
       device = "/dev/disk/by-label/{{ tarnbarford_keys_label }}";
       fsType = "ext4";
+      # hashedPasswordFile is read during activation, before normal mounts.
+      neededForBoot = true;
     };
     "{{ tarnbarford_web_root }}" = {
       device = "/dev/disk/by-label/{{ tarnbarford_website_label }}";

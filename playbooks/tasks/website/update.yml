@@ -1,0 +1,18 @@
+---
+# Playbook to trigger website content update inside the VM
+# This runs the systemd service that clones repos and regenerates the site
+
+- hosts: tarnbarford
+  user: root
+  become: yes
+  tasks:
+    - name: Trigger website update service
+      ansible.builtin.systemd:
+        name: website-update
+        state: started
+      register: update_result
+
+    - name: Show update status
+      ansible.builtin.debug:
+        msg: "Website update triggered successfully"
+      when: update_result.changed
