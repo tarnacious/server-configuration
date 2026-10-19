@@ -52,9 +52,9 @@ tarnbarford_certificates_label: "certificates"
 tarnbarford_keys_label: "keys"
 tarnbarford_website_label: "website"
 
-# Interface names
-tarnbarford_ipv4_interface: "enp0s2"
-tarnbarford_ipv6_interface: "enp0s3"
+# ACPI slot names: domain.xml pins the IPv4/IPv6 NICs to PCI slots 2/3.
+tarnbarford_ipv4_interface: "ens2"
+tarnbarford_ipv6_interface: "ens3"
 
 # Website configuration
 tarnbarford_web_root: "/var/www/{{ tarnbarford_fqdn }}"
