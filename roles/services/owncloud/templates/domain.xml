@@ -1,0 +1,70 @@
+<domain type='kvm'>
+  <name>ocis</name>
+  <uuid>{{ hosts.cloud.vm.uuid }}</uuid>
+
+  <memory unit='GiB'>{{ hosts.cloud.vm.memory }}</memory>
+  <vcpu>{{ hosts.cloud.vm.vcpu }}</vcpu>
+
+  <os>
+    <type arch='x86_64'>hvm</type>
+    <boot dev='hd'/>
+  </os>
+
+  <devices>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/var/kvm/images/basic.qcow2'/>
+      <target dev='vda' bus='virtio'/>
+    </disk>
+
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/var/kvm/images/owncloud-logs.qcow2'/>
+      <target dev='vdb' bus='virtio'/>
+      <serial>logs</serial>
+    </disk>
+
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/var/kvm/images/owncloud-certificates.qcow2'/>
+      <target dev='vdc' bus='virtio'/>
+      <serial>certificates</serial>
+    </disk>
+
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/var/kvm/images/owncloud-data.qcow2'/>
+      <target dev='vdd' bus='virtio'/>
+      <serial>data</serial>
+    </disk>
+
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/var/kvm/images/owncloud-keys.qcow2'/>
+      <target dev='vde' bus='virtio'/>
+      <serial>data</serial>
+    </disk>
+
+    <interface type='bridge'>
+      <mac address='{{ hosts.cloud.ipv4_mac }}'/>
+      <source bridge='{{ hosts.cloud.ipv4_bridge }}'/>
+      <target dev='{{ hosts.cloud.ipv4_target_dev }}'/>
+      <model type='virtio'/>
+    </interface>
+
+    <interface type='bridge'>
+      <mac address='{{ hosts.cloud.ipv6_mac }}'/>
+      <source bridge='{{ hosts.cloud.ipv6_bridge }}'/>
+      <target dev='{{ hosts.cloud.ipv6_target_dev }}'/>
+      <model type='virtio'/>
+    </interface>
+
+    <serial type='pty'>
+      <target type='isa-serial' port='0'/>
+    </serial>
+
+    <console type='pty'>
+      <target type='serial' port='0'/>
+    </console>
+  </devices>
+</domain>

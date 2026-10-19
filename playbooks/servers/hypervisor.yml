@@ -13,4 +13,5 @@
     - libvirt/server/tls
     - hypervisor
     - hypervisor-tools
+    - services/owncloud
     - services/website

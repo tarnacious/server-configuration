@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+SRC="/home/tarn/builders/owncloud"
+IMAGE_DIR="/var/kvm/images"
+NEW_IMAGE="$IMAGE_DIR/basic-new.qcow2"
+CURRENT_IMAGE="$IMAGE_DIR/basic.qcow2"
+OLD_IMAGE="$IMAGE_DIR/basic-old.qcow2"
+VM="ocis"
+
+cd "$SRC"
+
+echo "Building disk image..."
+nix build .#owncloud-image
+
+echo "Copying new image..."
+cp result/owncloud.qcow2 "$NEW_IMAGE"
+chmod 0644 "$NEW_IMAGE"
+
+# Make sure the new image is actually there before touching the current one.
+if [[ ! -s "$NEW_IMAGE" ]]; then
+    echo "ERROR: New image is missing or empty: $NEW_IMAGE" >&2
+    exit 1
+fi
+
+echo "Checking VM state..."
+state=$(virsh domstate "$VM" 2>/dev/null) || {
+    echo "ERROR: Failed to determine state of $VM" >&2
+    exit 1
+}
+
+echo "VM state: $state"
+
+if [[ "$state" == "running" ]]; then
+    echo "Stopping $VM..."
+    virsh destroy "$VM"
+fi
+
+# Keep the previous image as a rollback copy.
+if [[ -e "$OLD_IMAGE" ]]; then
+    rm -f "$OLD_IMAGE"
+fi
+
+if [[ -e "$CURRENT_IMAGE" ]]; then
+    mv "$CURRENT_IMAGE" "$OLD_IMAGE"
+fi
+
+mv "$NEW_IMAGE" "$CURRENT_IMAGE"
+
+echo "Starting $VM..."
+virsh start "$VM"
+
+echo "Deployment complete."

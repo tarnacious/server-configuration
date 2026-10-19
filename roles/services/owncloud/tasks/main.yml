@@ -1,0 +1,82 @@
+---
+- name: Create workspace directory
+  ansible.builtin.file:
+    path: /home/tarn/builders/owncloud
+    state: directory
+    owner: tarn
+    group: tarn
+    mode: '0755'
+
+- name: Nix configuration
+  ansible.builtin.template:
+    src: templates/{{ item }}
+    dest: /home/tarn/builders/owncloud/
+    owner: tarn
+    group: tarn
+    mode: '0644'
+  loop:
+    - flake.nix
+    - guest.nix
+    - configuration.nix
+    - ocis-bin.nix
+    - ocis-overlay.nix
+
+- name: Build and deploy scripts
+  ansible.builtin.template:
+    src: "templates/{{ item }}"
+    dest: "/home/tarn/builders/owncloud/{{ item }}"
+    owner: tarn
+    group: tarn
+    mode: '0755'
+  loop:
+    - build-and-deploy
+
+
+#- name: Build ownCloud image
+#  ansible.builtin.command: nix build .#owncloud-image
+#  args:
+#    chdir: /home/tarn/builders/owncloud
+#  environment:
+#    NIX_CONFIG: "experimental-features = nix-command flakes"
+#  register: build_result
+#
+#- name: Copy image to libvirt directory
+#  ansible.builtin.copy:
+#    src: /home/tarn/builders/owncloud/result/nixos.qcow2
+#    dest: /var/kvm/images/owncloud.qcow2
+#    remote_src: true
+#    owner: root
+#    group: kvm
+#    mode: '0644'
+#
+- name: Create data disk
+  ansible.builtin.command: qemu-img create -f qcow2 /var/kvm/images/owncloud-data.qcow2 1G
+  args:
+    creates: /var/kvm/images/owncloud-data.qcow2
+
+- name: Create logs disk
+  ansible.builtin.command: qemu-img create -f qcow2 /var/kvm/images/owncloud-logs.qcow2 1G
+  args:
+    creates: /var/kvm/images/owncloud-logs.qcow2
+
+- name: Create host keys disk
+  ansible.builtin.command: qemu-img create -f qcow2 /var/kvm/images/owncloud-keys.qcow2 1G
+  args:
+    creates: /var/kvm/images/owncloud-keys.qcow2
+
+- name: Create certificates disk
+  ansible.builtin.command: qemu-img create -f qcow2 /var/kvm/images/owncloud-certificates.qcow2 20G
+  args:
+    creates: /var/kvm/images/owncloud-certificates.qcow2
+
+- name: Define ownCloud VM
+  community.libvirt.virt:
+    command: define
+    name: "ocis"
+    xml: "{{ lookup('template', 'templates/domain.xml') }}"
+
+#- name: Start ownCloud VM
+#  community.libvirt.virt:
+#    command: start
+#    name: "ocis"
+#    state: running
