@@ -3,3 +3,9 @@ lib64
 lib
 include
 pyvenv.cfg
+
+# Rendered mail builders, QCOW2 disks, test credentials and logs
+/.generated/mail-server/
+
+# Live mail database exports contain account password hashes and addresses
+/vmail.sql

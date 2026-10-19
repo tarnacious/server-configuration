@@ -1,0 +1,53 @@
+{ config, lib, ... }:
+let
+  inherit (config.mailserver) fqdn domains;
+in {
+  mailserver = {
+    enable = true;
+    stateVersion = 5;
+    fqdn = {{ mail_server_fqdn | to_json }};
+    domains = [ {% for domain in mail_server_domains %}{{ domain | to_json }} {% endfor %}];
+    systemDomain = {{ mail_server_system_domain | to_json }};
+    accounts = import ./accounts.nix;
+    storage.path = "/var/vmail";
+    dkim = {
+      keyDirectory = "/keys/dkim";
+      domains = lib.genAttrs domains (domain: {
+        selectors.dkim.keyFile = "/keys/dkim/${domain}.dkim.key";
+      });
+    };
+    enableImap = false;
+    enableImapSsl = true;
+    enableSubmission = true;
+    enableSubmissionSsl = false;
+    enableManageSieve = false;
+    messageSizeLimit = 52428800;
+    virusScanning = false;
+    x509.useACMEHost = fqdn;
+  };
+
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = {{ mail_server_acme_email | to_json }};
+    certs.${fqdn}.reloadServices = [ "postfix.service" "dovecot.service" ];
+  };
+  services.nginx = {
+    enable = true;
+    virtualHosts.${fqdn} = {
+      enableACME = true;
+      addSSL = true;
+      locations."/" = {
+        extraConfig = "default_type text/plain;";
+        return = ''200 "I'm a mail server\n"'';
+      };
+    };
+  };
+  # Certificate state must not be initialized on a missing persistent disk.
+  systemd.services = lib.genAttrs [
+    "nginx" "acme-${fqdn}" "acme-setup" "acme-order-renew-${fqdn}"
+  ] (_: {
+    requires = [ "var-lib.mount" ];
+    after = [ "var-lib.mount" ];
+    unitConfig.RequiresMountsFor = [ "/var/lib" ];
+  });
+}

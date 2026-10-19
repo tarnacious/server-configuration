@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# Build first; record the exact source/image so deploy cannot use stale output.
+exec python3 "$HERE/builder.py" build "$HERE/nixos" "$@"

@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# One-time empty storage/domain creation. Never starts the guest or supplies secrets.
+set -euo pipefail
+HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+[[ $# == 0 ]] || { echo 'Usage: ./bootstrap' >&2; exit 2; }
+if [[ $(id -u) != 0 ]]; then exec sudo "$HERE/bootstrap"; fi
+exec 9>/run/lock/mail-server-deploy.lock
+flock -n 9
+DIR=/var/kvm/images/mail-server
+virsh -c qemu:///system list --all --name >/dev/null
+if virsh -c qemu:///system dominfo mail-server &>/dev/null || [[ -e "$DIR" || -L "$DIR" ]]; then
+  echo 'Refusing existing domain/storage. Bootstrap is not an update or restore command.' >&2
+  exit 1
+fi
+UUID=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["uuid"])' "$HERE/host.json")
+if virsh -c qemu:///system dominfo "$UUID" &>/dev/null; then
+  echo 'Refusing a UUID already owned by another domain.' >&2; exit 1;
+fi
+IMAGE=$(python3 "$HERE/builder.py" image "$HERE/nixos")
+specs=$(python3 - "$HERE/host.json" <<'PY'
+import json, re, sys
+c = json.load(open(sys.argv[1]))
+assert c['name'] == 'mail-server' and c['directory'] == '/var/kvm/images/mail-server'
+assert c['disks']['vda'] == c['directory'] + '/root.qcow2'
+assert set(c['storage']) == {'keys', 'data', 'state', 'logs'}
+assert set(c['disks']) == {'vda', 'vdb', 'vdc', 'vdd', 'vde'}
+for name, disk in c['storage'].items():
+    assert c['disks'][disk['target']] == c['directory'] + '/' + name + '.qcow2'
+    assert re.fullmatch(r'[A-Za-z0-9_-]{1,16}', disk['label'])
+    assert re.fullmatch(r'[1-9][0-9]*[MG]', disk['size'])
+    print(name, disk['label'], disk['size'], sep='\t')
+PY
+)
+virt-xml-validate "$HERE/domain.xml" domain
+install -d -m 0755 /var/kvm/images
+WORK=$(mktemp -d "$DIR.bootstrap.XXXXXXXX")
+trap 'rm -rf -- "$WORK"' EXIT
+cp --reflink=auto --sparse=always -- "$IMAGE" "$WORK/root.qcow2"
+qemu-img check "$WORK/root.qcow2"
+while IFS=$'\t' read -r name label size; do
+  truncate -s "$size" "$WORK/raw"
+  mkfs.ext4 -q -F -L "$label" "$WORK/raw"
+  qemu-img convert -f raw -O qcow2 "$WORK/raw" "$WORK/$name.qcow2"
+  rm -- "$WORK/raw"
+  qemu-img check "$WORK/$name.qcow2"
+done <<< "$specs"
+chmod 0755 "$WORK"
+chmod 0600 "$WORK/"*.qcow2
+mv -T --no-clobber -- "$WORK" "$DIR"
+[[ ! -d "$WORK" ]] || { echo 'Destination appeared during bootstrap; refusing it.' >&2; exit 1; }
+virsh -c qemu:///system define "$HERE/domain.xml" --validate
+echo 'Created five disks and defined mail-server; NOT started or autostarted.'
+echo 'Provision private account/admin hashes and production DKIM keys on /keys before first boot.'

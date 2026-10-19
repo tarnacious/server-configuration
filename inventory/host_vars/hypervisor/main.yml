@@ -1,0 +1,142 @@
+hostname: "hypervisor"
+fqdn: "hypervisor.tarnbarford.net"
+ansible_become_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  33336466333063633063626137376230646332383335346635633139363465653039326463383731
+  3739623031623464643130313934346137623263653864650a353466636538336231373532623738
+  65316366336564303837623862323531386462656661313430396630313136646438353864326638
+  6662623763663664630a353132666666656138373539663837306161306163616136313563343237
+  6637
+
+tarnbarford_fqdn: "tarnbarford.net"
+tarnbarford_ipv4: "192.168.122.9"
+tarnbarford_ipv6: "2a01:4f8:211:2845::9"
+tarnbarford_ipv4_mac: "52:54:00:51:25:a8"
+tarnbarford_ipv4_bridge: "virbr0"
+tarnbarford_ipv4_target_dev: "vnet_tarnbarford_0"
+tarnbarford_ipv6_mac: "52:54:00:68:08:e0"
+tarnbarford_ipv6_bridge: "br0"
+tarnbarford_ipv6_target_dev: "vnet_tarnbarford_1"
+tarnbarford_vm_uuid: "c3c58632-dd48-4550-a7e6-09a9e2e537f5"
+tarnbarford_vm_memory: 4
+tarnbarford_vm_vcpu: 2
+
+# Website VM configuration
+tarnbarford_vm_name: "website"
+tarnbarford_workspace_path: "/home/tarn/builders/website"
+tarnbarford_image_dir: "/var/kvm/images"
+tarnbarford_disk_size: 20
+
+# Network configuration
+tarnbarford_ipv4_prefix: 24
+tarnbarford_ipv6_prefix: 64
+tarnbarford_nameservers: '[ "1.1.1.1" "1.0.0.1" ]'
+tarnbarford_ipv4_gateway: "{{ gateway4 }}"
+tarnbarford_ipv6_gateway: "{{ gateway6 }}"
+
+# Disk configuration
+tarnbarford_disk_image: "{{ tarnbarford_image_dir }}/{{ tarnbarford_vm_name }}.qcow2"
+tarnbarford_logs_disk: "{{ tarnbarford_image_dir }}/{{ tarnbarford_vm_name }}-logs.qcow2"
+tarnbarford_certificates_disk: "{{ tarnbarford_image_dir }}/{{ tarnbarford_vm_name }}-certificates.qcow2"
+tarnbarford_keys_disk: "{{ tarnbarford_image_dir }}/{{ tarnbarford_vm_name }}-keys.qcow2"
+tarnbarford_website_disk: "{{ tarnbarford_image_dir }}/{{ tarnbarford_vm_name }}-website.qcow2"
+tarnbarford_logs_disk_size: "1G"
+tarnbarford_certificates_disk_size: "1G"
+tarnbarford_keys_disk_size: "1G"
+tarnbarford_website_disk_size: "1G"
+
+# Device labels
+tarnbarford_root_label: "nixos"
+tarnbarford_logs_label: "logs"
+tarnbarford_certificates_label: "certificates"
+tarnbarford_keys_label: "keys"
+tarnbarford_website_label: "website"
+
+# Interface names
+tarnbarford_ipv4_interface: "enp0s2"
+tarnbarford_ipv6_interface: "enp0s3"
+
+# Website configuration
+tarnbarford_web_root: "/var/www/{{ tarnbarford_fqdn }}"
+tarnbarford_website_user: "website"
+tarnbarford_website_group: "website"
+tarnbarford_website_home: "/var/lib/{{ tarnbarford_website_user }}"
+
+# ACME configuration
+tarnbarford_acme_email: "tarn@{{ tarnbarford_fqdn }}"
+
+# Git repositories
+tarnbarford_website_repo: "https://github.com/tarnacious/website.git"
+tarnbarford_website_repo_branch: "main"
+tarnbarford_posts_repo: "https://github.com/tarnacious/posts.git"
+tarnbarford_posts_repo_branch: "master"
+
+# Logrotate configuration
+tarnbarford_logrotate_size: "10M"
+tarnbarford_logrotate_rotate: 5
+
+# Journald configuration
+tarnbarford_journald_system_max_use: "100M"
+tarnbarford_journald_system_keep_free: "200M"
+tarnbarford_journald_max_retention: "7days"
+
+# Systemd timer configuration
+tarnbarford_timer_on_boot_sec: "1min"
+tarnbarford_timer_on_unit_active_sec: "30min"
+
+# Mail server VM configuration
+mail_server_hostname: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  31646330323965666130363032626365316161613036313361646434353336376162623337303935
+  3136353636636536313364383630646362326663633238350a333136353839333639303935393164
+  34636533383032363535353031613536363362363033343234373030343231666331643035666364
+  3931666539633661360a306561666132313935333133326266313231316161626434366261316166
+  3738
+mail_server_fqdn: mail.tarnbarford.net
+mail_server_ipv4: "{{ hosts.mail_server.ipv4 }}"
+mail_server_ipv6: "{{ hosts.mail_server.ipv6 }}"
+mail_server_ipv4_interface: ens2
+mail_server_ipv6_interface: ens3
+mail_server_ipv4_prefix: 24
+mail_server_ipv6_prefix: 64
+mail_server_ipv4_gateway: "{{ gateway4 }}"
+mail_server_ipv6_gateway: "{{ gateway6 }}"
+mail_server_nameservers: ["1.1.1.1", "1.0.0.1"]
+mail_server_ipv4_mac: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  31623461643365623061363630343636336432343436356561376536333866343966653165363566
+  6564353263656564663166616666663230343861643032350a323432656330626132363132303462
+  33306165616431393339323061373432626164376466346336303436633530643930663830643835
+  6534376430396533660a316637383136666237656332353530336536396630326636663431303061
+  39316535323839336439616131643436636366366663356663353730373262623261
+mail_server_ipv6_mac: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  34643734663137366266613330343066643238313630303961333631653034303437636365346133
+  6339333338363263396336623830303961306666646561610a326336326534666537616137663562
+  38666130396333333465396134363331653331353864343537313930306632306162376331323065
+  6232663062393761350a666562623030653236383933323631313731343162623761613438303366
+  34333834303563663364303862333932336463366162616330333966633262353432
+mail_server_ipv4_bridge: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  63383332356239326133383332376166336262326133383431373665623336663665653535343464
+  3831326263316538366431303361303363643839396636360a373437656332333133383961616339
+  33363131356433393266653961313831343136666137363864636335613334313932626534656331
+  3165373262653065640a323134623035316434313238636161333539346163376633613463303134
+  6334
+mail_server_ipv6_bridge: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  31396366386162366562393364626462306365653265343836386138666161363533326666616561
+  3230656635663336383137623233383865353632353265370a623333663766383464323466663162
+  31386539626564663435393465323133653762336439326632343131666366636138313339393966
+  3163636633303830630a346139653464663062393234306364366632643734616235666666363433
+  3738
+mail_server_domains: ["debugproxy.tarnbarford.net", "tarnbarford.net"]
+mail_server_system_domain: tarnbarford.net
+mail_server_acme_email: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  37393236313665633366393161353835636466616465393362373035373937353435326362333962
+  6331346336343630623538356235366263313639633437650a643061313435623639306264326464
+  33303734363661626432323738383531316361643939396161616466623137663638393562376431
+  3939373434383930620a636434643562393764303137383866366561303138623538343935333330
+  31666439313237343065346630666563306134656661323338306239643233313134
+mail_server_authorized_keys: "{{ authorized_keys }}"

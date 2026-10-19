@@ -4,6 +4,7 @@
       'python3',
       'python3-lxml',
       'qemu-system-x86',
+      'qemu-utils',
       'libvirt-clients',
       'libvirt-daemon-system',
       'bridge-utils',

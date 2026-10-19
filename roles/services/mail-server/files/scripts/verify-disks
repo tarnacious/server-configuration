@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Read-only label checks while the VM is off; used by deploy.
+set -euo pipefail
+HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+[[ $(id -u) == 0 ]] || { echo 'Run as root.' >&2; exit 1; }
+[[ $(virsh -c qemu:///system domstate mail-server) == 'shut off' ]] || {
+  echo 'Refusing to inspect disks while the VM is active.' >&2; exit 1;
+}
+specs=$(python3 - "$HERE/host.json" <<'PY'
+import json, sys
+c = json.load(open(sys.argv[1]))
+for disk in c['storage'].values():
+    print(c['disks'][disk['target']], disk['label'], sep='\t')
+PY
+)
+modprobe nbd max_part=16
+while IFS=$'\t' read -r image label; do
+  device=''
+  for i in {0..15}; do
+    if [[ -e /dev/nbd$i && ! -e /sys/block/nbd$i/pid ]]; then device="/dev/nbd$i"; break; fi
+  done
+  [[ -n "$device" ]] || { echo 'No free NBD device.' >&2; exit 1; }
+  qemu-nbd --read-only --connect="$device" "$image"
+  trap 'qemu-nbd --disconnect "$device" >/dev/null 2>&1 || true' EXIT
+  actual=''
+  for attempt in {1..5}; do
+    sleep 1
+    actual=$(blkid -p -o value -s LABEL "$device" || true)
+    [[ -n "$actual" ]] && break
+  done
+  [[ "$actual" == "$label" && $(blkid -p -o value -s TYPE "$device") == ext4 ]] || {
+    echo "Unexpected filesystem/label on $image (expected ext4/$label)." >&2; exit 1;
+  }
+  qemu-nbd --disconnect "$device"
+  trap - EXIT
+  echo "$image: ext4/$label"
+done <<< "$specs"

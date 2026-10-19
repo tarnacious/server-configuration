@@ -1,0 +1,7 @@
+---
+- name: Render mail builder with synthetic local inventory
+  hosts: mail-test
+  gather_facts: false
+  become: false
+  roles:
+    - role: services/mail-server

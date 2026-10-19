@@ -1,0 +1,94 @@
+---
+- name: Validate production builder paths and storage
+  ansible.builtin.assert:
+    that:
+      - mail_server_vm_name == 'mail-server'
+      - mail_server_builder_dir is match('^/[A-Za-z0-9/_.-]+$')
+      - "'..' not in mail_server_builder_dir.split('/')"
+      - mail_server_builder_dir != '/'
+      - mail_server_disk_dir == '/var/kvm/images/mail-server'
+      - mail_server_root_image == mail_server_disk_dir ~ '/root.qcow2'
+      - mail_server_disks.keys() | list == ['keys', 'data', 'state', 'logs']
+
+- name: Validate inventory-owned guest settings
+  ansible.builtin.assert:
+    that:
+      - mail_server_hostname | length > 0
+      - mail_server_fqdn | length > 0
+      - mail_server_ipv4 | length > 0
+      - mail_server_nameservers | length > 0
+      - mail_server_domains | length > 0
+      - mail_server_system_domain | length > 0
+      - "'@' in mail_server_acme_email"
+      - mail_server_ipv4_gateway | length > 0
+      - mail_server_ipv6_gateway | length > 0
+      - mail_server_ipv6 | string | length > 0
+    fail_msg: Configure the mail guest identity, DNS, mail domains and gateways in inventory.
+
+- name: Validate inventory account list
+  ansible.builtin.assert:
+    that:
+      - mail_server_accounts is sequence and mail_server_accounts is not string and mail_server_accounts is not mapping
+      - mail_server_accounts | length > 0
+      - mail_server_accounts | map(attribute='address') | unique | length == mail_server_accounts | length
+  no_log: true
+
+- name: Validate inventory account settings
+  ansible.builtin.assert:
+    that:
+      - item.address is string and '@' in item.address
+      - item.hashedPasswordFile is string and item.hashedPasswordFile is match('^/keys/accounts/[^/]+[.]hash$')
+      - item.quota is string
+      - item.sendOnly is boolean
+      - item.aliases | default([]) is sequence and item.aliases | default([]) is not string and item.aliases | default([]) is not mapping
+      - item.aliases | default([]) | select('string') | list | length == item.aliases | default([]) | length
+  loop: "{{ mail_server_accounts }}"
+  no_log: true
+
+- name: Create builder and Nix source directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0700'
+  loop:
+    - "{{ mail_server_builder_dir }}"
+    - "{{ mail_server_builder_dir }}/nixos"
+
+- name: Render Nix configuration from inventory
+  ansible.builtin.template:
+    src: "nixos/{{ item }}.j2"
+    dest: "{{ mail_server_builder_dir }}/nixos/{{ item }}"
+    mode: '0644'
+  loop: [configuration.nix, guest.nix, mail.nix, accounts.nix, flake.nix]
+  diff: false
+
+- name: Copy pinned Nix lockfile unchanged
+  ansible.builtin.copy:
+    src: nixos/flake.lock
+    dest: "{{ mail_server_builder_dir }}/nixos/flake.lock"
+    mode: '0644'
+
+- name: Remove obsolete generated guest files
+  ansible.builtin.file:
+    path: "{{ mail_server_builder_dir }}/nixos/{{ item }}"
+    state: absent
+  loop: [admin.pub, inventory.nix]
+
+- name: Install separate operator scripts
+  ansible.builtin.copy:
+    src: "scripts/{{ item }}"
+    dest: "{{ mail_server_builder_dir }}/{{ item }}"
+    mode: '0755'
+  loop: [build, deploy, bootstrap, builder.py, verify-disks]
+
+- name: Render hypervisor domain and disk configuration
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "{{ mail_server_builder_dir }}/{{ item }}"
+    mode: '0644'
+  loop: [domain.xml, host.json]
+
+- name: Remove the obsolete mixed source directory
+  ansible.builtin.file:
+    path: "{{ mail_server_builder_dir }}/source"
+    state: absent

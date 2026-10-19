@@ -1,0 +1,13 @@
+{% set paths = {'vda': mail_server_root_image} %}
+{% for name, disk in mail_server_disks.items() %}
+{% set _ = paths.update({disk.target: mail_server_disk_dir ~ '/' ~ name ~ '.qcow2'}) %}
+{% endfor %}
+{{ {
+  'name': mail_server_vm_name,
+  'uuid': mail_server_vm_uuid,
+  'directory': mail_server_disk_dir,
+  'disks': paths,
+  'storage': mail_server_disks,
+  'address': mail_server_ipv4,
+  'hostname': mail_server_fqdn
+} | to_nice_json }}

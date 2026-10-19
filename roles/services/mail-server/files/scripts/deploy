@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Routine production update: root image only; never provisions state disks.
+set -euo pipefail
+HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+if [[ $(id -u) == 0 ]]; then
+  exec python3 "$HERE/builder.py" deploy "$HERE/nixos" "$@"
+fi
+exec sudo python3 "$HERE/builder.py" deploy "$HERE/nixos" "$@"

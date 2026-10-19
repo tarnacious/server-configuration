@@ -1,0 +1,110 @@
+{ config, lib, pkgs, modulesPath, ... }:
+let
+  mounts = {
+    "/keys" = "mail-keys";
+    "/var/vmail" = "mail-data";
+    "/var/lib" = "mail-state";
+    "/var/log" = "mail-logs";
+  };
+  mountPaths = builtins.attrNames mounts;
+  mountUnits = [ "keys.mount" "var-vmail.mount" "var-lib.mount" "var-log.mount" ];
+in {
+  imports = [ "${modulesPath}/profiles/qemu-guest.nix" ];
+  system.stateVersion = "26.05";
+  services.qemuGuest.enable = true;
+  boot.loader.grub.device = "/dev/vda";
+  boot.kernelParams = [ "console=ttyS0" ];
+
+  networking = {
+    hostName = {{ mail_server_hostname | to_json }};
+    useDHCP = false;
+    nameservers = [ {% for server in mail_server_nameservers %}{{ server | to_json }} {% endfor %}];
+    interfaces.{{ mail_server_ipv4_interface | to_json }}.ipv4.addresses = [{
+      address = {{ mail_server_ipv4 | to_json }};
+      prefixLength = {{ mail_server_ipv4_prefix }};
+    }];
+    interfaces.{{ mail_server_ipv6_interface | to_json }}.ipv6.addresses = [{
+      address = {{ mail_server_ipv6 | string | to_json }};
+      prefixLength = {{ mail_server_ipv6_prefix }};
+    }];
+    defaultGateway = { address = {{ mail_server_ipv4_gateway | to_json }}; interface = {{ mail_server_ipv4_interface | to_json }}; };
+    defaultGateway6 = { address = {{ mail_server_ipv6_gateway | to_json }}; interface = {{ mail_server_ipv6_interface | to_json }}; };
+    firewall.allowedTCPPorts = [ 22 25 80 443 587 993 ];
+  };
+
+  fileSystems = lib.mapAttrs (_: label: {
+    device = "/dev/disk/by-label/${label}";
+    fsType = "ext4";
+    # Missing disks must leave console access, but never start mail services.
+    options = [ "nofail" "x-systemd.device-timeout=10s" ];
+  }) mounts // {
+    "/" = { device = "/dev/disk/by-label/nixos"; fsType = "ext4"; autoResize = true; };
+  };
+
+  services.openssh = {
+    enable = true;
+    settings = { PermitRootLogin = "no"; PasswordAuthentication = false; KbdInteractiveAuthentication = false; };
+    hostKeys = [{ path = "/keys/ssh_host_ed25519_key"; type = "ed25519"; }];
+    authorizedKeysFiles = [ "/keys/authorized_keys/%u" ];
+  };
+  users.users.tarn = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+    hashedPassword = "*";
+    openssh.authorizedKeys.keys = [
+{% for key in mail_server_authorized_keys.splitlines() if key | trim %}
+      {{ key | to_json }}
+{% endfor %}
+    ];
+  };
+  security.sudo.wheelNeedsPassword = true;
+
+  systemd.services = lib.genAttrs [ "postfix" "dovecot" "rspamd" "redis-rspamd" ] (_: {
+    requires = mountUnits ++ [ "mail-state-init.service" ];
+    after = mountUnits ++ [ "mail-state-init.service" ];
+    unitConfig.RequiresMountsFor = mountPaths;
+    serviceConfig.ExecStartPre = lib.mkBefore [
+      "+${pkgs.writeShellScript "require-mail-disks" ''
+        set -eu
+        ${lib.concatMapStringsSep "\n" (path: "${pkgs.util-linux}/bin/mountpoint -q ${lib.escapeShellArg path}") mountPaths}
+      ''}"
+    ];
+  }) // lib.genAttrs [ "sshd" "sshd-keygen" ] (_: {
+    requires = [ "keys.mount" ];
+    after = [ "keys.mount" ];
+    unitConfig.RequiresMountsFor = [ "/keys" ];
+    serviceConfig.ExecStartPre = lib.mkBefore [ "+${pkgs.util-linux}/bin/mountpoint -q /keys" ];
+  }) // {
+    mail-state-init = {
+      requires = mountUnits;
+      after = mountUnits;
+      serviceConfig = { Type = "oneshot"; RemainAfterExit = true; };
+      script = ''
+        ${pkgs.util-linux}/bin/mountpoint -q /keys
+        ${pkgs.coreutils}/bin/install -d -m 0750 -o rspamd -g rspamd /keys/dkim
+      '';
+    };
+    mail-admin-password = {
+      description = "Apply administrator sudo password from persistent keys disk";
+      wantedBy = [ "multi-user.target" ];
+      requires = [ "keys.mount" ];
+      after = [ "keys.mount" ];
+      before = [ "sshd.service" ];
+      serviceConfig.Type = "oneshot";
+      script = ''
+        test -s /keys/tarn-password
+        ${pkgs.shadow}/bin/usermod --password "$(< /keys/tarn-password)" tarn
+      '';
+    };
+  };
+
+  environment.systemPackages = with pkgs; [ openssl iproute2 ];
+  # Only declarative Nix files enter the image, never operator tools.
+  environment.etc."nixos".source = ./.;
+  system.build.qcow2 = import "${modulesPath}/../lib/make-disk-image.nix" {
+    inherit lib config pkgs;
+    format = "qcow2";
+    diskSize = 12288;
+    partitionTableType = "legacy";
+  };
+}

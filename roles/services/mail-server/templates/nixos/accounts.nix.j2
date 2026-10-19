@@ -1,0 +1,14 @@
+# Account metadata from inventory; actual password hashes remain on /keys.
+{% macro nix_string(value) -%}
+{{ value | to_json | replace('${', '\\${') }}
+{%- endmacro %}
+{
+{% for account in mail_server_accounts %}
+  {{ nix_string(account.address) }} = {
+    aliases = [ {% for alias in account.aliases | default([]) %}{{ nix_string(alias) }} {% endfor %}];
+    hashedPasswordFile = {{ nix_string(account.hashedPasswordFile) }};
+    quota = {{ nix_string(account.quota) }};
+    sendOnly = {{ account.sendOnly | to_json }};
+  };
+{% endfor %}
+}

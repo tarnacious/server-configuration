@@ -1,0 +1,13 @@
+---
+# Supply guest identity and network as flat mail_server_* inventory variables.
+# Hypervisor resources. Service configuration lives in templates/nixos/.
+mail_server_builder_dir: /home/tarn/builders/mail-production
+mail_server_vm_name: mail-server
+mail_server_vm_uuid: 3889a1b0-8561-487b-9b42-e91f20489ace
+mail_server_disk_dir: /var/kvm/images/mail-server
+mail_server_root_image: "{{ mail_server_disk_dir }}/root.qcow2"
+mail_server_disks:
+  keys: {target: vdb, label: mail-keys, size: 256M}
+  data: {target: vdc, label: mail-data, size: 20G}
+  state: {target: vdd, label: mail-state, size: 4G}
+  logs: {target: vde, label: mail-logs, size: 1G}

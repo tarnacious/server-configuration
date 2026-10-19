@@ -1,0 +1,33 @@
+---
+# Synthetic values deliberately differ from production to catch hard-coded settings.
+mail_server_ipv4: 192.0.2.12
+mail_server_ipv6: '2001:db8::12'
+mail_server_accounts:
+  - address: inbox@example.test
+    aliases: [postmaster@example.test, 'literal${alias}@example.test']
+    hashedPasswordFile: /keys/accounts/synthetic-inbox.hash
+    quota: 512M
+    sendOnly: false
+  - address: sender@example.test
+    hashedPasswordFile: /keys/accounts/synthetic-sender.hash
+    quota: 16M
+    sendOnly: true
+mail_server_hostname: mail-test
+mail_server_fqdn: mail.example.test
+mail_server_ipv4_interface: test4
+mail_server_ipv6_interface: test6
+mail_server_ipv4_prefix: 25
+mail_server_ipv6_prefix: 80
+mail_server_nameservers: [192.0.2.53, '2001:db8::53']
+mail_server_ipv4_mac: '52:54:00:00:00:04'
+mail_server_ipv6_mac: '52:54:00:00:00:06'
+mail_server_ipv4_bridge: testbr4
+mail_server_ipv6_bridge: testbr6
+mail_server_domains: [example.test]
+mail_server_system_domain: example.test
+mail_server_acme_email: admin@example.test
+mail_server_ipv4_gateway: 192.0.2.1
+mail_server_ipv6_gateway: '2001:db8::1'
+mail_server_authorized_keys: |
+  ssh-ed25519 AAAATEST first-test-key
+  ssh-ed25519 AAAATEST second-test-key

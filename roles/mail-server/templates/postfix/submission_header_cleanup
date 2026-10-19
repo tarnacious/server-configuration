@@ -1,6 +1,0 @@
-### Removes headers of MUAs for privacy reasons
-
-/^Received:/            IGNORE
-/^X-Originating-IP:/    IGNORE
-/^X-Mailer:/            IGNORE
-/^User-Agent:/          IGNORE

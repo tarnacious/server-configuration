@@ -1,6 +1,6 @@
 $TTL    604800
 @       IN      SOA     tarnbarford.net. tarn.tarnbarford.net. (
-                              5         ; Serial
+                              8         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
                         2419200         ; Expire

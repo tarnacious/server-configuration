@@ -1,0 +1,19 @@
+{
+  description = "Production mail-server NixOS image";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    mailserver = {
+      url = "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver/-/archive/nixos-26.05/nixos-mailserver-nixos-26.05.tar.gz";
+      flake = false;
+    };
+  };
+
+  outputs = { self, nixpkgs, mailserver }: {
+    nixosConfigurations.mail-server = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [ "${mailserver}/default.nix" ./configuration.nix ];
+    };
+    packages.x86_64-linux.qcow2 = self.nixosConfigurations.mail-server.config.system.build.qcow2;
+  };
+}
