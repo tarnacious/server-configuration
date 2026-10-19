@@ -84,7 +84,13 @@
       system.nixos.tags = [ "external-gpu" ];
       services.xserver.videoDrivers = [ "nvidia" ];
       services.xserver.enable = true;
-      boot.kernelParams = [ "module_blacklist=i915" ];
+      # Match the working USB setup: PRIME sync needs the Intel GPU too.
+      # Select this specialisation at boot for these parameters to take effect.
+      boot.kernelParams = [
+        "i915.enable_rc6=0"
+        "i915.enable_fbc=0"
+        "i915.lvds_downclock=0"
+      ];
       hardware.nvidia = {
         open = true;
         nvidiaSettings = true;
@@ -98,9 +104,16 @@
             enable = false;
           };
           intelBusId = "PCI:0:2:0";
-          nvidiaBusId = "PCI:82:0:0";
+          # From the working USB setup; recheck with lspci if PCI numbering changes.
+          nvidiaBusId = "PCI:52:0:0";
         };
       };
+      programs.steam.enable = true;
+      environment.systemPackages = with pkgs; [
+        mesa-demos
+        vulkan-tools
+        prismlauncher
+      ];
     };
   };
 
