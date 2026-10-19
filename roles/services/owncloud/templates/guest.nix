@@ -19,11 +19,11 @@
         "1.0.0.1"
       ];
     interfaces = {
-      enp0s2.ipv4.addresses = [ { address = "{{ hosts.cloud.ipv4 }}"; prefixLength = 24; } ];
-      enp0s3.ipv6.addresses = [ { address = "{{ hosts.cloud.ipv6 }}"; prefixLength = 64; } ];
+      ens2.ipv4.addresses = [ { address = "{{ hosts.cloud.ipv4 }}"; prefixLength = 24; } ];
+      ens3.ipv6.addresses = [ { address = "{{ hosts.cloud.ipv6 }}"; prefixLength = 64; } ];
     };
-    defaultGateway = { address = "{{ gateway4 }}"; interface = "enp0s2"; };
-    defaultGateway6 = { address = "{{ gateway6 }}"; interface = "enp0s3"; };
+    defaultGateway = { address = "{{ gateway4 }}"; interface = "ens2"; };
+    defaultGateway6 = { address = "{{ gateway6 }}"; interface = "ens3"; };
     firewall = {
       enable = true;
     };
