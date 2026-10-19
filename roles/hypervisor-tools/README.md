@@ -29,12 +29,25 @@ create-qcow2-disk /var/kvm/images/db-data.qcow2 dbdata 10G
 - Bails out if image already exists
 - Must be run as root (no sudo in script)
 - Uses qemu-nbd for formatting without mounting
+- Requires formatting tools and a free NBD device; never reports an unformatted image as success
+- Disconnects its NBD attachment on errors; leaves partial images for inspection
+- Serializes its own operations with `/run/lock/server-configuration-nbd.lock`
+- Leaves the shared NBD kernel module loaded
 
 **Requirements:**
 - qemu-img
 - qemu-nbd
 - nbd kernel module
 - ext4 filesystem tools
+- flock (util-linux)
+
+**Offline checks:**
+```bash
+bash -n roles/hypervisor-tools/scripts/create-qcow2-disk
+python3 roles/hypervisor-tools/tests/test-create-qcow2-disk.py
+```
+
+Tests mock disk commands and device paths; they never format real devices.
 
 ## Target
 
