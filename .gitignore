@@ -5,6 +5,9 @@ include
 pyvenv.cfg
 image-builders
 
+# Local Raspberry Pi scripts and setup notes
+/pi/
+
 # Rendered mail builders, QCOW2 disks, test credentials and logs
 /.generated/mail-server/
 
