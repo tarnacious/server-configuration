@@ -3,6 +3,7 @@ lib64
 lib
 include
 pyvenv.cfg
+image-builders
 
 # Rendered mail builders, QCOW2 disks, test credentials and logs
 /.generated/mail-server/
