@@ -157,7 +157,7 @@
     - "5665"
 
 - name: Get initial letsencypt SSL certificat
-  shell: "systemctl stop apache2 && certbot certonly --non-interactive --standalone -d {{ icinga_domain }} --email hello@debugproxy.com --agree-tos && systemctl start apache2"
+  shell: "systemctl stop apache2 && certbot certonly --non-interactive --standalone -d {{ icinga_domain }} --email hello@debugproxy.tarnbarford.net --agree-tos && systemctl start apache2"
   args:
     creates: "/etc/letsencrypt/live/{{ icinga_domain }}/cert.pem"
 

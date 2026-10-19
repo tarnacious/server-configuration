@@ -18,7 +18,7 @@ ff02::3 ip6-allhosts
 {{ hosts.bab_website.ipv6 }} bab-website
 {{ hosts.owncloud.ipv6 }} owncloud owncloud.tarnbarford.net
 {{ hosts.mail_server.ipv6 }} mail-server mail.tarnbarford.net
-{{ hosts.debugproxy.ipv6 }} debugproxy debugproxy.com
+{{ hosts.debugproxy.ipv6 }} debugproxy debugproxy.tarnbarford.net
 {{ hosts.icinga.ipv6 }} icinga icinga.tarnbarford.net
 {{ hosts.ns1.ipv6 }} ns1 ns1.tarnbarford.net
 {{ hosts.australia.ipv6 }} ns2 ns2.tarnbarford.net

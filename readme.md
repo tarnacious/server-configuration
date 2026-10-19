@@ -61,7 +61,7 @@ ansible-playbook playbooks/tarnbarford.yml
 
 
 [1]: https://tarnbarford.net
-[2]: https://debugproxy.com
+[2]: https://debugproxy.tarnbarford.net
 [3]: https://bridgesacrossborders.net
 [4]: https://owncloud.tarnbarford.net
 [5]: https://icinga.tarnbarford.net
