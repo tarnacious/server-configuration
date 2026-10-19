@@ -8,6 +8,9 @@ image-builders
 # Local Raspberry Pi scripts and setup notes
 /pi/
 
+# Local infrastructure setup notes
+/workspace/
+
 # Rendered mail builders, QCOW2 disks, test credentials and logs
 /.generated/mail-server/
 
