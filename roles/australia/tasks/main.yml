@@ -1,0 +1,31 @@
+---
+- name: Require local, non-production rendering
+  ansible.builtin.assert:
+    that:
+      - ansible_connection == 'local'
+      - inventory_hostname == 'localhost'
+      - australia_workspace is defined
+      - australia_wireguard_port is defined
+      - australia_workspace | length > 1
+      - australia_workspace != '/'
+
+- name: Create workspace
+  ansible.builtin.file:
+    path: "{{ australia_workspace }}"
+    state: directory
+    mode: '0700'
+
+- name: Render guest module
+  ansible.builtin.template:
+    src: configuration.nix.j2
+    dest: "{{ australia_workspace }}/configuration.nix"
+    mode: '0600'
+
+- name: Copy pinned flake and lock without updating dependencies
+  ansible.builtin.copy:
+    src: "{{ role_path }}/{{ item.src }}"
+    dest: "{{ australia_workspace }}/{{ item.dest }}"
+    mode: '0600'
+  loop:
+    - { src: templates/flake.nix, dest: flake.nix }
+    - { src: flake.lock, dest: flake.lock }

@@ -1,0 +1,70 @@
+{ config, pkgs, lib, modulesPath, ... }:
+{
+  imports = [ "${modulesPath}/virtualisation/digital-ocean-image.nix" ];
+  system.stateVersion = "25.11";
+  virtualisation.diskSize = 4096;
+  virtualisation.digitalOceanImage.configFile = ./configuration.nix;
+  # No arbitrary user-data evaluation or metadata-supplied password.
+  virtualisation.digitalOcean.rebuildFromUserData = false;
+  virtualisation.digitalOcean.setRootPassword = false;
+  virtualisation.digitalOcean.seedEntropy = false;
+  networking.hostName = "australia";
+  services.openssh.settings = {
+    PasswordAuthentication = false;
+    KbdInteractiveAuthentication = false;
+    PermitRootLogin = "prohibit-password";
+  };
+  users.users.root.hashedPassword = "!";
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 22 53 ];
+    allowedUDPPorts = [ 53 {{ australia_wireguard_port | int }} ];
+    # VPN clients can access the server; forwarded packets are governed by NAT.
+    trustedInterfaces = [ "wg0" ];
+  };
+  boot.kernel.sysctl = {
+    "net.ipv4.ip_forward" = 1;
+    "net.ipv6.conf.all.forwarding" = 1;
+  };
+  networking.nftables.enable = true;
+  networking.nftables.tables.australia-nat = {
+    family = "inet";
+    content = ''
+      chain postrouting {
+        type nat hook postrouting priority srcnat; policy accept;
+        oifname != "wg0" ip saddr 192.168.10.0/24 masquerade
+        oifname != "wg0" ip6 saddr fd42:42:42::/64 masquerade
+      }
+    '';
+  };
+  services.bind = {
+    enable = true;
+    # Zone lives outside the store and is checked by Ansible before publication.
+    checkConfig = false;
+    extraOptions = ''
+      recursion no;
+      dnssec-validation auto;
+    '';
+    zones."tarnbarford.net" = {
+      master = true;
+      file = "/var/lib/australia/zones/db.tarnbarford.net";
+      slaves = [ ];
+    };
+  };
+  # Missing runtime files are intentional on an unprovisioned image.
+  systemd.services.bind.unitConfig.ConditionPathExists = "/var/lib/australia/zones/db.tarnbarford.net";
+  systemd.services.wg-quick-wg0 = {
+    description = "Australia WireGuard VPN";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" "nftables.service" ];
+    wants = [ "network-online.target" ];
+    unitConfig.ConditionPathExists = "/etc/wireguard/wg0.conf";
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.wireguard-tools}/bin/wg-quick up /etc/wireguard/wg0.conf";
+      ExecStop = "${pkgs.wireguard-tools}/bin/wg-quick down /etc/wireguard/wg0.conf";
+    };
+  };
+  environment.systemPackages = with pkgs; [ bind dnsutils wireguard-tools python3 ];
+}

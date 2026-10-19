@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+role=$(cd "$(dirname "$0")/.." && pwd)
+if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then echo "Usage: $0 <non-secret-vars.yml> <workspace> [--build-only]" >&2; exit 2; fi
+vars=$1
+workspace=$(realpath -m "$2")
+if [ "${3:-}" != '--build-only' ]; then "$role/scripts/render" "$vars" "$workspace"; fi
+[ -f "$workspace/flake.lock" ] || { echo 'Render first' >&2; exit 2; }
+if [ -n "$(find "$workspace" -mindepth 1 -maxdepth 1 ! -name flake.nix ! -name flake.lock ! -name configuration.nix -print -quit)" ]; then
+  echo 'Workspace contains other files; refusing to copy them into the Nix store' >&2; exit 2
+fi
+# --no-write-lock-file ensures builds never update the checked-in pin.
+nix build --no-write-lock-file --out-link "$workspace.image" "$workspace#image"
+echo "Image directory: $workspace.image"

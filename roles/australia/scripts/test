@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+role=$(cd "$(dirname "$0")/.." && pwd)
+if [ "$#" -ne 1 ]; then echo "Usage: $0 <workspace>" >&2; exit 2; fi
+workspace=$(realpath -m "$1")
+"$role/scripts/render" "$role/tests/local.yml" "$workspace"
+nix eval --raw --no-write-lock-file "$workspace#nixosConfigurations.australia.config.system.build.digitalOceanImage.outPath" >/dev/null
+nix eval --json --no-write-lock-file "$workspace#nixosConfigurations.australia.config.networking.firewall.allowedUDPPorts" | grep -q '51194'
+! grep -R -E 'PrivateKey|ANSIBLE_VAULT' "$workspace/flake.nix" "$workspace/configuration.nix" "$workspace/flake.lock"
+ANSIBLE_BECOME_ASK_PASS=False ansible-playbook -i 'localhost,' -e "@$role/tests/zone.yml" \
+  -e "australia_workspace=$workspace" "$role/tests/zone-render.yml" >/dev/null
+named-checkzone tarnbarford.net "$workspace.test-zone"
+echo 'PASS: synthetic render, Nix evaluation, firewall, secret scan and authoritative zone validation'

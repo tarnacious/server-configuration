@@ -1,0 +1,11 @@
+hosts:
+  australia: {ipv4: 192.0.2.20, ipv6: '2001:db8::20'}
+  hypervisor: {ipv4: 192.0.2.10}
+  tarnbarford: {ipv6: '2001:db8::10'}
+  owncloud: {ipv6: '2001:db8::11'}
+  bacula: {ipv6: '2001:db8::12'}
+  mail_server: {ipv6: '2001:db8::13'}
+  debugproxy: {ipv6: '2001:db8::14'}
+  monitoring: {ipv6: '2001:db8::15'}
+  cloud: {ipv6: '2001:db8::16'}
+australia_zone_serial: 2026090101

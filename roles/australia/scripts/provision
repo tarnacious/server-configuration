@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+role=$(cd "$(dirname "$0")/.." && pwd)
+repo=$(cd "$role/../.." && pwd)
+if [ "$#" -ne 3 ]; then echo "Usage: $0 <inventory> <exact-target> <runtime-vars.yml>" >&2; exit 2; fi
+inventory=$(realpath "$1")
+target=$2
+vars=$(realpath "$3")
+[[ "$target" =~ ^[a-zA-Z0-9_.-]+$ ]] || { echo 'Target must be one exact inventory hostname' >&2; exit 2; }
+cd "$repo"
+ANSIBLE_BECOME_ASK_PASS=False ansible-playbook -i "$inventory" --limit "$target" \
+  -e "@$vars" -e australia_provision_confirm=true playbooks/tasks/australia/provision.yml

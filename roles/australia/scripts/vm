@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+if [ "$#" -ne 2 ]; then echo "Usage: $0 <start|stop> <workspace>" >&2; exit 2; fi
+operation=$1
+workspace=$(realpath -m "$2")
+state="$workspace.vm"
+case "$operation" in
+start)
+  mkdir -p "$state"
+  [ ! -e "$state/pid" ] || { echo "VM already started; check $state/pid" >&2; exit 1; }
+  image=$(find -L "$workspace.image" -maxdepth 1 -name '*.qcow2.gz' -print -quit)
+  [ -n "$image" ] || { echo 'Build the image first' >&2; exit 1; }
+  gzip -dc "$image" > "$state/disk.qcow2"
+  qemu-img resize "$state/disk.qcow2" 8G
+  qemu-system-x86_64 -enable-kvm -m 2048 -smp 2 -display none -vga none -serial "file:$state/console.log" \
+    -daemonize -pidfile "$state/pid" -monitor 'tcp:127.0.0.1:22221,server,nowait' \
+    -drive "file=$state/disk.qcow2,format=qcow2,if=virtio" \
+    -netdev 'user,id=net0,hostfwd=tcp:127.0.0.1:22220-:22' -device virtio-net-pci,netdev=net0
+  echo "Console: $state/console.log; SSH: 127.0.0.1:22220 (requires bootstrap keys)"
+  ;;
+stop)
+  [ -f "$state/pid" ] || { echo 'No VM PID' >&2; exit 1; }
+  exec 3<>/dev/tcp/127.0.0.1/22221
+  printf 'system_powerdown\n' >&3
+  exec 3>&- 3<&-
+  echo "Requested graceful shutdown; see $state/console.log"
+  ;;
+*) echo 'Expected start or stop' >&2; exit 2;;
+esac

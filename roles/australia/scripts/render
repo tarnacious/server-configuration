@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+role=$(cd "$(dirname "$0")/.." && pwd)
+repo=$(cd "$role/../.." && pwd)
+if [ "$#" -ne 2 ]; then echo "Usage: $0 <non-secret-vars.yml> <workspace>" >&2; exit 2; fi
+vars=$(realpath "$1")
+workspace=$(realpath -m "$2")
+case "$workspace" in "$repo"|"$repo"/*) echo 'Workspace must be outside the repository' >&2; exit 2;; esac
+if [ -d "$workspace" ] && [ -n "$(find "$workspace" -mindepth 1 -maxdepth 1 ! -name flake.nix ! -name flake.lock ! -name configuration.nix -print -quit)" ]; then
+  echo 'Workspace contains other files; refusing to copy them into the Nix store' >&2; exit 2
+fi
+command -v ansible-playbook >/dev/null || { echo 'Install ansible-core' >&2; exit 1; }
+cd "$repo"
+ANSIBLE_BECOME_ASK_PASS=False ansible-playbook -i 'localhost,' -e "@$vars" -e "australia_workspace=$workspace" playbooks/tasks/australia/render.yml
